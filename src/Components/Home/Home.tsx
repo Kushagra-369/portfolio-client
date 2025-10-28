@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import image1 from "../../Assets/Images/Profile.jpg";
+import image1 from "../../assets/Images/Profile.jpg";
 
 export default function Home() {
   const ref = useRef<HTMLDivElement>(null);
