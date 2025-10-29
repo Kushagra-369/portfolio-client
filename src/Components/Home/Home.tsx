@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
+import { Link } from "react-router-dom"; // ✅ make sure this import is at the top
 import {
   SiJavascript,
   SiReact,
@@ -9,6 +10,7 @@ import {
   SiNextdotjs,
   SiMongodb,
 } from "react-icons/si";
+import { Download, Mail } from "lucide-react"; // ✅ Added icons
 import image1 from "../../assets/Images/Profile.jpg";
 
 export default function Home() {
@@ -83,6 +85,35 @@ export default function Home() {
                 </span>
               </motion.div>
             ))}
+          </div>
+
+          {/* 📞 Contact & Download Buttons */}
+          <div className="flex gap-4 mt-10">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                to="/signup"
+                className="flex items-center gap-2 bg-indigo-600 dark:bg-cyan-600 text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition"
+              >
+                <Mail className="w-4 h-4" />
+                Contact Me
+              </Link>
+            </motion.div>
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                to="/resume"
+                className="flex items-center gap-2 border border-indigo-600 dark:border-cyan-500 text-indigo-700 dark:text-cyan-300 px-5 py-2 rounded-full hover:bg-indigo-50 dark:hover:bg-cyan-900 transition"
+              >
+                <Download className="w-4 h-4" />
+                Download
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
 

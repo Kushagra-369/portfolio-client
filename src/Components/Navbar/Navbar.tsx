@@ -49,7 +49,7 @@ export default function Navbar() {
     { name: "About", path: "/about" },
     { name: "Projects", path: "/projects" },
     { name: "Skills", path: "/skills" },
-    { name: "Contact", path: "/contact" },
+    { name: "Contact", path: "/signup" },
   ];
 
   return (
