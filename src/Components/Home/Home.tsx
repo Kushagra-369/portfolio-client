@@ -1,6 +1,6 @@
-import { useRef } from "react";
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { Link } from "react-router-dom"; // ✅ make sure this import is at the top
+import { useRef, useState, useEffect } from "react";
+import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 import {
   SiJavascript,
   SiReact,
@@ -9,17 +9,20 @@ import {
   SiNodedotjs,
   SiNextdotjs,
   SiMongodb,
+  SiTypescript,
+  SiGit,
+  SiFigma,
 } from "react-icons/si";
-import { Download, Mail } from "lucide-react"; // ✅ Added icons
-import image1 from "../../assets/Images/Profile.jpg";
+import { Download, Mail, Sparkles, ArrowRight, Star } from "lucide-react";
 
 export default function Home() {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const [currentSkill, setCurrentSkill] = useState(0);
 
-  const rotateX = useTransform(y, [-50, 50], [10, -10]);
-  const rotateY = useTransform(x, [-50, 50], [-10, 10]);
+  const rotateX = useTransform(y, [-200, 200], [15, -15]);
+  const rotateY = useTransform(x, [-200, 200], [-15, 15]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = ref.current?.getBoundingClientRect();
@@ -35,116 +38,350 @@ export default function Home() {
     y.set(0);
   };
 
-  // 🎯 Skill Data
+  // Enhanced Skill Data with gradients
   const skills = [
-    { name: "JavaScript", icon: <SiJavascript className="text-yellow-400 text-2xl" /> },
-    { name: "React", icon: <SiReact className="text-sky-400 text-2xl" /> },
-    { name: "Tailwind CSS", icon: <SiTailwindcss className="text-cyan-400 text-2xl" /> },
-    { name: "Express.js", icon: <SiExpress className="text-gray-300 text-2xl" /> },
-    { name: "Node.js", icon: <SiNodedotjs className="text-green-500 text-2xl" /> },
-    { name: "Next.js", icon: <SiNextdotjs className="text-white text-2xl" /> },
-    { name: "MongoDB", icon: <SiMongodb className="text-green-600 text-2xl" /> },
+    { 
+      name: "JavaScript", 
+      icon: <SiJavascript className="text-yellow-400 text-2xl lg:text-3xl" />,
+      gradient: "from-yellow-400 to-amber-600"
+    },
+    { 
+      name: "TypeScript", 
+      icon: <SiTypescript className="text-blue-600 text-2xl lg:text-3xl" />,
+      gradient: "from-blue-600 to-blue-800"
+    },
+    { 
+      name: "React", 
+      icon: <SiReact className="text-cyan-400 text-2xl lg:text-3xl" />,
+      gradient: "from-cyan-400 to-blue-600"
+    },
+    { 
+      name: "Next.js", 
+      icon: <SiNextdotjs className="text-white text-2xl lg:text-3xl" />,
+      gradient: "from-gray-100 to-gray-300"
+    },
+    { 
+      name: "Tailwind CSS", 
+      icon: <SiTailwindcss className="text-teal-400 text-2xl lg:text-3xl" />,
+      gradient: "from-teal-400 to-cyan-600"
+    },
+    { 
+      name: "Node.js", 
+      icon: <SiNodedotjs className="text-green-600 text-2xl lg:text-3xl" />,
+      gradient: "from-green-600 to-green-800"
+    },
+    { 
+      name: "Express.js", 
+      icon: <SiExpress className="text-gray-300 text-2xl lg:text-3xl" />,
+      gradient: "from-gray-300 to-gray-500"
+    },
+    { 
+      name: "MongoDB", 
+      icon: <SiMongodb className="text-green-500 text-2xl lg:text-3xl" />,
+      gradient: "from-green-500 to-green-700"
+    },
+    { 
+      name: "Git", 
+      icon: <SiGit className="text-orange-600 text-2xl lg:text-3xl" />,
+      gradient: "from-orange-600 to-red-600"
+    },
+    { 
+      name: "Figma", 
+      icon: <SiFigma className="text-purple-500 text-2xl lg:text-3xl" />,
+      gradient: "from-purple-500 to-pink-600"
+    },
   ];
 
+  // Auto-rotate featured skills
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSkill((prev) => (prev + 1) % 3);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const featuredSkills = skills.slice(0, 3);
+
   return (
-    <div className="py-24 px-6 lg:px-16 transition-colors duration-700">
-      <div className="md:flex justify-around gap-10 items-center">
-        {/* Text Section */}
+    <div className="min-h-screen mt-5 relative overflow-hidden  py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24 transition-colors duration-700">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Floating Particles */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-cyan-400/30 rounded-full"
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              x: [0, Math.random() * 100 - 50, 0],
+              opacity: [0.3, 1, 0.3],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+        
+        {/* Gradient Orbs */}
         <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="text-indigo-700 py-5 lg:py-10 dark:text-cyan-300 max-w-xl"
-        >
-          <h1 className="text-2xl sm:text-3xl lg:text-5xl font-extrabold mb-6 text-indigo-800 dark:text-cyan-200">
-            Welcome to My Portfolio
-          </h1>
+          className="absolute top-1/4 -left-32 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 -right-32 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.4, 0.7, 0.4],
+          }}
+          transition={{ duration: 6, repeat: Infinity }}
+        />
+      </div>
 
-          <p className="text-sm lg:text-xl text-slate-700 dark:text-gray-300 leading-relaxed mb-4">
-            I am a passionate developer with experience in building web applications.
-          </p>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-12 xl:gap-20">
+          
+          {/* Text Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-center lg:text-left max-w-2xl lg:max-w-xl xl:max-w-2xl"
+          >
+            {/* Welcome Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              
+              
+            </motion.div>
 
-          <p className="text-sm lg:text-xl text-gray-800 dark:text-gray-300 leading-relaxed mb-4">
-            I specialize in creating modern, scalable, and interactive digital experiences.
-          </p>
+            {/* Main Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.7 }}
+              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
+            >
+              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Kushagra
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+                Chhabra
+              </span>
+            </motion.h1>
 
-          {/* 💡 Skills Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
-            {skills.map((skill, index) => (
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.7 }}
+              className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
+            >
+              Full-Stack Developer &{" "}
+              <span className="font-semibold text-cyan-600 dark:text-cyan-400">
+                UI/UX Enthusiast
+              </span>
+            </motion.p>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.7 }}
+              className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed"
+            >
+              I craft <span className="font-semibold text-purple-600 dark:text-purple-400">digital experiences</span> that blend 
+              innovative design with cutting-edge technology. Specializing in modern web 
+              development with a focus on performance and user engagement.
+            </motion.p>
+
+            {/* Featured Skills Carousel */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.7 }}
+              className="mb-8"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <Star className="w-5 h-5 text-amber-400" />
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Currently loving:
+                </span>
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentSkill}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex items-center gap-3"
+                >
+                  {featuredSkills[currentSkill].icon}
+                  <span className={`text-lg font-bold bg-gradient-to-r ${featuredSkills[currentSkill].gradient} bg-clip-text text-transparent`}>
+                    {featuredSkills[currentSkill].name}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+
+            {/* Skills Grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.7 }}
+              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-8"
+            >
+              {skills.map((skill, index) => (
+                <motion.div
+                  key={skill.name}
+                  className="flex items-center gap-2 px-3 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl border border-white/20 dark:border-gray-700/50"
+                  whileHover={{ 
+                    scale: 1.05, 
+                    y: -2,
+                    transition: { duration: 0.2 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                >
+                  {skill.icon}
+                  <span className="font-medium text-gray-700 dark:text-gray-200 text-sm">
+                    {skill.name}
+                  </span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.7 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            >
               <motion.div
-                key={index}
-                className="flex items-center gap-2 px-3 py-2 bg-indigo-100 dark:bg-cyan-900 rounded-xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-1"
                 whileHover={{ scale: 1.05 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {skill.icon}
-                <span className="font-medium text-indigo-800 dark:text-cyan-200 text-sm sm:text-base">
-                  {skill.name}
+                <Link
+                  to="/signup"
+                  className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Mail className="w-5 h-5 relative z-10" />
+                  <span className="relative z-10">Get In Touch</span>
+                  <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/resume"
+                  className="group inline-flex items-center gap-3 border-2 border-cyan-400 text-cyan-600 dark:text-cyan-400 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-all duration-300 backdrop-blur-sm"
+                >
+                  <Download className="w-5 h-5" />
+                  <span>Download CV</span>
+                  <Sparkles className="w-4 h-4 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Link>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+
+          {/* Image Section with Enhanced 3D Effects */}
+          <motion.div
+            ref={ref}
+            className="relative flex-shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ rotateX, rotateY }}
+            initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          >
+            {/* Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-xl animate-pulse" />
+            
+            {/* Main Container */}
+            <div className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-cyan-900 dark:from-gray-100 dark:via-purple-100 dark:to-cyan-100 rounded-3xl p-4 sm:p-6 shadow-2xl">
+              
+              {/* Floating Elements */}
+              <motion.div
+                className="absolute -top-4 -left-4 w-8 h-8 bg-cyan-400 rounded-full shadow-lg"
+                animate={{
+                  y: [0, -10, 0],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <motion.div
+                className="absolute -bottom-4 -right-4 w-6 h-6 bg-purple-400 rounded-full shadow-lg"
+                animate={{
+                  y: [0, 10, 0],
+                  rotate: [360, 180, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+
+              {/* Profile Image */}
+              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-400/20 to-purple-400/20 p-2">
+                <motion.img
+                  src='https://res.cloudinary.com/dnpn8ljki/image/upload/v1761742733/Profile-removebg-preview_1_e0gxaz.png'
+                  alt="Kushagra Chhabra - Full Stack Developer"
+                  className="w-full h-auto object-cover rounded-2xl shadow-2xl"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4 }}
+                />
+                
+                {/* Shine Effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                />
+              </div>
+
+              {/* Status Badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.5, duration: 0.5 }}
+                className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-cyan-200 dark:border-cyan-800"
+              >
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Available for work
                 </span>
               </motion.div>
-            ))}
-          </div>
-
-          {/* 📞 Contact & Download Buttons */}
-          <div className="flex gap-4 mt-10">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                to="/signup"
-                className="flex items-center gap-2 bg-indigo-600 dark:bg-cyan-600 text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition"
-              >
-                <Mail className="w-4 h-4" />
-                Contact Me
-              </Link>
-            </motion.div>
-
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                to="/resume"
-                className="flex items-center gap-2 border border-indigo-600 dark:border-cyan-500 text-indigo-700 dark:text-cyan-300 px-5 py-2 rounded-full hover:bg-indigo-50 dark:hover:bg-cyan-900 transition"
-              >
-                <Download className="w-4 h-4" />
-                Download
-              </Link>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Image Section with Tilt & Swirl Animation */}
-        <motion.div
-          ref={ref}
-          className="relative p-1 lg:py-15 rounded-3xl"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{ rotateX, rotateY }}
-          whileHover={{ scale: 1.05 }}
-          initial={{ rotate: -180, opacity: 0, scale: 0.5 }}
-          animate={{ rotate: 0, opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-        >
-          <div className="relative flex items-center justify-center px-2 py-4">
-            {/* Gradient background layer */}
-            <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-700 via-black to-red-600 dark:from-cyan-300 dark:via-green-400 dark:to-yellow-300 animate-gradientMove"></div>
-
-            {/* Image container */}
-            <div className="relative rounded-3xl flex justify-center">
-              <motion.img
-                src={image1}
-                alt="Profile"
-                className="w-56 h-64 sm:w-64 sm:h-72 md:w-72 md:h-80 lg:w-80 lg:h-96 object-cover rounded-3xl shadow-lg"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.4 }}
-              />
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
