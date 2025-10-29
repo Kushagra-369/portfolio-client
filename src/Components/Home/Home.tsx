@@ -38,7 +38,6 @@ export default function Home() {
     y.set(0);
   };
 
-  // Enhanced Skill Data with gradients
   const skills = [
     { 
       name: "JavaScript", 
@@ -87,12 +86,11 @@ export default function Home() {
     },
     { 
       name: "Figma", 
-      icon: <SiFigma className="text-purple-500 text-2xl lg:text-3xl" />,
-      gradient: "from-purple-500 to-pink-600"
+      icon: <SiFigma className="text-indigo-500 text-2xl lg:text-3xl" />,
+      gradient: "from-indigo-500 to-blue-600"
     },
   ];
 
-  // Auto-rotate featured skills
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSkill((prev) => (prev + 1) % 3);
@@ -103,10 +101,8 @@ export default function Home() {
   const featuredSkills = skills.slice(0, 3);
 
   return (
-    <div className="min-h-screen mt-5 relative overflow-hidden  py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24 transition-colors duration-700">
-      {/* Animated Background Elements */}
+    <div className="min-h-screen mt-5 relative overflow-hidden py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24 transition-colors duration-700">
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* Floating Particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
@@ -127,10 +123,9 @@ export default function Home() {
             }}
           />
         ))}
-        
-        {/* Gradient Orbs */}
+
         <motion.div
-          className="absolute top-1/4 -left-32 w-96 h-96 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-3xl"
+          className="absolute top-1/4 -left-32 w-96 h-96 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.3, 0.6, 0.3],
@@ -138,7 +133,7 @@ export default function Home() {
           transition={{ duration: 8, repeat: Infinity }}
         />
         <motion.div
-          className="absolute bottom-1/4 -right-32 w-96 h-96 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 -right-32 w-96 h-96 bg-linear-to-r from-teal-500/20 to-cyan-500/20 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.4, 0.7, 0.4],
@@ -149,41 +144,27 @@ export default function Home() {
 
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-12 xl:gap-20">
-          
-          {/* Text Section */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left max-w-2xl lg:max-w-xl xl:max-w-2xl"
           >
-            {/* Welcome Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              
-              
-            </motion.div>
-
-            {/* Main Heading */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.7 }}
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
             >
-              <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 via-blue-400 to-teal-400 bg-clip-text text-transparent">
                 Kushagra
               </span>
               <br />
-              <span className="bg-gradient-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
                 Chhabra
               </span>
             </motion.h1>
 
-            {/* Subtitle */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -196,19 +177,17 @@ export default function Home() {
               </span>
             </motion.p>
 
-            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
               className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed"
             >
-              I craft <span className="font-semibold text-purple-600 dark:text-purple-400">digital experiences</span> that blend 
+              I craft <span className="font-semibold text-cyan-600 dark:text-cyan-400">digital experiences</span> that blend 
               innovative design with cutting-edge technology. Specializing in modern web 
               development with a focus on performance and user engagement.
             </motion.p>
 
-            {/* Featured Skills Carousel */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -231,14 +210,13 @@ export default function Home() {
                   className="flex items-center gap-3"
                 >
                   {featuredSkills[currentSkill].icon}
-                  <span className={`text-lg font-bold bg-gradient-to-r ${featuredSkills[currentSkill].gradient} bg-clip-text text-transparent`}>
+                  <span className={`text-lg font-bold bg-linear-to-r ${featuredSkills[currentSkill].gradient} bg-clip-text text-transparent`}>
                     {featuredSkills[currentSkill].name}
                   </span>
                 </motion.div>
               </AnimatePresence>
             </motion.div>
 
-            {/* Skills Grid */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -249,11 +227,7 @@ export default function Home() {
                 <motion.div
                   key={skill.name}
                   className="flex items-center gap-2 px-3 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl border border-white/20 dark:border-gray-700/50"
-                  whileHover={{ 
-                    scale: 1.05, 
-                    y: -2,
-                    transition: { duration: 0.2 }
-                  }}
+                  whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -267,32 +241,25 @@ export default function Home() {
               ))}
             </motion.div>
 
-            {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.7 }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/signup"
-                  className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className="group relative inline-flex items-center gap-3 bg-linear-to-r from-cyan-500 to-blue-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-linear-to-r from-cyan-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <Mail className="w-5 h-5 relative z-10" />
                   <span className="relative z-10">Get In Touch</span>
                   <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
               </motion.div>
 
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   to="/resume"
                   className="group inline-flex items-center gap-3 border-2 border-cyan-400 text-cyan-600 dark:text-cyan-400 px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-semibold hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-all duration-300 backdrop-blur-sm"
@@ -305,10 +272,9 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* Image Section with Enhanced 3D Effects */}
           <motion.div
             ref={ref}
-            className="relative flex-shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
+            className="relative shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ rotateX, rotateY }}
@@ -316,13 +282,8 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Glow Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-xl animate-pulse" />
-            
-            {/* Main Container */}
-            <div className="relative bg-gradient-to-br from-gray-900 via-purple-900 to-cyan-900 dark:from-gray-100 dark:via-purple-100 dark:to-cyan-100 rounded-3xl p-4 sm:p-6 shadow-2xl">
-              
-              {/* Floating Elements */}
+            <div className="absolute inset-0 bg-linear-to-r from-cyan-500/20 via-blue-500/20 to-teal-500/20 rounded-3xl blur-xl animate-pulse" />
+            <div className="relative bg-linear-to-br from-gray-900 via-blue-900 to-cyan-900 dark:from-gray-100 dark:via-blue-100 dark:to-cyan-100 rounded-3xl p-4 sm:p-6 shadow-2xl">
               <motion.div
                 className="absolute -top-4 -left-4 w-8 h-8 bg-cyan-400 rounded-full shadow-lg"
                 animate={{
@@ -336,7 +297,7 @@ export default function Home() {
                 }}
               />
               <motion.div
-                className="absolute -bottom-4 -right-4 w-6 h-6 bg-purple-400 rounded-full shadow-lg"
+                className="absolute -bottom-4 -right-4 w-6 h-6 bg-blue-400 rounded-full shadow-lg"
                 animate={{
                   y: [0, 10, 0],
                   rotate: [360, 180, 0],
@@ -347,27 +308,21 @@ export default function Home() {
                   ease: "easeInOut"
                 }}
               />
-
-              {/* Profile Image */}
-              <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-cyan-400/20 to-purple-400/20 p-2">
+              <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400/20 to-blue-400/20 p-2">
                 <motion.img
-                  src='https://res.cloudinary.com/dnpn8ljki/image/upload/v1761742733/Profile-removebg-preview_1_e0gxaz.png'
+                  src="https://res.cloudinary.com/dnpn8ljki/image/upload/v1761742733/Profile-removebg-preview_1_e0gxaz.png"
                   alt="Kushagra Chhabra - Full Stack Developer"
                   className="w-full h-auto object-cover rounded-2xl shadow-2xl"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.4 }}
                 />
-                
-                {/* Shine Effect */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -skew-x-12"
                   initial={{ x: "-100%" }}
                   animate={{ x: "100%" }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 />
               </div>
-
-              {/* Status Badge */}
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
