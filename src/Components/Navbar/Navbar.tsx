@@ -81,13 +81,26 @@ export default function Navbar() {
 
   const sections: Section[] = [
     { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Projects", path: "/projects" },
-    { name: "Skills", path: "/skills" },
+    { name: "About", path: "#about" },
+    { name: "Projects", path: "#projects" },
+    { name: "Skills", path: "#skills" },
     { name: "Contact", path: "/signup" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleScroll = (id: string) => {
+    const sectionId = id.replace("#", "");
+    const element = document.getElementById(sectionId);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 80, // adjust for navbar height
+        behavior: "smooth",
+      });
+    }
+  };
+
+
 
   return (
     <header className="fixed top-0 z-50 w-full px-4 py-3 font-[Outfit]">
@@ -160,17 +173,32 @@ export default function Navbar() {
         >
           {sections.map((section, index) => (
             <motion.div key={section.name} variants={slideInVariant} custom={index}>
-              <Link
-                to={section.path}
-                className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${
-                  isActive(section.path)
-                    ? "text-white dark:text-black bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
-                    : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
-                }`}
-              >
-                {section.name}
-              </Link>
+              {section.path.startsWith("#") ? (
+                // 🔹 Handle in-page scroll (like #about)
+                <button
+                  onClick={() => {
+                    handleScroll(section.path);
+                    setIsOpen(false);
+                  }}
+                  className="relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
+                >
+                  {section.name}
+                </button>
+              ) : (
+                // 🔹 Handle normal page navigation (like /signup)
+                <Link
+                  to={section.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${isActive(section.path)
+                      ? "text-white dark:text-black bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
+                      : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
+                    }`}
+                >
+                  {section.name}
+                </Link>
+              )}
             </motion.div>
+
           ))}
         </motion.div>
 
@@ -237,11 +265,10 @@ export default function Navbar() {
                   <Link
                     to={section.path}
                     onClick={() => setIsOpen(false)}
-                    className={`block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 ${
-                      isActive(section.path)
-                        ? "text-white dark:text-black bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
-                        : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
-                    }`}
+                    className={`block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 ${isActive(section.path)
+                      ? "text-white dark:text-black bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
+                      : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
+                      }`}
                   >
                     {section.name}
                   </Link>

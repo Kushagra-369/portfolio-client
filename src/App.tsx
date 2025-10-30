@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Components/Home/Home";
 import Signup from "./Components/Contact/Signup";
 import OTP from "./Components/Contact/OTP";
+// import About from "./Components/About/About";
 export default function App() {
   return (
     <BrowserRouter>

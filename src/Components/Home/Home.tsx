@@ -14,6 +14,9 @@ import {
   SiFigma,
 } from "react-icons/si";
 import { Download, Mail, Sparkles, ArrowRight, Star } from "lucide-react";
+import About from "../About/About";
+import Skills from "../Skills/Skills";
+import Project from "../Projects/Project";
 
 export default function Home() {
   const ref = useRef<HTMLDivElement>(null);
@@ -39,53 +42,53 @@ export default function Home() {
   };
 
   const skills = [
-    { 
-      name: "JavaScript", 
+    {
+      name: "JavaScript",
       icon: <SiJavascript className="text-yellow-400 text-2xl lg:text-3xl" />,
       gradient: "from-yellow-400 to-amber-600"
     },
-    { 
-      name: "TypeScript", 
+    {
+      name: "TypeScript",
       icon: <SiTypescript className="text-blue-600 text-2xl lg:text-3xl" />,
       gradient: "from-blue-600 to-blue-800"
     },
-    { 
-      name: "React", 
+    {
+      name: "React",
       icon: <SiReact className="text-cyan-400 text-2xl lg:text-3xl" />,
       gradient: "from-cyan-400 to-blue-600"
     },
-    { 
-      name: "Next.js", 
+    {
+      name: "Next.js",
       icon: <SiNextdotjs className="text-white text-2xl lg:text-3xl" />,
       gradient: "from-gray-100 to-gray-300"
     },
-    { 
-      name: "Tailwind CSS", 
+    {
+      name: "Tailwind CSS",
       icon: <SiTailwindcss className="text-teal-400 text-2xl lg:text-3xl" />,
       gradient: "from-teal-400 to-cyan-600"
     },
-    { 
-      name: "Node.js", 
+    {
+      name: "Node.js",
       icon: <SiNodedotjs className="text-green-600 text-2xl lg:text-3xl" />,
       gradient: "from-green-600 to-green-800"
     },
-    { 
-      name: "Express.js", 
+    {
+      name: "Express.js",
       icon: <SiExpress className="text-gray-300 text-2xl lg:text-3xl" />,
       gradient: "from-gray-300 to-gray-500"
     },
-    { 
-      name: "MongoDB", 
+    {
+      name: "MongoDB",
       icon: <SiMongodb className="text-green-500 text-2xl lg:text-3xl" />,
       gradient: "from-green-500 to-green-700"
     },
-    { 
-      name: "Git", 
+    {
+      name: "Git",
       icon: <SiGit className="text-orange-600 text-2xl lg:text-3xl" />,
       gradient: "from-orange-600 to-red-600"
     },
-    { 
-      name: "Figma", 
+    {
+      name: "Figma",
       icon: <SiFigma className="text-indigo-500 text-2xl lg:text-3xl" />,
       gradient: "from-indigo-500 to-blue-600"
     },
@@ -101,7 +104,8 @@ export default function Home() {
   const featuredSkills = skills.slice(0, 3);
 
   return (
-    <div className="min-h-screen mt-5 relative overflow-hidden py-20 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24 transition-colors duration-700">
+    <div className="min-h-screen relative overflow-hidden pt-28 sm:pt-32 lg:pt-36 pb-20 sm:pb-28 lg:pb-32 px-4 sm:px-6 lg:px-12 xl:px-20 2xl:px-24 transition-colors duration-700">
+      {/* Background */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -142,8 +146,10 @@ export default function Home() {
         />
       </div>
 
+      {/* Hero */}
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-12 xl:gap-20">
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-16 xl:gap-24">
+          {/* Text */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -181,20 +187,21 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
-              className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 leading-relaxed"
+              className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-10 leading-relaxed"
             >
-              I craft <span className="font-semibold text-cyan-600 dark:text-cyan-400">digital experiences</span> that blend 
-              innovative design with cutting-edge technology. Specializing in modern web 
+              I craft <span className="font-semibold text-cyan-600 dark:text-cyan-400">digital experiences</span> that blend
+              innovative design with cutting-edge technology. Specializing in modern web
               development with a focus on performance and user engagement.
             </motion.p>
 
+            {/* Dynamic Skill */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.7 }}
-              className="mb-8"
+              className="mb-12"
             >
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-4 justify-center lg:justify-start">
                 <Star className="w-5 h-5 text-amber-400" />
                 <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                   Currently loving:
@@ -207,7 +214,7 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-3 justify-center lg:justify-start"
                 >
                   {featuredSkills[currentSkill].icon}
                   <span className={`text-lg font-bold bg-linear-to-r ${featuredSkills[currentSkill].gradient} bg-clip-text text-transparent`}>
@@ -217,30 +224,46 @@ export default function Home() {
               </AnimatePresence>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.7 }}
-              className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-8"
-            >
-              {skills.map((skill, index) => (
-                <motion.div
-                  key={skill.name}
-                  className="flex items-center gap-2 px-3 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl border border-white/20 dark:border-gray-700/50"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                >
-                  {skill.icon}
-                  <span className="font-medium text-gray-700 dark:text-gray-200 text-sm">
-                    {skill.name}
-                  </span>
-                </motion.div>
-              ))}
-            </motion.div>
+            {/* What I Do */}
+            <section className="mt-20 mb-16 text-center lg:text-left">
+              <h2 className="text-3xl font-bold mb-10 text-cyan-400">
+                What I Do
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[
+                  {
+                    title: "Frontend Development",
+                    desc: "Crafting responsive, dynamic UIs using React, Next.js, and Tailwind CSS.",
+                    icon: "💻",
+                  },
+                  {
+                    title: "Backend Engineering",
+                    desc: "Building scalable APIs with Node.js, Express, and MongoDB.",
+                    icon: "⚙️",
+                  },
+                  {
+                    title: "Animation & UX",
+                    desc: "Enhancing user experiences using Framer Motion and creative design.",
+                    icon: "🎨",
+                  },
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.2, duration: 0.6 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="bg-white/10 dark:bg-gray-900/30 p-6 rounded-2xl border border-cyan-400/20 backdrop-blur-md hover:border-cyan-400/40 transition-all"
+                  >
+                    <div className="text-4xl mb-4">{item.icon}</div>
+                    <h3 className="text-lg font-semibold text-cyan-400 mb-2">{item.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
 
+            {/* Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -272,6 +295,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
+          {/* Profile Image */}
           <motion.div
             ref={ref}
             className="relative shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
@@ -338,6 +362,20 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
+
+      {/* About Section */}
+      <section id="about" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+        <About />
+      </section>
+
+      {/* Skills Section */}
+      <section id="skills" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20 pb-20">
+        <Skills />
+      </section>
+      {/* Projects Section */}
+      <section id="projects" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20 pb-20">
+        <Project />
+      </section>
     </div>
   );
 }
