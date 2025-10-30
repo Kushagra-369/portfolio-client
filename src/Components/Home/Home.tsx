@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   SiJavascript,
   SiReact,
@@ -19,6 +20,22 @@ import Skills from "../Skills/Skills";
 import Project from "../Projects/Project";
 
 export default function Home() {
+
+  const location = useLocation();
+
+  useEffect(() => {
+    // Scroll to top or specific section after navigation
+    if (location.hash) {
+      const section = document.getElementById(location.hash.replace("#", ""));
+      if (section) {
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 300);
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location]);
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -104,7 +121,7 @@ export default function Home() {
   const featuredSkills = skills.slice(0, 3);
 
   return (
-    <div className="min-h-screen relative overflow-hidden pt-28 sm:pt-32 lg:pt-36 pb-20 sm:pb-28 lg:pb-32 px-4 sm:px-6 lg:px-12 xl:px-20 2xl:px-24 transition-colors duration-700">
+    <div id="home" className="min-h-screen relative overflow-hidden pt-28 sm:pt-32 lg:pt-36 pb-20 sm:pb-28 lg:pb-32 px-4 sm:px-6 lg:px-12 xl:px-20 2xl:px-24 transition-colors duration-700">
       {/* Background */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         {[...Array(20)].map((_, i) => (
@@ -363,11 +380,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* About Section */}
-      <section id="about" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
-        <About />
-      </section>
-
       {/* Skills Section */}
       <section id="skills" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20 pb-20">
         <Skills />
@@ -375,6 +387,10 @@ export default function Home() {
       {/* Projects Section */}
       <section id="projects" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20 pb-20">
         <Project />
+      </section>
+      {/* About Section */}
+      <section id="about" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+        <About />
       </section>
     </div>
   );

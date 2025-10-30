@@ -2,7 +2,7 @@ import { useState, type ReactElement } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { Download, Menu, X, Linkedin, Github, Sun, Moon, Sparkles } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../Context/ThemeContext";
 
 interface Icon {
@@ -51,6 +51,8 @@ export default function Navbar() {
     visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
   };
 
+  const navigate = useNavigate();
+
   const icons: Icon[] = [
     {
       id: "linkedin",
@@ -81,22 +83,42 @@ export default function Navbar() {
 
   const sections: Section[] = [
     { name: "Home", path: "/" },
-    { name: "About", path: "#about" },
-    { name: "Projects", path: "#projects" },
     { name: "Skills", path: "#skills" },
+    { name: "Projects", path: "#projects" },
+    { name: "About", path: "#about" },
     { name: "Contact", path: "/signup" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleScroll = (id: string) => {
-    const sectionId = id.replace("#", "");
-    const element = document.getElementById(sectionId);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 80, // adjust for navbar height
-        behavior: "smooth",
-      });
+  const handleScroll = (path: string) => {
+    const sectionId = path.replace("#", "");
+
+    if (path === "/" || path === "#home") {
+      if (location.pathname !== "/") {
+        navigate("/#home"); // use hash routing
+      } else {
+        const homeSection = document.getElementById("home");
+        if (homeSection) {
+          homeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }
+      return;
+    }
+
+    if (path.startsWith("#")) {
+      if (location.pathname !== "/") {
+        navigate("/" + path); // e.g., "/#skills"
+      } else {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    } else {
+      navigate(path);
     }
   };
 
@@ -190,8 +212,8 @@ export default function Navbar() {
                   to={section.path}
                   onClick={() => setIsOpen(false)}
                   className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${isActive(section.path)
-                      ? "text-white dark:text-black bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
-                      : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
+                    ? "text-white dark:text-black bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
+                    : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
                     }`}
                 >
                   {section.name}
@@ -262,18 +284,31 @@ export default function Navbar() {
               {/* Sections (always show inside dropdown for small & md) */}
               {sections.map((section, idx) => (
                 <motion.div key={section.name} variants={slideInVariant} custom={idx}>
-                  <Link
-                    to={section.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 ${isActive(section.path)
-                      ? "text-white dark:text-black bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
-                      : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
-                      }`}
-                  >
-                    {section.name}
-                  </Link>
+                  {section.path.startsWith("#") ? (
+                    <button
+                      onClick={() => {
+                        handleScroll(section.path);
+                        setIsOpen(false);
+                      }}
+                      className="block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
+                    >
+                      {section.name}
+                    </button>
+                  ) : (
+                    <Link
+                      to={section.path}
+                      onClick={() => setIsOpen(false)}
+                      className={`block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 ${isActive(section.path)
+                        ? "text-white dark:text-black bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
+                        : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
+                        }`}
+                    >
+                      {section.name}
+                    </Link>
+                  )}
                 </motion.div>
               ))}
+
 
               {/* Resume + icons: Visible inside dropdown on SMALL SCREENS ONLY.
                   On MEDIUM screens the resume+icons are outside (in navbar), so inside the dropdown they are hidden via `md:hidden`. */}

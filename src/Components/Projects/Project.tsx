@@ -111,11 +111,28 @@ export default function Project() {
                 View Project →
               </a>
 
+              {/* 🔵 Vertical hover ring (same as in Skills) */}
+              <motion.div
+                className="absolute -inset-4 rounded-full border-2 border-cyan-400/60 opacity-0 group-hover:opacity-100 pointer-events-none"
+                initial={{ rotate: 0 }}
+                animate={{ rotate: 360 }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 3,
+                  ease: "linear",
+                }}
+                style={{
+                  borderTopColor: "transparent",
+                  borderLeftColor: "rgba(34,211,238,0.6)",
+                }}
+              />
+
               {/* Hover Glow */}
               <motion.div
                 className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300"
               />
             </motion.div>
+
           ))}
         </motion.div>
 
