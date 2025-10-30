@@ -13,6 +13,7 @@ import {
   SiGit,
   SiFigma,
   SiFramer,
+  SiMui
 } from "react-icons/si";
 
 export default function Skills() {
@@ -41,6 +42,7 @@ export default function Skills() {
     { name: "MongoDB", icon: <SiMongodb className="text-green-500 text-4xl" /> },
     { name: "Git", icon: <SiGit className="text-orange-600 text-4xl" /> },
     { name: "Figma", icon: <SiFigma className="text-indigo-500 text-4xl" /> },
+    { name: "Material UI", icon: <SiMui className="text-blue-500 text-2xl lg:text-3xl" /> }
   ];
 
   return (

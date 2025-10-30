@@ -13,6 +13,7 @@ import {
   SiTypescript,
   SiGit,
   SiFigma,
+  SiMui 
 } from "react-icons/si";
 import { Download, Mail, Sparkles, ArrowRight, Star } from "lucide-react";
 import About from "../About/About";
@@ -109,6 +110,12 @@ export default function Home() {
       icon: <SiFigma className="text-indigo-500 text-2xl lg:text-3xl" />,
       gradient: "from-indigo-500 to-blue-600"
     },
+    {
+      name: "Material UI",
+      icon: <SiMui className="text-blue-500 text-2xl lg:text-3xl" />,
+      gradient: "from-blue-500 to-blue-700"
+    }
+
   ];
 
   useEffect(() => {
@@ -164,8 +171,8 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-16 xl:gap-24">
+      <div className="max-w-8xl mx-auto">
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16 xl:gap-24">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -179,10 +186,11 @@ export default function Home() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
             >
-              <span className="bg-linear-to-r from-cyan-400 via-blue-400 to-teal-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400  via-blue-400 to-teal-400 bg-clip-text text-transparent">
                 Kushagra
               </span>
-              <br />
+              {" "}
+
               <span className="bg-linear-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
                 Chhabra
               </span>
