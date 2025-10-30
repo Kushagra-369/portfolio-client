@@ -101,7 +101,7 @@ export default function Home() {
   const featuredSkills = skills.slice(0, 3);
 
   return (
-    <div className="min-h-screen mt-5 relative overflow-hidden py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24 transition-colors duration-700">
+    <div className="min-h-screen mt-5 relative overflow-hidden py-20 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24 transition-colors duration-700">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -310,7 +310,7 @@ export default function Home() {
               />
               <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400/20 to-blue-400/20 p-2">
                 <motion.img
-                  src="https://res.cloudinary.com/dnpn8ljki/image/upload/v1761742733/Profile-removebg-preview_1_e0gxaz.png"
+                  src="https://res.cloudinary.com/dynodadq0/image/upload/v1761790870/unnamed_adxxjm.jpg"
                   alt="Kushagra Chhabra - Full Stack Developer"
                   className="w-full h-auto object-cover rounded-2xl shadow-2xl"
                   whileHover={{ scale: 1.02 }}

@@ -55,7 +55,7 @@ export default function Navbar() {
     {
       id: "linkedin",
       element: <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />,
-      href: "https://linkedin.com",
+      href: "https://www.linkedin.com/in/kushagra-chhabra-83b215355?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       hoverColor: "hover:text-cyan-400",
       external: true,
     },
@@ -153,7 +153,7 @@ export default function Navbar() {
 
         {/* Large: Sections inline (visible on lg and up) */}
         <motion.div
-          className="hidden lg:flex items-center gap-6"
+          className="hidden xl:flex items-center gap-6"
           variants={containerVariant}
           initial="hidden"
           animate="visible"
@@ -212,7 +212,7 @@ export default function Navbar() {
 
         {/* Hamburger (SM & MD): visible below lg */}
         <button
-          className="block lg:hidden p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-black"
+          className="block xl:hidden p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-black"
           onClick={() => setIsOpen((s) => !s)}
           aria-label="Toggle menu"
         >
@@ -224,7 +224,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="lg:hidden fixed inset-x-4 top-20 mx-auto rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/95 via-blue-900/90 to-cyan-900/95 dark:from-white/98 dark:via-blue-50/95 dark:to-cyan-50/98 shadow-2xl shadow-cyan-500/20 dark:shadow-blue-900/30 overflow-hidden z-50"
+            className="xl:hidden fixed inset-x-4 top-20 mx-auto rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/95 via-blue-900/90 to-cyan-900/95 dark:from-white/98 dark:via-blue-50/95 dark:to-cyan-50/98 shadow-2xl shadow-cyan-500/20 dark:shadow-blue-900/30 overflow-hidden z-50"
             initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
