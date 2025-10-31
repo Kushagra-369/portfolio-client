@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { motion } from 'framer-motion';
 import ResumeFile from './QF-Data Analysis Associate.pdf_.pdf';
 
@@ -6,7 +6,7 @@ export default function Resume() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 py-8 px-4">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 to-gray-800 py-8 px-4">
       <motion.div
         className="max-w-6xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
