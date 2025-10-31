@@ -135,25 +135,26 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         {/* Left: KC + Name (always visible) */}
-        <motion.div
-          className="flex items-center space-x-3 sm:space-x-4 cursor-pointer shrink-0"
-          whileHover="float"
-          variants={floatingVariant}
-        >
-          <motion.div className="relative border-2 border-cyan-400/80 rounded-full text-white flex items-center justify-center font-bold bg-linear-to-br from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-500 shadow-lg shadow-cyan-500/25 w-10 h-10 sm:w-12 sm:h-12">
-            <span className="text-sm sm:text-base">KC</span>
-            <motion.div
-              className="absolute inset-0 rounded-full border-2 border-cyan-300/40"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-            />
+        <Link to='/'>
+          <motion.div
+            className="flex items-center space-x-3 sm:space-x-4 cursor-pointer shrink-0 select-none"
+            whileHover="float"
+            variants={floatingVariant}
+          >
+            <motion.div className="relative border-2 border-cyan-400/80 rounded-full text-white flex items-center justify-center font-bold bg-linear-to-br from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-500 shadow-lg shadow-cyan-500/25 w-10 h-10 sm:w-12 sm:h-12">
+              <span className="text-sm sm:text-base">KC</span>
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-cyan-300/40"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
+
+            <h1 className="text-base sm:text-lg md:text-xl font-[Roboto] font-bold bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-300 dark:via-white dark:to-orange-400 bg-clip-text text-transparent tracking-tight">
+              Kushagra Chhabra
+            </h1>
           </motion.div>
-
-          <h1 className="text-base sm:text-lg md:text-xl font-[Roboto] font-bold bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-300 dark:via-white dark:to-orange-400 bg-clip-text text-transparent tracking-tight">
-            Kushagra Chhabra
-          </h1>
-        </motion.div>
-
+        </Link>
         {/* Middle: Resume + Icons (only on md, hidden on sm and lg) */}
         <div className="hidden md:flex lg:hidden items-center gap-3">
           <Link

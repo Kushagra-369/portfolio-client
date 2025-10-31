@@ -1,22 +1,20 @@
 import Navbar from "./Components/Navbar/Navbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Components/Home/Home";
+import PNF from './Components/PNF/PageNotFound'
+import Resume from './Components/Resume/Resume'
 
-// import About from "./Components/About/About";
 export default function App() {
   return (
     <BrowserRouter>
-      {/* Background Layer */}
       <div className="fixed inset-0 -z-10 w-full h-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
 dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
 
-      {/* Navbar always visible */}
       <Navbar />
-
-      {/* Page Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
-
+        <Route path="/resume" element={<Resume />} />
+        <Route path="/*" element={<PNF />} />
       </Routes>
     </BrowserRouter>
   );

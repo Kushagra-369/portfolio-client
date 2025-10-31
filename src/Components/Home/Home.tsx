@@ -358,7 +358,7 @@ export default function Home() {
                   ease: "easeInOut"
                 }}
               />
-              <div className="relative rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400/20 to-blue-400/20 p-2">
+              <div className="relative select-none rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400/20 to-blue-400/20 p-2">
                 <motion.img
                   src="https://res.cloudinary.com/dynodadq0/image/upload/v1761790870/unnamed_adxxjm.jpg"
                   alt="Kushagra Chhabra - Full Stack Developer"
@@ -390,23 +390,23 @@ export default function Home() {
       </div>
 
       {/* Skills Section */}
-      <section id="skills" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20 pb-20">
+      <section id="skills" >
         <Skills />
       </section>
       {/* Projects Section */}
-      <section id="projects" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20 pb-20">
+      <section id="projects" className="pt-10" >
         <Project />
       </section>
       {/* About Section */}
-      <section id="about" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+      <section id="about" >
         <About />
       </section>
       {/* Signup Section */}
-      <section id="contact" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+      <section id="contact" >
         <Signup />
       </section>
       {/* Footer Section */}  
-      <section id="footer" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+      <section id="footer" >
         <Footer />
       </section>
     </div>
