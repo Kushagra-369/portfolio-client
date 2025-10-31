@@ -2,7 +2,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Components/Home/Home";
 import PNF from './Components/PNF/PageNotFound'
-import Resume from './Components/Resume/Resume'
+// import Resume from './Components/Resume/Resume'
 
 export default function App() {
   return (
@@ -13,7 +13,7 @@ dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></di
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/resume" element={<Resume />} />
+        {/* <Route path="/resume" element={<Resume />} /> */}
         <Route path="/*" element={<PNF />} />
       </Routes>
     </BrowserRouter>
