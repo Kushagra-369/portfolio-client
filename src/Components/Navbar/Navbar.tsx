@@ -263,7 +263,7 @@ export default function Navbar() {
 
         {/* Hamburger (SM & MD): visible below lg */}
         <button
-          className="block xl:hidden p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-black"
+          className="block xl:hidden p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-white"
           onClick={() => setIsOpen((s) => !s)}
           aria-label="Toggle menu"
         >
@@ -275,7 +275,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="xl:hidden fixed inset-x-4 top-20 mx-auto rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/95 via-blue-900/90 to-cyan-900/95 dark:from-white/98 dark:via-blue-50/95 dark:to-cyan-50/98 shadow-2xl shadow-cyan-500/20 dark:shadow-blue-900/30 overflow-hidden z-50"
+            className="xl:hidden fixed inset-x-4 top-20 mx-auto rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/95 via-blue-900/90 to-cyan-900/95 dark:from-black dark:via-blue-950 dark:to-cyan-900 shadow-2xl shadow-cyan-500/20 dark:shadow-blue-900/30 overflow-hidden z-50"
             initial={{ opacity: 0, y: -8, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -291,7 +291,7 @@ export default function Navbar() {
                         handleScroll(section.path);
                         setIsOpen(false);
                       }}
-                      className="block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
+                      className="block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600 hover:bg-white/10 dark:hover:bg-black/10"
                     >
                       {section.name}
                     </button>
@@ -300,7 +300,7 @@ export default function Navbar() {
                       to={section.path}
                       onClick={() => setIsOpen(false)}
                       className={`block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 ${isActive(section.path)
-                        ? "text-white dark:text-black bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
+                        ? "text-white dark:text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
                         : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
                         }`}
                     >
@@ -334,7 +334,7 @@ export default function Navbar() {
                         href={icon.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor}`}
+                        className={`p-3 rounded-xl bg-white/10  dark:text-white dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor}`}
                         onClick={() => setIsOpen(false)}
                       >
                         {icon.element}
@@ -346,7 +346,7 @@ export default function Navbar() {
                           toggleTheme();
                           setIsOpen(false);
                         }}
-                        className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor}`}
+                        className={`p-3 rounded-xl bg-white/10 dark:text-white dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor}`}
                       >
                         {icon.element}
                       </button>
