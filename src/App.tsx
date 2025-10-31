@@ -1,8 +1,7 @@
 import Navbar from "./Components/Navbar/Navbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Components/Home/Home";
-import Signup from "./Components/Contact/Signup";
-import OTP from "./Components/Contact/OTP";
+
 // import About from "./Components/About/About";
 export default function App() {
   return (
@@ -17,8 +16,7 @@ dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></di
       {/* Page Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/otp" element={<OTP />} />
+
       </Routes>
     </BrowserRouter>
   );

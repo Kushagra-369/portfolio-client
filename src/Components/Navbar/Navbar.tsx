@@ -86,7 +86,8 @@ export default function Navbar() {
     { name: "Skills", path: "#skills" },
     { name: "Projects", path: "#projects" },
     { name: "About", path: "#about" },
-    { name: "Contact", path: "/signup" },
+    { name: "Contact", path: "#signup" },
+    { name: "Footer", path: "#footer" },
   ];
 
   const isActive = (path: string) => location.pathname === path;

@@ -19,7 +19,8 @@ import { Download, Mail, Sparkles, ArrowRight, Star } from "lucide-react";
 import About from "../About/About";
 import Skills from "../Skills/Skills";
 import Project from "../Projects/Project";
-
+import Signup from "../Contact/Signup";
+import Footer from "../Footer/Footer";
 export default function Home() {
 
   const location = useLocation();
@@ -399,6 +400,14 @@ export default function Home() {
       {/* About Section */}
       <section id="about" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
         <About />
+      </section>
+      {/* Signup Section */}
+      <section id="contact" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+        <Signup />
+      </section>
+      {/* Footer Section */}  
+      <section id="footer" className="mt-12 sm:mt-20 lg:mt-18 px-4 sm:px-6 lg:px-20">
+        <Footer />
       </section>
     </div>
   );
