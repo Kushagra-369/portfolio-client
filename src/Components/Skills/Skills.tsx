@@ -95,7 +95,7 @@ export default function Skills() {
 
                 {/* 🔵 Vertical hover ring (your existing one) */}
                 <motion.div
-                  className="absolute -inset-4 rounded-full border-2 border-cyan-400/60 opacity-0 
+                  className="absolute -inset-4 rounded-full border-2 border-red-600 opacity-0 
         group-hover:opacity-100"
                   initial={{ rotate: 0 }}
                   animate={{ rotate: 360 }}

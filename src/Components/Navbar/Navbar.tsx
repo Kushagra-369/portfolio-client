@@ -76,7 +76,7 @@ export default function Navbar() {
         <Moon className="w-5 h-5 sm:w-6 sm:h-6" />
       ),
       href: "",
-      hoverColor: "hover:text-amber-400",
+      hoverColor: "hover:text-amber-400 ",
       external: false,
     },
   ];
@@ -128,7 +128,7 @@ export default function Navbar() {
     <header className="fixed top-0 z-50 w-full px-4 py-3 font-[Outfit]">
       {/* NAVBAR */}
       <motion.nav
-        className="w-full mx-auto px-5 py-3 flex justify-between items-center rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/90 via-blue-900/85 to-cyan-900/90 dark:from-white/95 dark:via-blue-50/90 dark:to-cyan-50/95 shadow-2xl shadow-cyan-500/10 dark:shadow-blue-900/20"
+        className="w-full mx-auto px-5 py-3 flex justify-between items-center rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/90 via-blue-900/85 to-cyan-900/90 dark:from-black dark:via-blue-950 dark:to-cyan-900 shadow-2xl shadow-cyan-500/10 dark:shadow-blue-900/20"
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
@@ -148,7 +148,7 @@ export default function Navbar() {
             />
           </motion.div>
 
-          <h1 className="text-base sm:text-lg md:text-xl font-[Roboto] font-bold bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-600 dark:to-blue-600 bg-clip-text text-transparent tracking-tight">
+          <h1 className="text-base sm:text-lg md:text-xl font-[Roboto] font-bold bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-300 dark:via-white dark:to-orange-400 bg-clip-text text-transparent tracking-tight">
             Kushagra Chhabra
           </h1>
         </motion.div>
@@ -170,7 +170,7 @@ export default function Navbar() {
                 href={icon.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`p-2 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
+                className={`p-2 rounded-xl bg-white/10 dark:bg-black/10 border dark:text-white border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
               >
                 {icon.element}
               </a>
@@ -178,7 +178,7 @@ export default function Navbar() {
               <button
                 key={icon.id}
                 onClick={toggleTheme}
-                className={`p-2 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
+                className={`p-2 rounded-xl bg-white/10 dark:bg-black/10 border dark:text-white border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
               >
                 {icon.element}
               </button>
@@ -202,7 +202,7 @@ export default function Navbar() {
                     handleScroll(section.path);
                     setIsOpen(false);
                   }}
-                  className="relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
+                  className="relative px-4 py-2 rounded-xl  font-semibold transition-all duration-200 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
                 >
                   {section.name}
                 </button>
@@ -212,8 +212,8 @@ export default function Navbar() {
                   to={section.path}
                   onClick={() => setIsOpen(false)}
                   className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${isActive(section.path)
-                    ? "text-white dark:text-black bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
-                    : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black"
+                    ? "text-white dark:text-white bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
+                    : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
                     }`}
                 >
                   {section.name}
@@ -244,7 +244,7 @@ export default function Navbar() {
                 href={icon.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
+                className={`p-3 rounded-xl dark:text-white bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
               >
                 {icon.element}
               </a>
@@ -252,7 +252,7 @@ export default function Navbar() {
               <button
                 key={icon.id}
                 onClick={toggleTheme}
-                className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
+                className={`p-3 rounded-xl bg-white/10 dark:text-white dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} transition-all duration-200`}
               >
                 {icon.element}
               </button>
