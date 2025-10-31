@@ -98,13 +98,13 @@ export default function Skills() {
 
                 {/* Vertical hover ring */}
                 <motion.div
-                  className="absolute -inset-4 sm:-inset-5 rounded-full border-2 border-red-600 opacity-100 
+                  className="absolute -inset-4 sm:-inset-5 rounded-full border-2 border-red-600 opacity-0 
                   group-hover:opacity-100"
                   initial={{ rotateX: 0 }}
                   animate={{ rotateX: 360 }}                
                   transition={{
                     repeat: Infinity,
-                    duration: 6,
+                    duration: 3,
                     ease: "linear",
                   }}
                   style={{
