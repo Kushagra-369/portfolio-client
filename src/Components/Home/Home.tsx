@@ -187,7 +187,7 @@ export default function Home() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
             >
-              <span className="bg-linear-to-r from-cyan-400  via-blue-400 to-teal-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-300 dark:via-white dark:to-orange-400 bg-clip-text text-transparent">
                 Kushagra
               </span>
               {" "}
@@ -205,7 +205,7 @@ export default function Home() {
             >
               Full-Stack Developer &{" "}
               <span className="font-semibold text-cyan-600 dark:text-cyan-400">
-                UI/UX Enthusiast
+                App developer
               </span>
             </motion.p>
 
@@ -251,7 +251,7 @@ export default function Home() {
             </motion.div>
 
             {/* What I Do */}
-            <section className="mt-20 mb-16 text-center lg:text-left">
+            <section className="mt-20 select-none mb-16 text-center lg:text-left">
               <h2 className="text-3xl font-bold mb-10 text-cyan-400">
                 What I Do
               </h2>

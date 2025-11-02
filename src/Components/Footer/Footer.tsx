@@ -98,12 +98,15 @@ export default function Footer() {
               <Linkedin className="w-6 h-6" />
             </motion.a>
             <motion.a
-              href="mailto:kushagra@example.com"
+              href="https://mail.google.com/mail/?view=cm&to=kushagra100chhabra@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.2 }}
               className="text-gray-600 dark:text-gray-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-all"
             >
               <Mail className="w-6 h-6" />
             </motion.a>
+
           </div>
         </div>
       </motion.div>

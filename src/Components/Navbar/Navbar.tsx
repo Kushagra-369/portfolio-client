@@ -204,7 +204,7 @@ export default function Navbar() {
                     handleScroll(section.path);
                     setIsOpen(false);
                   }}
-                  className="relative px-4 py-2 rounded-xl  font-semibold transition-all duration-200 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
+                  className="relative px-4 py-2 select-none rounded-xl  font-semibold transition-all duration-200 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
                 >
                   {section.name}
                 </button>
@@ -213,7 +213,7 @@ export default function Navbar() {
                 <Link
                   to={section.path}
                   onClick={() => setIsOpen(false)}
-                  className={`relative px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${isActive(section.path)
+                  className={`relative px-4 py-2 select-none rounded-xl font-semibold transition-all duration-200 ${isActive(section.path)
                     ? "text-white dark:text-white bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
                     : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
                     }`}
@@ -231,7 +231,7 @@ export default function Navbar() {
           <motion.div variants={pulseVariant} animate="pulse">
             <Link
               to="/resume"
-              className="group inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500 text-white font-semibold shadow-md transition-all duration-200"
+              className="group inline-flex select-none items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500 text-white font-semibold shadow-md transition-all duration-200"
             >
               <Download className="w-4 h-4" />
               <span>Resume</span>
