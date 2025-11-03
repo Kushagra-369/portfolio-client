@@ -108,7 +108,7 @@ export default function Project() {
         <motion.div
           variants={fadeIn}
           custom={3}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16"
+          className="grid grid-cols-1 select-none sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16"
         >
           {fullStackProjects.map((project, i) => (
             <motion.div
@@ -137,7 +137,7 @@ export default function Project() {
               </div>
 
               {/* GitHub + Live (added here) */}
-              <div className="flex justify-center sm:justify-start gap-4 mt-3 relative z-10">
+              <div className="flex  justify-center sm:justify-start gap-4 mt-3 relative z-10">
                 {project.github && (
                   <a
                     href={project.github}
@@ -194,7 +194,7 @@ export default function Project() {
         <motion.div
           variants={fadeIn}
           custom={6}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+          className="grid select-none grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
         >
           {frontendProjects.map((project, i) => (
             <motion.div

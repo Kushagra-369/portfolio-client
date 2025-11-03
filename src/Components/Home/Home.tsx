@@ -324,7 +324,7 @@ export default function Home() {
           {/* Profile Image */}
           <motion.div
             ref={ref}
-            className="relative shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
+            className="relative select-none shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             style={{ rotateX, rotateY }}

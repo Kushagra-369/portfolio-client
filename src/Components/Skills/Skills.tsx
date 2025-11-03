@@ -65,7 +65,7 @@ export default function Skills() {
 
         {/* Skills Grid */}
         <motion.div variants={fadeIn} custom={1}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
+          <div className="grid grid-cols-2 select-none sm:grid-cols-3 md:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
             {skills.map((skill, i) => (
               <motion.div
                 key={skill.name}

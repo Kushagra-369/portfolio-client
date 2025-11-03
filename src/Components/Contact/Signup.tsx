@@ -58,7 +58,7 @@ export default function Signup() {
           className="space-y-6 
           bg-white/70 dark:bg-white/10 backdrop-blur-md 
           rounded-2xl p-8 shadow-lg 
-          border border-blue-200 dark:border-cyan-400/20 
+          border border-blue-200 dark:border-cyan-400/20  select-none
           transition-all duration-500"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

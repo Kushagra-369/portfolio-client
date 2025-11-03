@@ -1,12 +1,12 @@
 import  { useState } from 'react';
 import { motion } from 'framer-motion';
-import ResumeFile from './QF-Data Analysis Associate.pdf_.pdf';
+import ResumeFile from './Kushagra_Resume.pdf';
 
 export default function Resume() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 to-gray-800 py-8 px-4">
+    <div className="min-h-screen py-25 bg-linear-to-br from-gray-900 to-gray-800  px-4">
       <motion.div
         className="max-w-6xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
@@ -16,7 +16,7 @@ export default function Resume() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-4">My Resume</h1>
-          <p className="text-gray-400 text-lg">Data Analysis Associate - Professional Profile</p>
+          <p className="text-gray-400 text-lg">Mern Stack Developer - Professional Profile</p>
         </div>
 
         {/* Action Buttons */}
@@ -28,7 +28,7 @@ export default function Resume() {
         >
           <motion.a
             href={ResumeFile}
-            download="QF-Data-Analysis-Associate-Resume.pdf"
+            download="Kushagra_Resume.pdf"
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -83,7 +83,7 @@ export default function Resume() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <p>File: QF-Data-Analysis-Associate-Resume.pdf</p>
+          <p>File: Kushagra_Resume.pdf</p>
           <p className="mt-2">For best experience, download the PDF and open in Adobe Acrobat Reader</p>
         </motion.div>
       </motion.div>
