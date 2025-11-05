@@ -2,6 +2,12 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { useEffect } from "react";
 import { Github, ExternalLink } from "lucide-react";
+import image1 from "../../assets/Images/portfolio.png";
+import image2 from "../../assets/Images/foodking.png";
+import image3 from "../../assets/Images/HCM.png";
+import image4 from "../../assets/Images/sekiro.png";
+import image5 from "../../assets/Images/lifeisstrange.png";
+import image6 from "../../assets/Images/abondoned.png";
 
 export default function Project() {
   useEffect(() => {
@@ -25,6 +31,7 @@ export default function Project() {
       tech: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
       github: "https://github.com/Kushagra-369/portfolio-client",
       live: "https://portfolio-client-swart.vercel.app/",
+      image: image1,
     },
     {
       title: "Food King",
@@ -32,6 +39,7 @@ export default function Project() {
       tech: ["React", "JavaScript", "Node.js", "Express", "MongoDB", "JWT"],
       github: "https://github.com/Kushagra-369/food_client",
       live: "https://food-client-33mf.vercel.app/",
+      image: image2,
     },
     {
       title: "HCM",
@@ -39,6 +47,7 @@ export default function Project() {
       tech: ["React", "Express", "MongoDB", "JWT", "JavaScript", "Node.js"],
       github: "https://github.com/Kushagra-369/HCM",
       live: "https://hcm-rho.vercel.app/",
+      image: image3,
     },
   ];
 
@@ -50,6 +59,7 @@ export default function Project() {
       tech: ["HTML", "CSS", "JavaScript", "GSAP"],
       github: "https://github.com/Kushagra-369/Sekiro",
       live: "https://sekiro.vercel.app/",
+      image: image4,
     },
     {
       title: "Life is Strange",
@@ -57,6 +67,7 @@ export default function Project() {
       tech: ["React", "Framer Motion", "Tailwind CSS"],
       github: "https://github.com/Kushagra-369/BEST-GAME",
       live: "https://best-game.vercel.app/",
+      image: image5,
     },
     {
       title: "Abandoned Places",
@@ -64,6 +75,7 @@ export default function Project() {
       tech: ["Next.js", "Tailwind CSS"],
       github: "https://github.com/Kushagra-369/abondoned-client",
       live: "https://abondoned-client.vercel.app/",
+      image: image6,
     },
   ];
 
@@ -97,176 +109,18 @@ export default function Project() {
         </motion.p>
 
         {/* 🔹 Full Stack Section */}
-        <motion.h2
-          variants={fadeIn}
-          custom={2}
-          className="text-2xl font-semibold text-cyan-400 mb-6"
-        >
-          ⚙️ Full Stack Projects
-        </motion.h2>
-
-        <motion.div
-          variants={fadeIn}
-          custom={3}
-          className="grid grid-cols-1 select-none sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16"
-        >
-          {fullStackProjects.map((project, i) => (
-            <motion.div
-              key={project.title}
-              variants={fadeIn}
-              custom={i * 0.2 + 4}
-              whileHover={{ scale: 1.05 }}
-              className="relative group bg-white/10 dark:bg-gray-900/40 backdrop-blur-md rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg transition-all duration-300 p-6 overflow-hidden"
-            >
-              <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-                {project.title}
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 leading-relaxed">
-                {project.desc}
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
-                {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-xs bg-cyan-400/20 text-cyan-500 dark:text-cyan-300 px-3 py-1 rounded-full"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* GitHub + Live (added here) */}
-              <div className="flex  justify-center sm:justify-start gap-4 mt-3 relative z-10">
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-cyan-500 hover:text-cyan-400 transition-all cursor-pointer"
-                  >
-                    <Github className="w-4 h-4" /> GitHub
-                  </a>
-                )}
-                {project.live && project.live !== "#" && (
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-all cursor-pointer"
-                  >
-                    <ExternalLink className="w-4 h-4" /> Live
-                  </a>
-                )}
-              </div>
-
-              {/* Hover Animations */}
-              <motion.div
-                className="absolute -inset-4 rounded-full border-2 border-cyan-400/60 opacity-0 group-hover:opacity-100 pointer-events-none z-0"
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 360 }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 3,
-                  ease: "linear",
-                }}
-                style={{
-                  borderTopColor: "transparent",
-                  borderLeftColor: "rgba(34,211,238,0.6)",
-                }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-0"
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+        <Section
+          title="⚙️ Full Stack Projects"
+          projects={fullStackProjects}
+          fadeIn={fadeIn}
+        />
 
         {/* 🔹 Frontend Section */}
-        <motion.h2
-          variants={fadeIn}
-          custom={5}
-          className="text-2xl font-semibold text-cyan-400 mb-6"
-        >
-          🎨 Frontend Projects
-        </motion.h2>
-
-        <motion.div
-          variants={fadeIn}
-          custom={6}
-          className="grid select-none grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
-        >
-          {frontendProjects.map((project, i) => (
-            <motion.div
-              key={project.title}
-              variants={fadeIn}
-              custom={i * 0.2 + 7}
-              whileHover={{ scale: 1.05 }}
-              className="relative group bg-white/10 dark:bg-gray-900/40 backdrop-blur-md rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg transition-all duration-300 p-6 overflow-hidden"
-            >
-              <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-                {project.title}
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 leading-relaxed">
-                {project.desc}
-              </p>
-
-              <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
-                {project.tech.map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-xs bg-cyan-400/20 text-cyan-500 dark:text-cyan-300 px-3 py-1 rounded-full"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* GitHub + Live (already here) */}
-              <div className="flex justify-center sm:justify-start gap-4 mt-3 relative z-10">
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-cyan-500 hover:text-cyan-400 transition-all cursor-pointer"
-                  >
-                    <Github className="w-4 h-4" /> GitHub
-                  </a>
-                )}
-                {project.live && project.live !== "#" && (
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-all cursor-pointer"
-                  >
-                    <ExternalLink className="w-4 h-4" /> Live
-                  </a>
-                )}
-              </div>
-
-              {/* Hover Border + Glow */}
-              <motion.div
-                className="absolute -inset-4 rounded-full border-2 border-cyan-400/60 opacity-0 group-hover:opacity-100 pointer-events-none z-0"
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 360 }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 3,
-                  ease: "linear",
-                }}
-                style={{
-                  borderTopColor: "transparent",
-                  borderLeftColor: "rgba(34,211,238,0.6)",
-                }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-0"
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+        <Section
+          title="🎨 Frontend Projects"
+          projects={frontendProjects}
+          fadeIn={fadeIn}
+        />
 
         {/* Quote */}
         <motion.div
@@ -278,5 +132,109 @@ export default function Project() {
         </motion.div>
       </motion.div>
     </div>
+  );
+}
+
+// ✅ Reusable Section with Background Image + All Animations
+function Section({ title, projects, fadeIn }: any) {
+  return (
+    <>
+      <motion.h2
+        variants={fadeIn}
+        className="text-2xl font-semibold text-cyan-400 mb-6"
+      >
+        {title}
+      </motion.h2>
+
+      <motion.div
+        variants={fadeIn}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 select-none"
+      >
+        {projects.map((project: any, i: number) => (
+          <motion.div
+            key={project.title}
+            variants={fadeIn}
+            custom={i * 0.2}
+            whileHover={{ scale: 1.05 }}
+            className="relative group rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg overflow-hidden transition-all duration-300"
+          >
+            {/* 🔹 Background Image */}
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-all duration-500"
+              style={{ backgroundImage: `url(${project.image})` }}
+            ></div>
+
+            {/* 🔹 Dark Overlay */}
+            <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-500"></div>
+
+            {/* 🔹 Rotating Border (kept exactly as before) */}
+            <motion.div
+              className="absolute -inset-4 rounded-full border-2 border-cyan-400/60 opacity-0 group-hover:opacity-100 pointer-events-none z-0"
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{
+                repeat: Infinity,
+                duration: 3,
+                ease: "linear",
+              }}
+              style={{
+                borderTopColor: "transparent",
+                borderLeftColor: "rgba(34,211,238,0.6)",
+              }}
+            />
+
+            {/* 🔹 Glow on Hover */}
+            <motion.div
+              className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-0"
+            />
+
+            {/* 🔹 Card Content */}
+            <div className="relative z-10 p-6 backdrop-blur-[2px]">
+              <h3 className="text-xl font-semibold text-cyan-400 mb-3">
+                {project.title}
+              </h3>
+              <p className="text-gray-200 text-sm mb-4 leading-relaxed">
+                {project.desc}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
+                {project.tech.map((tech: string) => (
+                  <span
+                    key={tech}
+                    className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              {/* GitHub + Live */}
+              <div className="flex justify-center sm:justify-start gap-4 mt-3 relative z-10">
+                {project.github && (
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm font-medium text-cyan-300 hover:text-cyan-100 transition-all cursor-pointer"
+                  >
+                    <Github className="w-4 h-4" /> GitHub
+                  </a>
+                )}
+                {project.live && project.live !== "#" && (
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm font-medium text-blue-300 hover:text-blue-100 transition-all cursor-pointer"
+                  >
+                    <ExternalLink className="w-4 h-4" /> Live
+                  </a>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    </>
   );
 }
