@@ -24,7 +24,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:1080/create_user", formData);
+      const res = await axios.post("http://localhost:1080/create_admin", formData);
       console.log(res.data);
       navigate("/otp", { state: { email: formData.email } });
     } catch (err: any) {
