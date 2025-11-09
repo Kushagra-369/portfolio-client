@@ -52,7 +52,7 @@ export default function OTP() {
         localStorage.setItem("admin_token", res.data.token);
 
         // ✅ Redirect after short delay so user sees toast
-        setTimeout(() => navigate("/"), 1000);
+        setTimeout(() => navigate("/admin/dashboard"), 1000);
       } else {
         showErrorToast(res.data.message || "Invalid OTP");
       }
