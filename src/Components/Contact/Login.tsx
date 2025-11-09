@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { showSuccessToast, showErrorToast } from "../TestNotifivation/Notification";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,13 +27,22 @@ export default function Login() {
     try {
       const res = await axios.post("http://localhost:1080/create_admin", formData);
       console.log(res.data);
+
+      
       navigate("/otp", { state: { email: formData.email } });
+      showSuccessToast("OTP sent successfully!");
+
     } catch (err: any) {
-      setError(err.response?.data?.msg || "Something went wrong");
+      const errorMsg = err.response?.data?.msg || "Something went wrong";
+      setError(errorMsg);
+
+      // ❌ Show error toast if request fails
+      showErrorToast(errorMsg);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">

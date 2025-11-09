@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { showSuccessToast, showErrorToast } from "../TestNotifivation/Notification";
 import axios from "axios";
 
 export default function OTP() {
@@ -32,8 +33,9 @@ export default function OTP() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const otpCode = otp.join("");
+
     if (otpCode.length !== 4) {
-      alert("Please enter the complete 4-digit OTP");
+      showErrorToast("Please enter the complete 4-digit OTP");
       return;
     }
 
@@ -42,16 +44,23 @@ export default function OTP() {
         otp: otpCode,
       });
 
-
       if (res.data.status === "success") {
-        alert("OTP verified successfully!");
+        // ✅ Show success toast
+        showSuccessToast("OTP verified successfully!");
+
+        // ✅ Store token
         localStorage.setItem("admin_token", res.data.token);
-        navigate("/"); // ✅ redirect to home
+
+        // ✅ Redirect after short delay so user sees toast
+        setTimeout(() => navigate("/"), 1000);
+      } else {
+        showErrorToast(res.data.message || "Invalid OTP");
       }
     } catch (err: any) {
-      alert(err.response?.data?.message || "Invalid OTP");
+      showErrorToast(err.response?.data?.message || "Invalid OTP");
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center pt-32 pb-20 transition-colors duration-500">

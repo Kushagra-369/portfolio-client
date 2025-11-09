@@ -5,6 +5,8 @@ import PNF from './Components/PNF/PageNotFound'
 import Resume from './Components/Resume/Resume'
 import Login from "./Components/Contact/Login";
 import OTP from "./Components/Contact/OTP";
+const adminPath = import.meta.env.VITE_ADMIN_ROUTE;
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -15,7 +17,7 @@ dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></di
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/resume" element={<Resume />} />
-        <Route path="/192837" element={<Login />} />
+        <Route path={`/${adminPath}`} element={<Login />} />
         <Route path="/otp" element={<OTP />} />
         <Route path="/*" element={<PNF />} />
       </Routes>
