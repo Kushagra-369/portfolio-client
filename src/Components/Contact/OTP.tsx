@@ -9,8 +9,8 @@ export default function OTP() {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const navigate = useNavigate();
 
-  // Handle OTP change
-  const handleChange = (value: string, index: number) => {
+  // ✅ Handle change
+  const handleChange = (value: string, index: number): void => {
     if (/^[0-9]?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
@@ -22,15 +22,15 @@ export default function OTP() {
     }
   };
 
-  // Handle Backspace navigation
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  // ✅ Handle backspace navigation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number): void => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
-  // Submit OTP
-  const handleSubmit = async (e: React.FormEvent) => {
+  // ✅ Handle submit
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const otpCode = otp.join("");
 
@@ -40,18 +40,10 @@ export default function OTP() {
     }
 
     try {
-      const res = await axios.post("http://localhost:1080/verify_admin_otp", {
-        otp: otpCode,
-      });
-
+      const res = await axios.post("http://localhost:1080/verify_admin_otp", { otp: otpCode });
       if (res.data.status === "success") {
-        // ✅ Show success toast
         showSuccessToast("OTP verified successfully!");
-
-        // ✅ Store token
         localStorage.setItem("admin_token", res.data.token);
-
-        // ✅ Redirect after short delay so user sees toast
         setTimeout(() => navigate("/admin/dashboard"), 1000);
       } else {
         showErrorToast(res.data.message || "Invalid OTP");
@@ -61,21 +53,20 @@ export default function OTP() {
     }
   };
 
-
   return (
-    <div className="min-h-screen flex items-center justify-center pt-32 pb-20 transition-colors duration-500">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-indigo-200 dark:from-gray-950 dark:via-gray-900 dark:to-black transition-all duration-700">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: 30, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="[background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)] dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)] rounded-2xl shadow-xl p-8 w-80 sm:w-96"
+        className="p-8 sm:p-10 w-80 sm:w-96 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 shadow-[0_0_30px_rgba(99,102,241,0.2)] dark:shadow-[0_0_35px_rgba(34,211,238,0.15)] backdrop-blur-xl"
       >
         {/* Title */}
         <motion.h2
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl font-bold text-center text-indigo-700 dark:text-cyan-300 mb-6"
+          transition={{ duration: 0.4 }}
+          className="text-3xl font-bold text-center mb-6 text-indigo-700 dark:text-cyan-300 tracking-wide drop-shadow-sm"
         >
           Verify OTP
         </motion.h2>
@@ -85,15 +76,15 @@ export default function OTP() {
           onSubmit={handleSubmit}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.7 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
           className="flex flex-col items-center space-y-6"
         >
           {/* OTP Inputs */}
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 sm:gap-4">
             {otp.map((digit, index) => (
               <motion.input
                 key={index}
-                ref={(el) => {
+                ref={(el: HTMLInputElement | null): void => {
                   inputRefs.current[index] = el;
                 }}
                 type="text"
@@ -103,11 +94,10 @@ export default function OTP() {
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 whileFocus={{
                   scale: 1.15,
-                  borderColor: "#6366f1",
-                  boxShadow: "0px 0px 10px rgba(99,102,241,0.4)",
+                  boxShadow: "0 0 18px rgba(99,102,241,0.6)",
                 }}
                 transition={{ type: "spring", stiffness: 250 }}
-                className="w-10 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-semibold border rounded-lg bg-gray-900 dark:bg-gray-100 text-white dark:text-black border-gray-700 dark:border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="w-12 h-14 sm:w-14 sm:h-16 text-center text-xl font-bold rounded-2xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-indigo-200 dark:border-cyan-700 focus:border-indigo-500 dark:focus:border-cyan-400 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-cyan-500 outline-none shadow-md transition-all duration-200"
               />
             ))}
           </div>
@@ -116,27 +106,27 @@ export default function OTP() {
           <motion.button
             whileHover={{
               scale: 1.05,
-              boxShadow: "0px 0px 15px rgba(56,189,248,0.6)",
+              boxShadow: "0px 0px 25px rgba(99,102,241,0.4)",
             }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full py-2 mt-3 text-white bg-indigo-700 hover:bg-indigo-600 dark:bg-cyan-300 dark:text-black dark:hover:bg-cyan-400 font-semibold rounded-lg shadow-md transition"
+            className="w-full py-3 mt-3 rounded-xl text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-500 hover:to-indigo-700 dark:from-cyan-400 dark:to-cyan-500 dark:hover:from-cyan-300 dark:hover:to-cyan-400 shadow-lg transition-all duration-300"
           >
             Verify OTP
           </motion.button>
 
-          {/* Resend Link */}
+          {/* Resend OTP */}
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="text-sm text-center text-black dark:text-white mt-4"
+            transition={{ delay: 0.6 }}
+            className="text-sm text-center text-gray-700 dark:text-gray-300 mt-3"
           >
             Didn’t receive the code?{" "}
             <motion.a
               whileHover={{ color: "#ef4444", scale: 1.05 }}
               href="#"
-              className="text-indigo-700 dark:text-cyan-300 hover:underline"
+              className="text-indigo-700 dark:text-cyan-300 font-medium hover:underline"
             >
               Resend OTP
             </motion.a>
