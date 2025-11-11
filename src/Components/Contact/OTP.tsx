@@ -1,15 +1,38 @@
 import { motion } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from "../TestNotifivation/Notification";
 import axios from "axios";
 
 export default function OTP() {
   const [otp, setOtp] = useState(["", "", "", ""]);
+  const [timer, setTimer] = useState(30);
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const navigate = useNavigate();
 
-  // ✅ Handle change
+  // ⏱ Start Countdown
+  useEffect(() => {
+    let interval: any;
+
+    if (isResendDisabled) {
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsResendDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(interval);
+  }, [isResendDisabled]);
+
+  // ✅ Handle OTP input
   const handleChange = (value: string, index: number): void => {
     if (/^[0-9]?$/.test(value)) {
       const newOtp = [...otp];
@@ -22,14 +45,14 @@ export default function OTP() {
     }
   };
 
-  // ✅ Handle backspace navigation
+  // ✅ Backspace auto-focus
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number): void => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
-  // ✅ Handle submit
+  // ✅ Verify OTP
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     const otpCode = otp.join("");
@@ -53,85 +76,93 @@ export default function OTP() {
     }
   };
 
+  // 🔄 Resend OTP
+  const handleResend = async () => {
+    setOtp(["", "", "", ""]);
+    setIsResendDisabled(true);
+    setTimer(30);
+
+    try {
+      await axios.get("http://localhost:1080/resend_admin_otp");
+      showSuccessToast("OTP Resent Successfully!");
+    } catch {
+      showErrorToast("Failed to resend OTP");
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-indigo-200 dark:from-gray-950 dark:via-gray-900 dark:to-black transition-all duration-700">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden text-white px-6">
+
+      {/* 🌈 Animated Floating Background */}
+      <motion.div className="absolute inset-0 -z-10">
+        <motion.div
+          animate={{ x: ["-20%", "20%", "-20%"], y: ["-20%", "20%", "-20%"] }}
+          transition={{ duration: 10, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+          className="absolute w-[500px] h-[500px] rounded-full blur-[180px] bg-cyan-600/30 top-[-10%] left-[-20%]"
+        />
+
+        <motion.div
+          animate={{ x: ["20%", "-10%", "20%"], y: ["10%", "-20%", "10%"] }}
+          transition={{ duration: 12, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+          className="absolute w-[500px] h-[500px] rounded-full blur-[180px] bg-violet-600/30 bottom-[-10%] right-[-20%]"
+        />
+      </motion.div>
+
+      {/* 🌟 OTP Card */}
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.9 }}
+        initial={{ opacity: 0, y: 25, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="p-8 sm:p-10 w-80 sm:w-96 rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 shadow-[0_0_30px_rgba(99,102,241,0.2)] dark:shadow-[0_0_35px_rgba(34,211,238,0.15)] backdrop-blur-xl"
+        transition={{ duration: 0.6 }}
+        className="p-8 sm:p-10 w-80 sm:w-96 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_0_40px_rgba(0,200,255,0.25)]"
       >
-        {/* Title */}
-        <motion.h2
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-3xl font-bold text-center mb-6 text-indigo-700 dark:text-cyan-300 tracking-wide drop-shadow-sm"
-        >
+        <motion.h2 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-bold text-center mb-4 tracking-wide">
           Verify OTP
         </motion.h2>
 
-        {/* OTP Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="flex flex-col items-center space-y-6"
-        >
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-sm text-cyan-300 mb-6">
+          Enter the 4-digit code sent to your email.
+        </motion.p>
+
+        <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-6">
+
           {/* OTP Inputs */}
-          <div className="flex justify-center gap-3 sm:gap-4">
+          <div className="flex gap-4 justify-center">
             {otp.map((digit, index) => (
               <motion.input
                 key={index}
-                ref={(el: HTMLInputElement | null): void => {
-                  inputRefs.current[index] = el;
-                }}
+                ref={(el) => (inputRefs.current[index] = el)}
                 type="text"
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
-                whileFocus={{
-                  scale: 1.15,
-                  boxShadow: "0 0 18px rgba(99,102,241,0.6)",
-                }}
-                transition={{ type: "spring", stiffness: 250 }}
-                className="w-12 h-14 sm:w-14 sm:h-16 text-center text-xl font-bold rounded-2xl bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white border border-indigo-200 dark:border-cyan-700 focus:border-indigo-500 dark:focus:border-cyan-400 focus:ring-2 focus:ring-indigo-400 dark:focus:ring-cyan-500 outline-none shadow-md transition-all duration-200"
+                className="w-14 h-16 text-center text-2xl font-bold rounded-2xl bg-gray-900/50 border border-cyan-400/50 text-white focus:ring-2 focus:ring-cyan-400 transition-all"
+                whileFocus={{ scale: 1.15, boxShadow: "0 0 20px rgba(0,255,255,0.5)" }}
               />
             ))}
           </div>
 
           {/* Verify Button */}
           <motion.button
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0px 0px 25px rgba(99,102,241,0.4)",
-            }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0,255,255,0.4)" }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full py-3 mt-3 rounded-xl text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-indigo-800 hover:from-indigo-500 hover:to-indigo-700 dark:from-cyan-400 dark:to-cyan-500 dark:hover:from-cyan-300 dark:hover:to-cyan-400 shadow-lg transition-all duration-300"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold shadow-xl"
           >
             Verify OTP
           </motion.button>
 
-          {/* Resend OTP */}
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="text-sm text-center text-gray-700 dark:text-gray-300 mt-3"
-          >
-            Didn’t receive the code?{" "}
-            <motion.a
-              whileHover={{ color: "#ef4444", scale: 1.05 }}
-              href="#"
-              className="text-indigo-700 dark:text-cyan-300 font-medium hover:underline"
-            >
-              Resend OTP
-            </motion.a>
-          </motion.p>
-        </motion.form>
+          {/* Countdown / Resend */}
+          <p className="text-sm text-center text-gray-300">
+            {isResendDisabled ? (
+              <>Resend OTP in <span className="text-cyan-300 font-bold">{timer}s</span></>
+            ) : (
+              <button onClick={handleResend} className="text-cyan-400 font-semibold hover:text-cyan-200 transition-all">
+                Resend OTP
+              </button>
+            )}
+          </p>
+        </form>
       </motion.div>
     </div>
   );

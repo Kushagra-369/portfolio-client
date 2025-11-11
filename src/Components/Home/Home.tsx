@@ -3,7 +3,7 @@ import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-mo
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
-  SiJavascript,
+  SiJavascript, 
   SiReact,
   SiTailwindcss,
   SiExpress,

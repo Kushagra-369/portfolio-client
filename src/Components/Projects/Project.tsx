@@ -1,17 +1,29 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Github, ExternalLink } from "lucide-react";
-import image1 from "../../assets/Images/portfolio.png";
-import image2 from "../../assets/Images/foodking.png";
-import image3 from "../../assets/Images/HCM.png";
-import image4 from "../../assets/Images/sekiro.png";
-import image5 from "../../assets/Images/lifeisstrange.png";
-import image6 from "../../assets/Images/abondoned.png";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Project() {
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const fetchProjects = async () => {
+      try {
+        const res = await fetch("http://localhost:1080/get_all_project");
+        const data = await res.json();
+        setProjects(data.data);
+      } catch (error) {
+        console.log("Fetch Error: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
   }, []);
 
   const fadeIn: Variants = {
@@ -23,74 +35,25 @@ export default function Project() {
     }),
   };
 
-  // 🔹 Full Stack Projects
-  const fullStackProjects = [
-    {
-      title: "Portfolio Website",
-      desc: "A fully responsive and animated portfolio built with React, TypeScript, and Tailwind CSS.",
-      tech: ["React", "TypeScript", "Tailwind CSS", "Framer Motion"],
-      github: "https://github.com/Kushagra-369/portfolio-client",
-      live: "https://portfolio-client-swart.vercel.app/",
-      image: image1,
-    },
-    {
-      title: "Food King",
-      desc: "A full-stack food ordering app with user authentication, cart, and admin dashboard.",
-      tech: ["React", "JavaScript", "Node.js", "Express", "MongoDB", "JWT"],
-      github: "https://github.com/Kushagra-369/food_client",
-      live: "https://food-client-33mf.vercel.app/",
-      image: image2,
-    },
-    {
-      title: "HCM",
-      desc: "A Monsterverse present in the novel Empty Spaces.",
-      tech: ["React", "Express", "MongoDB", "JWT", "JavaScript", "Node.js"],
-      github: "https://github.com/Kushagra-369/HCM",
-      live: "https://hcm-rho.vercel.app/",
-      image: image3,
-    },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <CircularProgress size={60} />
+      </div>
+    );
+  }
 
-  // 🔹 Frontend Projects
-  const frontendProjects = [
-    {
-      title: "Sekiro",
-      desc: "A cinematic landing page inspired by Sekiro: Shadows Die Twice — focusing on animations and storytelling.",
-      tech: ["HTML", "CSS", "JavaScript", "GSAP"],
-      github: "https://github.com/Kushagra-369/Sekiro",
-      live: "https://sekiro.vercel.app/",
-      image: image4,
-    },
-    {
-      title: "Life is Strange",
-      desc: "Interactive web experience with scroll-triggered animations and emotional storytelling.",
-      tech: ["React", "Framer Motion", "Tailwind CSS"],
-      github: "https://github.com/Kushagra-369/BEST-GAME",
-      live: "https://best-game.vercel.app/",
-      image: image5,
-    },
-    {
-      title: "Abandoned Places",
-      desc: "A photography showcase website with responsive grid layout and smooth transitions.",
-      tech: ["Next.js", "Tailwind CSS"],
-      github: "https://github.com/Kushagra-369/abondoned-client",
-      live: "https://abondoned-client.vercel.app/",
-      image: image6,
-    },
-  ];
+  // Splitting projects based on category from backend
+  const fullStackProjects = projects.filter(p => p.category === "Full Stack");
+  const frontendProjects = projects.filter(p => p.category === "Frontend");
 
   return (
     <div
       id="projects"
       className="pt-16 pb-24 px-6 sm:px-12 md:px-20 lg:px-32 font-[Outfit] overflow-y-auto min-h-screen"
     >
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-        className="max-w-6xl mx-auto text-center"
-      >
-        {/* Heading */}
+      <motion.div initial="hidden" animate="visible" variants={fadeIn} className="max-w-6xl mx-auto text-center">
+        
         <motion.h1
           variants={fadeIn}
           custom={0}
@@ -108,21 +71,16 @@ export default function Project() {
           logic, and performance.
         </motion.p>
 
-        {/* 🔹 Full Stack Section */}
-        <Section
-          title="⚙️ Full Stack Projects"
-          projects={fullStackProjects}
-          fadeIn={fadeIn}
-        />
+        {/* Full Stack */}
+        {fullStackProjects.length > 0 && (
+          <Section title="⚙️ Full Stack Projects" projects={fullStackProjects} fadeIn={fadeIn} />
+        )}
 
-        {/* 🔹 Frontend Section */}
-        <Section
-          title="🎨 Frontend Projects"
-          projects={frontendProjects}
-          fadeIn={fadeIn}
-        />
+        {/* Frontend */}
+        {frontendProjects.length > 0 && (
+          <Section title="🎨 Frontend Projects" projects={frontendProjects} fadeIn={fadeIn} />
+        )}
 
-        {/* Quote */}
         <motion.div
           variants={fadeIn}
           custom={10}
@@ -130,75 +88,42 @@ export default function Project() {
         >
           “Every project is a story — told through code and creativity.”
         </motion.div>
+
       </motion.div>
     </div>
   );
 }
 
-// ✅ Reusable Section with Background Image + All Animations
+// ✅ Section Component (No Changes in UI — Only Data Coming From Backend)
 function Section({ title, projects, fadeIn }: any) {
   return (
     <>
-      <motion.h2
-        variants={fadeIn}
-        className="text-2xl font-semibold text-cyan-400 mb-6"
-      >
+      <motion.h2 variants={fadeIn} className="text-2xl font-semibold text-cyan-400 mb-6">
         {title}
       </motion.h2>
 
-      <motion.div
-        variants={fadeIn}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 select-none"
-      >
+      <motion.div variants={fadeIn} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 select-none">
         {projects.map((project: any, i: number) => (
           <motion.div
-            key={project.title}
+            key={project._id}
             variants={fadeIn}
             custom={i * 0.2}
             whileHover={{ scale: 1.05 }}
             className="relative group rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg overflow-hidden transition-all duration-300"
           >
-            {/* 🔹 Background Image */}
             <div
               className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-all duration-500"
-              style={{ backgroundImage: `url(${project.image})` }}
+              style={{ backgroundImage: `url(${project.profilePhoto?.secure_url})` }}
             ></div>
 
-            {/* 🔹 Dark Overlay */}
             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-500"></div>
 
-            {/* 🔹 Rotating Border (kept exactly as before) */}
-            <motion.div
-              className="absolute -inset-4 rounded-full border-2 border-cyan-400/60 opacity-0 group-hover:opacity-100 pointer-events-none z-0"
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{
-                repeat: Infinity,
-                duration: 3,
-                ease: "linear",
-              }}
-              style={{
-                borderTopColor: "transparent",
-                borderLeftColor: "rgba(34,211,238,0.6)",
-              }}
-            />
-
-            {/* 🔹 Glow on Hover */}
-            <motion.div
-              className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-0"
-            />
-
-            {/* 🔹 Card Content */}
             <div className="relative z-10 p-6 backdrop-blur-[2px]">
-              <h3 className="text-xl font-semibold text-cyan-400 mb-3">
-                {project.title}
-              </h3>
-              <p className="text-gray-200 text-sm mb-4 leading-relaxed">
-                {project.desc}
-              </p>
+              <h3 className="text-xl font-semibold text-cyan-400 mb-3">{project.name}</h3>
+              <p className="text-gray-200 text-sm mb-4 leading-relaxed">{project.description}</p>
 
               <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
-                {project.tech.map((tech: string) => (
+                {project.tools?.map((tech: string) => (
                   <span
                     key={tech}
                     className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full"
@@ -208,29 +133,20 @@ function Section({ title, projects, fadeIn }: any) {
                 ))}
               </div>
 
-              {/* GitHub + Live */}
-              <div className="flex justify-center sm:justify-start gap-4 mt-3 relative z-10">
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-cyan-300 hover:text-cyan-100 transition-all cursor-pointer"
-                  >
+              <div className="flex justify-center sm:justify-start gap-4 mt-3">
+                {project.githubLink && (
+                  <a href={project.githubLink} target="_blank" className="flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100">
                     <Github className="w-4 h-4" /> GitHub
                   </a>
                 )}
-                {project.live && project.live !== "#" && (
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-medium text-blue-300 hover:text-blue-100 transition-all cursor-pointer"
-                  >
+
+                {project.deploymentLink && (
+                  <a href={project.deploymentLink} target="_blank" className="flex items-center gap-2 text-sm text-blue-300 hover:text-blue-100">
                     <ExternalLink className="w-4 h-4" /> Live
                   </a>
                 )}
               </div>
+
             </div>
           </motion.div>
         ))}
