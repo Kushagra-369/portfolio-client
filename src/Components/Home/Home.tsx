@@ -173,7 +173,7 @@ export default function Home() {
 
       {/* Hero */}
       <div className="max-w-8xl mx-auto">
-        <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16 xl:gap-24">
+<div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-12 lg:gap-16 xl:gap-24">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}

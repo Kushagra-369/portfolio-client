@@ -4,6 +4,14 @@ import type { Variants } from "framer-motion";
 import { Download, Menu, X, Linkedin, Github, Sun, Moon, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../Context/ThemeContext";
+import {
+  Home as HomeIcon,
+  Build as SkillsIcon,
+  Work as ProjectsIcon,
+  Info as AboutIcon,
+  ContactMail as ContactIcon,
+  ArrowDownward as FooterIcon,
+} from "@mui/icons-material";
 
 interface Icon {
   id: string;
@@ -16,7 +24,9 @@ interface Icon {
 interface Section {
   name: string;
   path: string;
+  icon?: ReactElement; // ✅ optional icon
 }
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,13 +92,14 @@ export default function Navbar() {
   ];
 
   const sections: Section[] = [
-    { name: "Home", path: "/" },
-    { name: "Skills", path: "#skills" },
-    { name: "Projects", path: "#projects" },
-    { name: "About", path: "#about" },
-    { name: "Contact", path: "#signup" },
-    { name: "Footer", path: "#footer" },
+    { name: "Home", path: "/", icon: <HomeIcon fontSize="small" /> },
+    { name: "Skills", path: "#skills", icon: <SkillsIcon fontSize="small" /> },
+    { name: "Projects", path: "#projects", icon: <ProjectsIcon fontSize="small" /> },
+    { name: "About", path: "#about", icon: <AboutIcon fontSize="small" /> },
+    { name: "Contact", path: "#signup", icon: <ContactIcon fontSize="small" /> },
+    { name: "Footer", path: "#footer", icon: <FooterIcon fontSize="small" /> },
   ];
+
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -206,20 +217,38 @@ export default function Navbar() {
                   }}
                   className="relative px-4 py-2 select-none rounded-xl  font-semibold transition-all duration-200 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
                 >
-                  {section.name}
+                  <span className="flex items-center justify-center gap-2">
+                    {section.icon && (
+                      <span className="text-cyan-400 hover:text-white dark:hover:text-red-600  dark:text-cyan-300">
+                        {section.icon}
+                      </span>
+                    )}
+                    <span>{section.name}</span>
+                  </span>
+
                 </button>
               ) : (
                 // 🔹 Handle normal page navigation (like /signup)
                 <Link
                   to={section.path}
                   onClick={() => setIsOpen(false)}
-                  className={`relative px-4 py-2 select-none rounded-xl font-semibold transition-all duration-200 ${isActive(section.path)
-                    ? "text-white dark:text-white bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
-                    : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl select-none font-semibold transition-all duration-200
+    ${isActive(section.path)
+                      ? "text-white dark:text-white bg-kinear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
+                      : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
                     }`}
                 >
-                  {section.name}
+                  {/* Icon */}
+                  {section.icon && (
+                    <span className="text-cyan-400 dark:text-cyan-300 shrink-0">
+                      {section.icon}
+                    </span>
+                  )}
+
+                  {/* Name */}
+                  <span className="tracking-tight">{section.name}</span>
                 </Link>
+
               )}
             </motion.div>
 
@@ -285,31 +314,48 @@ export default function Navbar() {
             <motion.div className="flex flex-col p-5 gap-3" variants={containerVariant} initial="hidden" animate="visible">
               {/* Sections (always show inside dropdown for small & md) */}
               {sections.map((section, idx) => (
-                <motion.div key={section.name} variants={slideInVariant} custom={idx}>
+                <motion.div
+                  key={section.name}
+                  variants={slideInVariant}
+                  custom={idx}
+                  className="flex justify-center" // ✅ ensures everything centers horizontally
+                >
                   {section.path.startsWith("#") ? (
                     <button
                       onClick={() => {
                         handleScroll(section.path);
                         setIsOpen(false);
                       }}
-                      className="block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600 hover:bg-white/10 dark:hover:bg-black/10"
+                      className="flex items-center justify-center gap-2 w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600 hover:bg-white/10 dark:hover:bg-black/10"
                     >
-                      {section.name}
+                      {section.icon && (
+                        <span className="text-cyan-400 hover:text-white dark:hover:text-red-600 dark:text-cyan-300 shrink-0 transition-colors duration-200">
+                          {section.icon}
+                        </span>
+                      )}
+                      <span>{section.name}</span>
                     </button>
                   ) : (
                     <Link
                       to={section.path}
                       onClick={() => setIsOpen(false)}
-                      className={`block w-full text-center px-4 py-3 rounded-xl font-semibold transition-all duration-150 ${isActive(section.path)
-                        ? "text-white dark:text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/40"
-                        : "text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black hover:bg-white/10 dark:hover:bg-black/10"
+                      className={`flex items-center justify-center gap-2 w-full text-center px-4 py-3 rounded-xl select-none font-semibold transition-all duration-200
+          ${isActive(section.path)
+                          ? "text-white dark:text-white bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
+                          : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600 hover:bg-white/10 dark:hover:bg-black/10"
                         }`}
                     >
-                      {section.name}
+                      {section.icon && (
+                        <span className="text-cyan-400 dark:text-cyan-300 shrink-0 transition-colors duration-200 group-hover:text-blue-400">
+                          {section.icon}
+                        </span>
+                      )}
+                      <span>{section.name}</span>
                     </Link>
                   )}
                 </motion.div>
               ))}
+
 
 
               {/* Resume + icons: Visible inside dropdown on SMALL SCREENS ONLY.
