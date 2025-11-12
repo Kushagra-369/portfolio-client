@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import {
-  SiJavascript, 
+  SiJavascript,
   SiReact,
   SiTailwindcss,
   SiExpress,
@@ -13,7 +14,7 @@ import {
   SiTypescript,
   SiGit,
   SiFigma,
-  SiMui 
+  SiMui
 } from "react-icons/si";
 import { Download, Mail, Sparkles, ArrowRight, Star } from "lucide-react";
 import About from "../About/About";
@@ -42,6 +43,7 @@ export default function Home() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const [currentSkill, setCurrentSkill] = useState(0);
+  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   const rotateX = useTransform(y, [-200, 200], [15, -15]);
   const rotateY = useTransform(x, [-200, 200], [-15, 15]);
@@ -54,6 +56,18 @@ export default function Home() {
     x.set(offsetX);
     y.set(offsetY);
   };
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      try {
+        const response = await axios.get("http://localhost:1080/get_ratings");
+        setAverageRating(response.data.averageRating);
+      } catch (error) {
+        console.error("❌ Error fetching ratings:", error);
+      }
+    };
+    fetchRatings();
+  }, []);
 
   const handleMouseLeave = () => {
     x.set(0);
@@ -173,7 +187,7 @@ export default function Home() {
 
       {/* Hero */}
       <div className="max-w-8xl mx-auto">
-<div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-12 lg:gap-16 xl:gap-24">
+        <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-12 lg:gap-16 xl:gap-24">
           {/* Text */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -250,6 +264,8 @@ export default function Home() {
               </AnimatePresence>
             </motion.div>
 
+
+
             {/* What I Do */}
             <section className="mt-20 select-none mb-16 text-center lg:text-left">
               <h2 className="text-3xl font-bold mb-10 text-cyan-400">
@@ -322,70 +338,116 @@ export default function Home() {
           </motion.div>
 
           {/* Profile Image */}
-          <motion.div
-            ref={ref}
-            className="relative select-none shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{ rotateX, rotateY }}
-            initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-          >
-            <div className="absolute inset-0 bg-linear-to-r from-cyan-500/20 via-blue-500/20 to-teal-500/20 rounded-3xl blur-xl animate-pulse" />
-            <div className="relative bg-linear-to-br from-gray-900 via-blue-900 to-cyan-900 dark:from-gray-100 dark:via-blue-100 dark:to-cyan-100 rounded-3xl p-4 sm:p-6 shadow-2xl">
-              <motion.div
-                className="absolute -top-4 -left-4 w-8 h-8 bg-cyan-400 rounded-full shadow-lg"
-                animate={{
-                  y: [0, -10, 0],
-                  rotate: [0, 180, 360],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              <motion.div
-                className="absolute -bottom-4 -right-4 w-6 h-6 bg-blue-400 rounded-full shadow-lg"
-                animate={{
-                  y: [0, 10, 0],
-                  rotate: [360, 180, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              <div className="relative select-none rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400/20 to-blue-400/20 p-2">
-                <motion.img
-                  src="https://res.cloudinary.com/dynodadq0/image/upload/v1761790870/unnamed_adxxjm.jpg"
-                  alt="Kushagra Chhabra - Full Stack Developer"
-                  className="w-full h-auto object-cover rounded-2xl shadow-2xl"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.4 }}
+          {/* Profile Image + Rating Section */}
+          <div className="flex flex-col items-center">
+            <motion.div
+              ref={ref}
+              className="relative select-none shrink-0 w-full max-w-md lg:max-w-lg xl:max-w-xl"
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{ rotateX, rotateY }}
+              initial={{ opacity: 0, scale: 0.8, rotateY: 180 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            >
+              <div className="absolute inset-0 bg-linear-to-r from-cyan-500/20 via-blue-500/20 to-teal-500/20 rounded-3xl blur-xl animate-pulse" />
+              <div className="relative bg-linear-to-br from-gray-900 via-blue-900 to-cyan-900 dark:from-gray-100 dark:via-blue-100 dark:to-cyan-100 rounded-3xl p-4 sm:p-6 shadow-2xl">
+                <motion.div
+                  className="absolute -top-4 -left-4 w-8 h-8 bg-cyan-400 rounded-full shadow-lg"
+                  animate={{
+                    y: [0, -10, 0],
+                    rotate: [0, 180, 360],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 />
                 <motion.div
-                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -skew-x-12"
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                  className="absolute -bottom-4 -right-4 w-6 h-6 bg-blue-400 rounded-full shadow-lg"
+                  animate={{
+                    y: [0, 10, 0],
+                    rotate: [360, 180, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 />
+                <div className="relative select-none rounded-2xl overflow-hidden bg-linear-to-br from-cyan-400/20 to-blue-400/20 p-2">
+                  <motion.img
+                    src="https://res.cloudinary.com/dynodadq0/image/upload/v1761790870/unnamed_adxxjm.jpg"
+                    alt="Kushagra Chhabra - Full Stack Developer"
+                    className="w-full h-auto object-cover rounded-2xl shadow-2xl"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.4 }}
+                  />
+                  <motion.div
+                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -skew-x-12"
+                    initial={{ x: "-100%" }}
+                    animate={{ x: "100%" }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                  />
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1.5, duration: 0.5 }}
+                  className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-cyan-200 dark:border-cyan-800"
+                >
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    Available for work
+                  </span>
+                </motion.div>
               </div>
+            </motion.div>
+
+            {/* ⭐ Average Rating Section */}
+            {averageRating !== null && (
               <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.5, duration: 0.5 }}
-                className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-cyan-200 dark:border-cyan-800"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="mt-6 flex flex-col items-center"
               >
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                  Available for work
-                </span>
+                <div className="flex items-center justify-center space-x-1">
+                  {[...Array(5)].map((_, i) => {
+                    const fillPercent = Math.min(Math.max(averageRating - i, 0), 1) * 100;
+                    // 100% for full, 70% for partial, 0% for empty
+
+                    return (
+                      <div key={i} className="relative w-6 h-6">
+                        {/* Background gray star */}
+                        <Star className="absolute top-0 left-0 w-6 h-6 text-gray-300 dark:text-gray-600" />
+
+                        {/* Foreground filled star */}
+                        <div
+                          className="absolute top-0 left-0 overflow-hidden"
+                          style={{ width: `${fillPercent}%` }}
+                        >
+                          <Star className="w-6 h-6 text-yellow-400" />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <p className="mt-2 text-gray-700 dark:text-gray-300 text-sm text-center">
+                  Average Rating:{" "}
+                  <span className="font-semibold text-yellow-500">
+                    {averageRating.toFixed(1)}
+                  </span>
+                  /5 ⭐
+                </p>
               </motion.div>
-            </div>
-          </motion.div>
+            )}
+
+          </div>
+
+
         </div>
       </div>
 
@@ -405,7 +467,7 @@ export default function Home() {
       <section id="contact" >
         <Signup />
       </section>
-      {/* Footer Section */}  
+      {/* Footer Section */}
       <section id="footer" >
         <Footer />
       </section>

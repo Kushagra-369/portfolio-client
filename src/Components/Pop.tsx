@@ -1,14 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 
 interface PopProps {
   onClose: () => void;
   onRatingSubmit: (rating: number) => void;
 }
 
-export default function Pop({ onClose, onRatingSubmit }: PopProps) {
+const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
   const [selectedRating, setSelectedRating] = useState<number>(0);
-  const [feedback, setFeedback] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
+
+  // Check if user submitted a rating within last 24 hours
+  useEffect(() => {
+    const lastSubmitted = localStorage.getItem("lastRatingTime");
+    if (lastSubmitted) {
+      const lastTime = new Date(lastSubmitted).getTime();
+      const now = new Date().getTime();
+      const hoursPassed = (now - lastTime) / (1000 * 60 * 60);
+      if (hoursPassed < 24) {
+        console.log(`⏳ Rating blocked for ${24 - Math.floor(hoursPassed)} more hours`);
+        setIsBlocked(true);
+        onClose(); // Auto close popup if blocked
+      }
+    }
+  }, [onClose]);
 
   const handleStarClick = (rating: number) => {
     setSelectedRating(rating);
@@ -16,140 +33,143 @@ export default function Pop({ onClose, onRatingSubmit }: PopProps) {
 
   const handleSubmit = async () => {
     if (selectedRating === 0) {
-      alert('Please select a rating before submitting');
+      alert("Please select a rating before submitting");
       return;
     }
 
     setIsSubmitting(true);
-    
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      console.log('Submitting rating:', selectedRating);
-      console.log('User feedback:', feedback);
-      
-      // Call the parent function to handle the rating
+      // ✅ Send rating to backend API
+      const response = await axios.post("http://localhost:1080/send_rating", {
+        rating: selectedRating,
+      });
+
+      console.log("✅ Rating submitted:", response.data);
+
+      // Save timestamp in localStorage for 24-hour limit
+      localStorage.setItem("lastRatingTime", new Date().toISOString());
+
       onRatingSubmit(selectedRating);
-      
-      // You can add your API call here:
-      // await fetch('/api/ratings', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ rating: selectedRating, feedback })
-      // });
-      
-    } catch (error) {
-      console.error('Error submitting rating:', error);
+      alert("Thank you for your feedback!");
+      onClose();
+    } catch (error: any) {
+      console.error("❌ Error submitting rating:", error);
+      alert(
+        error.response?.data?.error ||
+          "Failed to submit rating. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
-  return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={handleBackdropClick}
-    >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-[#3e3b3b5e] bg-opacity-50"></div>
-      
-      {/* Popup Content */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto p-6">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl transition-colors"
-        >
-          ×
-        </button>
-        
-        <div className="text-center">
-          {/* Icon */}
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">⭐</span>
-          </div>
-          
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            How do you like our website?
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Your feedback helps us improve!
-          </p>
-          
-          {/* Star Rating */}
-          <div className="flex justify-center space-x-2 mb-6">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                onClick={() => handleStarClick(star)}
-                disabled={isSubmitting}
-                className={`text-4xl transition-all duration-200 transform hover:scale-110 ${
-                  star <= selectedRating 
-                    ? 'text-yellow-400 scale-110' 
-                    : 'text-gray-300 hover:text-yellow-300'
-                } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                ★
-              </button>
-            ))}
-          </div>
+  // Emoji mapping by rating
+  const emojiMap: Record<number, string> = {
+    1: "😡",
+    2: "😞",
+    3: "😐",
+    4: "😊",
+    5: "🤩",
+  };
 
-          {/* Rating Text */}
-          {selectedRating > 0 && (
-            <p className="text-sm text-gray-600 mb-4">
-              You rated: <span className="font-semibold text-blue-600">{selectedRating}</span> star{selectedRating > 1 ? 's' : ''}
-            </p>
-          )}
-          
-          {/* Optional Feedback */}
-          <textarea
-            placeholder="Any additional feedback? (Optional)"
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-            disabled={isSubmitting}
-            className="w-full p-3 border border-gray-300 rounded-lg resize-none mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            rows={3}
-          />
-          
-          {/* Action Buttons */}
-          <div className="flex space-x-3">
-            <button
-              onClick={onClose}
-              disabled={isSubmitting}
-              className="flex-1 py-3 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Maybe Later
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={selectedRating === 0 || isSubmitting}
-              className={`flex-1 py-3 px-4 rounded-lg transition-colors ${
-                selectedRating > 0 && !isSubmitting
-                  ? 'bg-blue-600 text-white hover:bg-blue-700'
-                  : 'bg-blue-400 text-white cursor-not-allowed'
-              }`}
-            >
-              {isSubmitting ? (
-                <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Submitting...
-                </span>
-              ) : (
-                'Submit Rating'
-              )}
-            </button>
+  // 🧱 If blocked, don’t show popup at all
+  if (isBlocked) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onClick={handleBackdropClick}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        {/* 🔳 Background overlay */}
+        <motion.div
+          className="absolute inset-0 bg-black bg-opacity-40"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.5 }}
+          exit={{ opacity: 0 }}
+        />
+
+        {/* 💬 Popup box */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 18 }}
+          className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full mx-auto p-8"
+        >
+          {/* ❌ Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl transition-colors"
+          >
+            ×
+          </button>
+
+          <div className="text-center">
+            {/* ⭐ Emoji Icon */}
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-5 text-4xl">
+              {selectedRating > 0 ? emojiMap[selectedRating] : "⭐"}
+            </div>
+
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              How do you like our website?
+            </h2>
+
+            {/* ⭐ Star Rating */}
+            <div className="flex justify-center space-x-3 mb-8">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => handleStarClick(star)}
+                  disabled={isSubmitting}
+                  className={`text-5xl transition-all duration-200 transform hover:scale-110 ${
+                    star <= selectedRating
+                      ? "text-yellow-400 scale-110"
+                      : "text-gray-300 hover:text-yellow-300"
+                  } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+
+            {/* ✅ Action Buttons */}
+            <div className="flex space-x-4">
+              <button
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="flex-1 py-3 px-5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              >
+                Maybe Later
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={selectedRating === 0 || isSubmitting}
+                className={`flex-1 py-3 px-5 rounded-lg text-white transition-colors ${
+                  selectedRating > 0 && !isSubmitting
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-blue-400 cursor-not-allowed"
+                }`}
+              >
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
-}
+};
+
+export default Pop;
