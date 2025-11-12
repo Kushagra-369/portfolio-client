@@ -130,7 +130,9 @@ export default function OTP() {
             {otp.map((digit, index) => (
               <motion.input
                 key={index}
-                ref={(el) => (inputRefs.current[index] = el)}
+                ref={(el) => {
+                  inputRefs.current[index] = el;
+                }}
                 type="text"
                 maxLength={1}
                 value={digit}
@@ -147,7 +149,7 @@ export default function OTP() {
             whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0,255,255,0.4)" }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-semibold shadow-xl"
+            className="w-full py-3 rounded-xl bg-linear-to-r from-cyan-500 to-blue-600 font-semibold shadow-xl"
           >
             Verify OTP
           </motion.button>
