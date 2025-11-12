@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 export default function Signup() {
   useEffect(() => {
@@ -13,17 +14,38 @@ export default function Signup() {
     message: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    alert("Form submitted successfully!");
-    setFormData({ name: "", email: "", phone: "", message: "" });
+
+    try {
+      setLoading(true);
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phone,
+        message: formData.message,
+      };
+
+      const res = await axios.post("http://localhost:1080/create_message", payload);
+
+      if (res.status === 201) {
+        alert("✅ Message sent successfully!");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      }
+    } catch (error: any) {
+      console.error("Error submitting message:", error);
+      alert("❌ Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -38,7 +60,7 @@ export default function Signup() {
         className="max-w-3xl mx-auto text-center"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: 'easeOut' }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <h1
           className="text-4xl md:text-5xl font-bold mb-8 
@@ -52,13 +74,12 @@ export default function Signup() {
           Feel free to reach out! I’d love to hear from you.
         </p>
 
-        {/* Form */}
         <motion.form
           onSubmit={handleSubmit}
           className="space-y-6 
           bg-white/70 dark:bg-white/10 backdrop-blur-md 
           rounded-2xl p-8 shadow-lg 
-          border border-blue-200 dark:border-cyan-400/20  select-none
+          border border-blue-200 dark:border-cyan-400/20 select-none
           transition-all duration-500"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,7 +88,7 @@ export default function Signup() {
           {/* Name */}
           <div className="text-left">
             <label className="block text-sm font-medium text-blue-700 dark:text-cyan-300 mb-2">
-              Name <span className="text-red-500 dark:text-red-400">*</span>
+              Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -88,7 +109,7 @@ export default function Signup() {
           {/* Email */}
           <div className="text-left">
             <label className="block text-sm font-medium text-blue-700 dark:text-cyan-300 mb-2">
-              Email <span className="text-red-500 dark:text-red-400">*</span>
+              Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -149,8 +170,9 @@ export default function Signup() {
           {/* Submit Button */}
           <motion.button
             type="submit"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            disabled={loading}
+            whileHover={{ scale: loading ? 1 : 1.05 }}
+            whileTap={{ scale: loading ? 1 : 0.95 }}
             className="w-full py-3 rounded-xl 
             bg-linear-to-r from-blue-500 to-cyan-500 
             hover:from-cyan-500 hover:to-blue-500 
@@ -159,7 +181,7 @@ export default function Signup() {
             dark:hover:from-sky-500 dark:hover:to-cyan-400 
             transition-all duration-500"
           >
-            Submit
+            {loading ? "Sending..." : "Submit"}
           </motion.button>
         </motion.form>
       </motion.div>

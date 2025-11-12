@@ -1,23 +1,44 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Home from "../Home/Home";
-import { User, HomeIcon, LogOut, FolderPlus, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  User,
+  HomeIcon,
+  LogOut,
+  FolderPlus,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import AddProject from "./AddProject";
+import UserMessages from "./UserMessages";
 
 export default function AdminDashboard() {
   const [activePage, setActivePage] = useState("home");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
   const renderPage = () => {
     switch (activePage) {
       case "home":
         return <Home />;
       case "users":
-        return <div className="p-6 text-gray-800 dark:text-gray-100">User Management Coming Soon...</div>;
+        return <UserMessages />;
       case "addProject":
         return <AddProject />;
       default:
-        return <div className="p-6 text-gray-800 dark:text-gray-100">Select a page from the sidebar</div>;
+        return (
+          <div className="p-6 text-gray-800 dark:text-gray-100">
+            Select a page from the sidebar
+          </div>
+        );
     }
+  };
+
+  // ✅ Logout Function
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    sessionStorage.clear();
+    navigate("/");
   };
 
   return (
@@ -30,7 +51,8 @@ export default function AdminDashboard() {
       >
         {sidebarOpen && (
           <>
-            <div>
+            {/* Scrollable section */}
+            <div className="flex-1 overflow-y-auto">
               <h2 className="text-2xl font-bold text-center py-5 text-blue-600 dark:text-blue-400 border-b border-gray-200 dark:border-gray-700">
                 Admin Panel
               </h2>
@@ -71,10 +93,12 @@ export default function AdminDashboard() {
               </nav>
             </div>
 
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+            {/* ✅ Fixed Logout Button */}
+            <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
               <button
-                onClick={() => alert("Logout clicked")}
-                className="flex items-center w-full px-4 py-2 rounded-md text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition"
+                onClick={handleLogout}
+                className="flex items-center justify-center w-full px-4 py-3 text-red-500 
+                  hover:bg-red-100 dark:hover:bg-red-900/30 transition font-medium"
               >
                 <LogOut className="w-5 h-5 mr-2" /> Logout
               </button>
@@ -83,7 +107,7 @@ export default function AdminDashboard() {
         )}
       </aside>
 
-      {/* 🧭 Floating Toggle Button (Always Visible) */}
+      {/* 🧭 Floating Toggle Button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className="fixed top-1/2 left-0 transform -translate-y-1/2 z-50 bg-blue-600 text-white p-2 rounded-r-md shadow-lg hover:bg-blue-700 transition"
