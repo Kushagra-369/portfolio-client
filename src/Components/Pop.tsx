@@ -58,7 +58,7 @@ export default function Pop({ onClose, onRatingSubmit }: PopProps) {
       onClick={handleBackdropClick}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-[#fffff] bg-opacity-50"></div>
+      <div className="absolute inset-0 bg-[#3e3b3b5e] bg-opacity-50"></div>
       
       {/* Popup Content */}
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto p-6">
