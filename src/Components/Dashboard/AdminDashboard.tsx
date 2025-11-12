@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import AddProject from "./AddProject";
 import UserMessages from "./UserMessages";
-
+import ChangeAdmin from "./ChangeAdmin";
 export default function AdminDashboard() {
   const [activePage, setActivePage] = useState("home");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -25,6 +25,8 @@ export default function AdminDashboard() {
         return <UserMessages />;
       case "addProject":
         return <AddProject />;
+      case "changeAdmin":
+        return <ChangeAdmin />;
       default:
         return (
           <div className="p-6 text-gray-800 dark:text-gray-100">
@@ -90,10 +92,21 @@ export default function AdminDashboard() {
                 >
                   <FolderPlus className="w-5 h-5 mr-2" /> Add Projects
                 </button>
+
+                <button
+                  onClick={() => setActivePage("changeAdmin")}
+                  className={`flex items-center w-full px-4 py-2 rounded-md transition ${
+                    activePage === "changeAdmin"
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  <User className="w-5 h-5 mr-2" /> Change Admin
+                </button>
               </nav>
             </div>
 
-            {/* ✅ Fixed Logout Button */}
+            {/* ✅ Fixed Logout Button */} 
             <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleLogout}
