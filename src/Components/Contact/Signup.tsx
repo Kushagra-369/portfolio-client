@@ -34,7 +34,7 @@ export default function Signup() {
         message: formData.message,
       };
 
-      const res = await axios.post("https://portfolio-server-3-7ffl.onrender.com/create_message", payload);
+      const res = await axios.post("http://localhost:1080/create_message", payload);
 
       if (res.status === 201) {
         alert("✅ Message sent successfully!");

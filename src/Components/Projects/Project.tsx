@@ -13,7 +13,7 @@ export default function Project() {
 
     const fetchProjects = async () => {
       try {
-        const res = await fetch("https://portfolio-server-3-7ffl.onrender.com/get_all_project");
+        const res = await fetch("http://localhost:1080/get_all_project");
         const data = await res.json();
         setProjects(data.data);
       } catch (error) {
