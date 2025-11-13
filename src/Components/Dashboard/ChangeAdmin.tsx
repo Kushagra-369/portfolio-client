@@ -16,12 +16,10 @@ export default function ChangeAdmin() {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Handle text input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Common file handling logic
   const handleProfileFile = (file: File) => {
     if (!file.type.startsWith("image/")) {
       alert("Please upload an image file for profile photo.");
@@ -31,13 +29,13 @@ export default function ChangeAdmin() {
     setPreview(URL.createObjectURL(file));
   };
 
-  // Handle file input (click upload)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
     if (files && files.length > 0) {
       const file = files[0];
 
       if (name === "profileImg") handleProfileFile(file);
+
       if (name === "resume") {
         if (file.type !== "application/pdf") {
           alert("Please upload a PDF file for resume.");
@@ -48,7 +46,6 @@ export default function ChangeAdmin() {
     }
   };
 
-  // Handle drag events
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -57,7 +54,6 @@ export default function ChangeAdmin() {
     if (e.type === "dragleave") setDragActive(false);
   };
 
-  // Handle drop event
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -68,7 +64,6 @@ export default function ChangeAdmin() {
     }
   };
 
-  // Handle submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
@@ -95,62 +90,62 @@ export default function ChangeAdmin() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-4">
+    <div className="flex justify-center items-center min-h-screen p-4">
       <motion.form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-lg"
+        className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 w-full max-w-lg"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h2 className="text-2xl font-semibold text-center mb-6">
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-900 dark:text-gray-100">
           Change Admin Profile
         </h2>
 
         {/* Name */}
-        <label className="block mb-2 font-medium">Name</label>
+        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">Name</label>
         <input
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           required
-          className="w-full p-2 mb-4 border rounded-lg focus:ring focus:ring-blue-300"
+          className="w-full p-2 mb-4 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300 dark:focus:ring-blue-500"
         />
 
         {/* LinkedIn */}
-        <label className="block mb-2 font-medium">LinkedIn ID</label>
+        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">LinkedIn ID</label>
         <input
           type="url"
           name="linkedin"
           value={formData.linkedin}
           onChange={handleChange}
           placeholder="https://linkedin.com/in/username"
-          className="w-full p-2 mb-4 border rounded-lg focus:ring focus:ring-blue-300"
+          className="w-full p-2 mb-4 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300 dark:focus:ring-blue-500"
         />
 
         {/* GitHub */}
-        <label className="block mb-2 font-medium">GitHub ID</label>
+        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">GitHub ID</label>
         <input
           type="url"
           name="github"
           value={formData.github}
           onChange={handleChange}
           placeholder="https://github.com/username"
-          className="w-full p-2 mb-4 border rounded-lg focus:ring focus:ring-blue-300"
+          className="w-full p-2 mb-4 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600 focus:ring focus:ring-blue-300 dark:focus:ring-blue-500"
         />
 
-        {/* Profile Photo (Drag & Drop Zone) */}
-        <label className="block mb-2 font-medium">Profile Photo</label>
+        {/* Profile Photo */}
+        <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">Profile Photo</label>
         <div
           onDragEnter={handleDrag}
           onDragOver={handleDrag}
           onDragLeave={handleDrag}
           onDrop={handleDrop}
-          className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
-            dragActive
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-300 hover:border-blue-400"
-          }`}
+          className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer
+            ${dragActive
+              ? "border-blue-500 bg-blue-100 dark:bg-gray-700"
+              : "border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 hover:border-blue-400"
+            }`}
           onClick={() => inputRef.current?.click()}
         >
           {preview ? (
@@ -160,7 +155,7 @@ export default function ChangeAdmin() {
               className="w-24 h-24 mx-auto rounded-full object-cover"
             />
           ) : (
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-gray-300">
               Drag & drop an image here, or click to browse
             </p>
           )}
@@ -174,20 +169,22 @@ export default function ChangeAdmin() {
           />
         </div>
 
-        {/* Resume PDF */}
-        <label className="block mb-2 mt-6 font-medium">Resume (PDF only)</label>
+        {/* Resume */}
+        <label className="block mb-2 mt-6 font-medium text-gray-700 dark:text-gray-300">
+          Resume (PDF only)
+        </label>
         <input
           type="file"
           name="resume"
           accept="application/pdf"
           onChange={handleFileChange}
-          className="mb-6"
+          className="mb-6 text-gray-800 dark:text-gray-100"
         />
 
         <button
           type="submit"
           disabled={uploading}
-          className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          className="w-full bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-800 disabled:opacity-50"
         >
           {uploading ? "Uploading..." : "Update Profile"}
         </button>
