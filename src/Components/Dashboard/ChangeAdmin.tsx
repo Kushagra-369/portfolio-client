@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { APIURL } from "../../GlobalAPIURL"
 
 export default function ChangeAdmin() {
   const [formData, setFormData] = useState({
@@ -76,7 +77,7 @@ export default function ChangeAdmin() {
     if (formData.resume) data.append("resume", formData.resume);
 
     try {
-      const res = await axios.post("http://localhost:1080/create_new_profile", data, {
+      const res = await axios.post(`${APIURL}/create_new_profile`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Admin profile updated successfully!");

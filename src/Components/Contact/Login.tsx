@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { showSuccessToast, showErrorToast } from "../TestNotifivation/Notification";
+import { APIURL } from "../../GlobalAPIURL"
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:1080/create_admin", formData);
+      const res = await axios.post(`${APIURL}/create_admin`, formData);
       console.log(res.data);
 
       

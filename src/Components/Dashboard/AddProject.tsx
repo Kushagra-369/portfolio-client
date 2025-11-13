@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { showErrorToast, showSuccessToast } from "../TestNotifivation/Notification";
+import { APIURL } from "../../GlobalAPIURL"
 
 export default function AddProject() {
   const [preview, setPreview] = useState<string | null>(null);
@@ -38,7 +39,7 @@ export default function AddProject() {
     try {
       setLoading(true);
 
-      const res = await axios.post("http://localhost:1080/create_project", data, {
+      const res = await axios.post(`${APIURL}/create_project`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

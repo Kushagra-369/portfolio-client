@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { showSuccessToast, showErrorToast } from "../TestNotifivation/Notification";
+import { APIURL } from "../../GlobalAPIURL"
 import axios from "axios";
 
 export default function OTP() {
@@ -63,7 +64,7 @@ export default function OTP() {
     }
 
     try {
-      const res = await axios.post("http://localhost:1080/verify_admin_otp", { otp: otpCode });
+      const res = await axios.post(`${APIURL}/verify_admin_otp`, { otp: otpCode });
       if (res.data.status === "success") {
         showSuccessToast("OTP verified successfully!");
         localStorage.setItem("admin_token", res.data.token);
@@ -83,7 +84,7 @@ export default function OTP() {
     setTimer(30);
 
     try {
-      await axios.get("http://localhost:1080/resend_admin_otp");
+      await axios.get(`${APIURL}/resend_admin_otp`);
       showSuccessToast("OTP Resent Successfully!");
     } catch {
       showErrorToast("Failed to resend OTP");

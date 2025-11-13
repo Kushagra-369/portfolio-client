@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
+import { APIURL } from "../../GlobalAPIURL"
 
 interface Message {
   _id: string;
@@ -20,7 +21,7 @@ export default function UserMessages() {
   // ✅ Fetch all messages
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("http://localhost:1080/get_all_messages");
+      const res = await axios.get(`${APIURL}/get_all_messages`);
       setMessages(res.data.messages);
     } catch (error) {
       console.error("Error fetching messages:", error);

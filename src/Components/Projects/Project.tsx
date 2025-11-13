@@ -3,7 +3,7 @@ import type { Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import {APIURL} from "../../GlobalAPIURL";
 export default function Project() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ export default function Project() {
 
     const fetchProjects = async () => {
       try {
-        const res = await fetch("http://localhost:1080/get_all_project");
+        const res = await fetch(`${APIURL}/get_all_project`);
         const data = await res.json();
         setProjects(data.data);
       } catch (error) {

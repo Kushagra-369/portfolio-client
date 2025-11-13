@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-
+import {APIURL} from "../GlobalAPIURL"
 interface PopProps {
   onClose: () => void;
   onRatingSubmit: (rating: number) => void;
@@ -24,7 +24,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post("http://localhost:1080/send_rating", {
+      const response = await axios.post(`${APIURL}/send_rating`, {
         rating: selectedRating,
       });
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { APIURL } from "../../GlobalAPIURL"
 
 export default function Signup() {
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function Signup() {
         message: formData.message,
       };
 
-      const res = await axios.post("http://localhost:1080/create_message", payload);
+      const res = await axios.post(`${APIURL}/create_message`, payload);
 
       if (res.status === 201) {
         alert("✅ Message sent successfully!");
