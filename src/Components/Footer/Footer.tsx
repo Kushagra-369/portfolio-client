@@ -8,6 +8,11 @@ export default function Footer() {
       dark:from-slate-950 dark:via-blue-950 dark:to-cyan-950 
       text-gray-800 dark:text-white py-16 px-6 sm:px-12 font-[Outfit] border-t border-cyan-400/20"
     >
+
+      <h1 className="text-center text-4xl font-extrabold tracking-wider 
+  text-cyan-600 dark:text-cyan-400 mb-10">
+        ADMIN
+      </h1>
       <motion.div
         className="max-w-6xl mx-auto flex flex-col md:flex-row 
         items-center md:items-start justify-center md:justify-between 
