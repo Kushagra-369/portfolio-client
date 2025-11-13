@@ -34,7 +34,7 @@ export default function Signup() {
         message: formData.message,
       };
 
-      const res = await axios.post("http://https://portfolio-server-u68u.onrender.com/create_message", payload);
+      const res = await axios.post("https://portfolio-server-u68u.onrender.com/create_message", payload);
 
       if (res.status === 201) {
         alert("✅ Message sent successfully!");
