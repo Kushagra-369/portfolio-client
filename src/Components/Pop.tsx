@@ -31,47 +31,23 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
-  const [scrollTriggered, setScrollTriggered] = useState<boolean>(false);
 
   const showToast = (msg: string) => setToastMessage(msg);
 
-  // 🌟 Check if submitted before
-  const submittedBefore = localStorage.getItem("ratingSubmitted") === "true";
-
-  // ⭐ STEP 1 — If NOT submitted, wait for 30% scroll
+  // 🔥 NEW LOGIC: Handle showing popup
   useEffect(() => {
-    if (submittedBefore) {
-      // ⭐ If user already submitted, popup should appear IMMEDIATELY
+    const submitted = localStorage.getItem("ratingSubmitted") === "true";
+
+    if (submitted) {
+      // User already submitted before → show only on new visit
       setShowPopup(true);
       return;
     }
 
-    // ⭐ If NOT submitted → wait for 30% scroll
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrolled = window.scrollY / totalHeight;
-
-      if (scrolled >= 0.3) {
-        setScrollTriggered(true);
-        window.removeEventListener("scroll", handleScroll);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [submittedBefore]);
-
-  // ⭐ STEP 2 — After scroll trigger, apply 2-minute reopen logic
-  useEffect(() => {
-    // ❗ If submitted before, scroll doesn't matter → popup already shown
-    if (submittedBefore) return;
-
-    if (!scrollTriggered) return;
-
     const lastClosed = localStorage.getItem("lastClosedTime");
 
     if (!lastClosed) {
+      // First visit → show popup instantly
       setShowPopup(true);
       return;
     }
@@ -80,14 +56,17 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
     const now = Date.now();
 
     if (now - lastTime >= 2 * 60 * 1000) {
+      // 2 minutes passed → show popup
       setShowPopup(true);
     } else {
+      // 2 minutes NOT passed → wait and show
       const remaining = 2 * 60 * 1000 - (now - lastTime);
+
       setTimeout(() => setShowPopup(true), remaining);
     }
-  }, [scrollTriggered, submittedBefore]);
+  }, []);
 
-  // ⭐ Close handler
+  // ⭐ Store last closed time
   const handleClose = () => {
     localStorage.setItem("lastClosedTime", Date.now().toString());
     setShowPopup(false);
@@ -98,7 +77,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
     setSelectedRating(rating);
   };
 
-  // ⭐ Submit handler
+  // ⭐ On submit
   const handleSubmit = async () => {
     if (selectedRating === 0) {
       showToast("Please select a rating before submitting.");
@@ -112,7 +91,6 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
         rating: selectedRating,
       });
 
-      // Store submission flag
       localStorage.setItem("ratingSubmitted", "true");
 
       onRatingSubmit(selectedRating);
@@ -171,6 +149,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
             </button>
 
             <div className="text-center">
+              {/* Emoji */}
               <div className="w-20 h-20 bg-blue-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-5 text-4xl">
                 {selectedRating > 0 ? emojiMap[selectedRating] : "⭐"}
               </div>
@@ -179,6 +158,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
                 How do you like our website?
               </h2>
 
+              {/* ⭐ Star Rating */}
               <div className="flex justify-center space-x-3 mb-8">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <motion.button
@@ -186,10 +166,14 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
                     onClick={() => handleStarClick(star)}
                     disabled={isSubmitting}
                     whileTap={{ scale: 1.3 }}
-                    animate={{ scale: star <= selectedRating ? 1.2 : 1 }}
+                    animate={{
+                      scale: star <= selectedRating ? 1.2 : 1,
+                    }}
                     transition={{ type: "spring", stiffness: 300 }}
                     className={`text-5xl ${
-                      star <= selectedRating ? "text-yellow-400" : "text-gray-300"
+                      star <= selectedRating
+                        ? "text-yellow-400"
+                        : "text-gray-300"
                     } ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     ★
@@ -197,6 +181,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
                 ))}
               </div>
 
+              {/* Buttons */}
               <div className="flex space-x-4">
                 <button
                   onClick={handleClose}
@@ -223,6 +208,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
         </motion.div>
       </AnimatePresence>
 
+      {/* Toast */}
       <AnimatePresence>
         {toastMessage && (
           <Toast message={toastMessage} onClose={() => setToastMessage("")} />
