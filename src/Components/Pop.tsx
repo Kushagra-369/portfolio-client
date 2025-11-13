@@ -29,55 +29,33 @@ interface PopProps {
 const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
   const [selectedRating, setSelectedRating] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
 
-  const showToast = (msg: string) => setToastMessage(msg);
+  // Show toast
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+  };
 
-  // 🔥 NEW LOGIC: Handle showing popup
+  // Check 24-hour lock
   useEffect(() => {
-    const submitted = localStorage.getItem("ratingSubmitted") === "true";
+    const lastSubmitted = localStorage.getItem("lastRatingTime");
 
-    if (submitted) {
-      // User already submitted before → show only on new visit
-      setShowPopup(true);
-      return;
-    }
+    if (lastSubmitted) {
+      const lastTime = new Date(lastSubmitted).getTime();
+      const now = new Date().getTime();
+      const hoursPassed = (now - lastTime) / (1000 * 60 * 60);
 
-    const lastClosed = localStorage.getItem("lastClosedTime");
-
-    if (!lastClosed) {
-      // First visit → show popup instantly
-      setShowPopup(true);
-      return;
-    }
-
-    const lastTime = parseInt(lastClosed);
-    const now = Date.now();
-
-    if (now - lastTime >= 2 * 60 * 1000) {
-      // 2 minutes passed → show popup
-      setShowPopup(true);
-    } else {
-      // 2 minutes NOT passed → wait and show
-      const remaining = 2 * 60 * 1000 - (now - lastTime);
-
-      setTimeout(() => setShowPopup(true), remaining);
+      if (hoursPassed < 0.01) {
+        setIsBlocked(true);
+      }
     }
   }, []);
-
-  // ⭐ Store last closed time
-  const handleClose = () => {
-    localStorage.setItem("lastClosedTime", Date.now().toString());
-    setShowPopup(false);
-    onClose();
-  };
 
   const handleStarClick = (rating: number) => {
     setSelectedRating(rating);
   };
 
-  // ⭐ On submit
   const handleSubmit = async () => {
     if (selectedRating === 0) {
       showToast("Please select a rating before submitting.");
@@ -91,17 +69,21 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
         rating: selectedRating,
       });
 
-      localStorage.setItem("ratingSubmitted", "true");
+      // Save timestamp
+      localStorage.setItem("lastRatingTime", new Date().toISOString());
 
       onRatingSubmit(selectedRating);
       showToast("Thank you for your feedback!");
-      setShowPopup(false);
       onClose();
     } catch {
       showToast("Failed to submit rating. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleMaybeLater = () => {
+    onClose();
   };
 
   const emojiMap: Record<number, string> = {
@@ -112,14 +94,14 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
     5: "🤩",
   };
 
-  if (!showPopup) return null;
+  if (isBlocked) return null;
 
   return (
     <>
       <AnimatePresence>
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={(e) => e.target === e.currentTarget && handleClose()}
+          onClick={(e) => e.target === e.currentTarget && onClose()}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -142,7 +124,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
           >
             {/* Close button */}
             <button
-              onClick={handleClose}
+              onClick={handleMaybeLater}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-2xl"
             >
               ×
@@ -158,7 +140,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
                 How do you like our website?
               </h2>
 
-              {/* ⭐ Star Rating */}
+              {/* Star Rating */}
               <div className="flex justify-center space-x-3 mb-8">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <motion.button
@@ -184,7 +166,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
               {/* Buttons */}
               <div className="flex space-x-4">
                 <button
-                  onClick={handleClose}
+                  onClick={handleMaybeLater}
                   disabled={isSubmitting}
                   className="flex-1 py-3 px-5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
                 >
