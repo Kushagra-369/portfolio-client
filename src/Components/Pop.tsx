@@ -203,7 +203,7 @@ const Pop: React.FC<PopProps> = ({ onClose, onRatingSubmit }) => {
                   disabled={isSubmitting}
                   className="flex-1 py-3 px-5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
                 >
-                  Maybe Later
+                  May be Later
                 </button>
 
                 <button
