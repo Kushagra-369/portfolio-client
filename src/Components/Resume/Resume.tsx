@@ -6,7 +6,7 @@ export default function Resume() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="min-h-screen py-25 bg-linear-to-br from-gray-900 to-gray-800  px-4">
+    <div className="min-h-screen py-25  px-4">
       <motion.div
         className="max-w-6xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
@@ -15,8 +15,8 @@ export default function Resume() {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">My Resume</h1>
-          <p className="text-gray-400 text-lg">Mern Stack Developer - Professional Profile</p>
+          <h1 className="text-4xl font-bold text-black dark:text-white mb-4">My Resume</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">Mern Stack Developer - Professional Profile</p>
         </div>
 
         {/* Action Buttons */}
@@ -41,7 +41,7 @@ export default function Resume() {
 
           <motion.button
             onClick={() => window.open(ResumeFile, '_blank')}
-            className="border-2 border-gray-600 text-gray-300 hover:bg-gray-800 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3"
+            className="border-2 border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-800 px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -78,7 +78,7 @@ export default function Resume() {
 
         {/* Footer Info */}
         <motion.div
-          className="text-center mt-6 text-gray-400 text-sm"
+          className="text-center mt-6 text-gray-600 dark:text-gray-300 text-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
