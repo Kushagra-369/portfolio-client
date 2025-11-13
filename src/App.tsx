@@ -62,7 +62,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/resume" element={<Resume />} />
-            <Route path={`/${adminPath}`} element={<Login />} />
+            <Route path="/192837" element={<Login />} />
             <Route path="/otp" element={<OTP />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/icons" element={<Icons />} />
