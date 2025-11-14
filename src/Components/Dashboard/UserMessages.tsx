@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
-import { APIURL } from "../../GlobalAPIURL"
+import {APIURL} from "../../GlobalAPIURL"
 
 interface Message {
   _id: string;
@@ -36,7 +36,7 @@ export default function UserMessages() {
     if (!window.confirm("Are you sure you want to delete this message?")) return;
     try {
       setDeletingId(id);
-      await axios.delete(`http://localhost:1080/delete_message/${id}`);
+      await axios.delete(`${APIURL}/delete_message/${id}`);
       setMessages((prev) => prev.filter((msg) => msg._id !== id));
     } catch (error) {
       console.error("Error deleting message:", error);

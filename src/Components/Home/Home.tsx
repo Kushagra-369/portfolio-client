@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
+import {APIURL} from "../../GlobalAPIURL"
 import {
   SiJavascript,
   SiReact,
@@ -34,7 +35,7 @@ export default function Home() {
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
-        const res = await axios.get("http://localhost:1080/get_new_profile");
+        const res = await axios.get(`${APIURL}/get_new_profile`);
         const admin = res.data?.adminProfiles?.[0];
         if (admin) {
           setAdminName(admin.name || "Kushagra Chhabra");
@@ -86,7 +87,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRatings = async () => {
       try {
-        const response = await axios.get("http://localhost:1080/get_ratings");
+        const response = await axios.get(`${APIURL}/get_ratings`);
         setAverageRating(response.data.averageRating);
       } catch (error) {
         console.error("❌ Error fetching ratings:", error);

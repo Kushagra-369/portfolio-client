@@ -16,49 +16,67 @@ function AppContent() {
   const location = useLocation();
   const [showPop, setShowPop] = useState(false);
 
-  // Define routes where Navbar should be hidden
   const hideNavbarRoutes = ["/admin/dashboard"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
-  // --------------------------------------------
-  // ⭐ POPUP SHOW ONLY ONCE PER TAB SESSION
-  // --------------------------------------------
+  // 🔥 Show popup initially if allowed
   useEffect(() => {
-    const hasSeenPopup = sessionStorage.getItem('popupSeen');
+    if (location.pathname !== "/") return;
 
-    if (location.pathname === "/" && !hasSeenPopup) {
-      const timer = setTimeout(() => {
-        setShowPop(true);
-      }, 2000); // delay for UX
+    const popupSeen = sessionStorage.getItem("popupSeen");
+    if (popupSeen === "true") return;
 
+    const hideUntil = Number(sessionStorage.getItem("popupHideUntil")) || 0;
+
+    if (Date.now() >= hideUntil) {
+      const timer = setTimeout(() => setShowPop(true), 2000);
       return () => clearTimeout(timer);
     }
   }, [location.pathname]);
 
+  // 🔥 Auto-watch every second (NO REFRESH NEEDED)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const popupSeen = sessionStorage.getItem("popupSeen");
+      if (popupSeen === "true") return;
+
+      const hideUntil = Number(sessionStorage.getItem("popupHideUntil")) || 0;
+
+      if (location.pathname === "/" && Date.now() >= hideUntil) {
+        setShowPop(true);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [location.pathname]);
+
+  // ❌ User closed popup without rating
   const handleClosePop = () => {
     setShowPop(false);
-    sessionStorage.setItem('popupSeen', 'true'); // show once per session
+
+    const nextTime = Date.now() + 30_000; // 30 seconds
+    sessionStorage.setItem("popupHideUntil", String(nextTime));
   };
 
+  // ⭐ Rating submitted — stop popup forever
   const handleRatingSubmit = (rating: number) => {
     console.log("User rated:", rating);
-    handleClosePop();
+
+    sessionStorage.setItem("popupSeen", "true");
+    setShowPop(false);
   };
 
   return (
     <>
       <div>
         <div>
-          {/* Background */}
           <div className="fixed inset-0 -z-10 w-full h-full bg-white 
-            [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
-            dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+          [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
+          dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
           </div>
 
-          {/* Navbar */}
           {!shouldHideNavbar && <Navbar />}
 
-          {/* Routes */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/resume" element={<Resume />} />
@@ -70,7 +88,6 @@ function AppContent() {
           </Routes>
         </div>
 
-        {/* ⭐ Popup Rating Modal */}
         {showPop && (
           <Pop
             onClose={handleClosePop}

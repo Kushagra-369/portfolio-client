@@ -5,6 +5,7 @@ import axios from "axios";
 import { Download, Menu, X, Linkedin, Github, Sun, Moon, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../Context/ThemeContext";
+import {APIURL} from "../../GlobalAPIURL"
 import {
   Home as HomeIcon,
   Build as SkillsIcon,
@@ -52,7 +53,7 @@ export default function Navbar() {
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
-        const res = await axios.get("http://localhost:1080/get_new_profile");
+        const res = await axios.get(`${APIURL}/get_new_profile`);
         const profile = res.data?.adminProfiles?.[0];
         if (profile) {
           setAdmin({
