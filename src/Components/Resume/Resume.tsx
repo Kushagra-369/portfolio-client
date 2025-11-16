@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 import { motion } from 'framer-motion';
-import ResumeFile from './Kushagra_Resume (1) (1).pdf';
+import ResumeFile from './Kushagra_Resume (2).pdf';
 
 export default function Resume() {
   const [isLoading, setIsLoading] = useState(true);
