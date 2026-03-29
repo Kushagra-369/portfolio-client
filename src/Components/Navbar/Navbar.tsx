@@ -5,7 +5,7 @@ import axios from "axios";
 import { Download, Menu, X, Linkedin, Github, Sun, Moon, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../Context/ThemeContext";
-import {APIURL} from "../../GlobalAPIURL"
+import { APIURL } from "../../GlobalAPIURL"
 import {
   Home as HomeIcon,
   Build as SkillsIcon,
@@ -242,11 +242,10 @@ export default function Navbar() {
                 <Link
                   to={section.path}
                   onClick={() => setIsOpen(false)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all ${
-                    isActive(section.path)
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all ${isActive(section.path)
                       ? "text-white dark:text-white bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
                       : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
-                  }`}
+                    }`}
                 >
                   {section.icon && <span className="text-cyan-400 dark:text-cyan-300">{section.icon}</span>}
                   <span>{section.name}</span>
