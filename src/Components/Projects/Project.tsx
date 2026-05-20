@@ -46,6 +46,102 @@ const staticProjects: Project[] = [
     __v: 0
   },
   {
+    _id: "6910c9d084a2c11a9b7f6ac1",
+    profilePhoto: {
+      _id: "6910c9d084a2c11a9b7f6ac2",
+      public_id: "course/aura-link-project",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1779253731/Screenshot_From_2026-05-20_10-38-41_u7qmc6.png"
+    },
+    name: "AuraLink",
+    description:
+      "A modern real-time messaging platform with sleek UI, responsive chat layouts, authentication, and smooth user interactions. Built for seamless communication with a focus on performance, clean design, and modern frontend experience.",
+    tools: [
+      "React",
+      "JavaScript",
+      "CSS",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Socket.io",
+      "JWT"
+    ],
+    githubLink: "https://github.com/Kushagra-369/AuraLink",
+    deploymentLink: "https://aura-link-bw7g.vercel.app/",
+    category: "Full Stack",
+    isDeleted: false,
+    createdAt: "2025-11-09T17:05:20.297+00:00",
+    updatedAt: "2025-11-09T17:05:20.297+00:00",
+    __v: 0
+  },
+  {
+    _id: "6910c9d084a2c11a9b7f6ac3",
+    profilePhoto: {
+      _id: "6910c9d084a2c11a9b7f6ac4",
+      public_id: "course/globex-travel-project",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1779253617/Screenshot_From_2026-05-20_10-36-31_do9glb.png"
+    },
+    name: "Globex",
+    description:
+      "A full-stack travel and destination platform featuring responsive UI, interactive travel exploration, and an AI-powered chatbot assistant for user guidance and trip-related interactions. Designed for smooth user experience and modern web accessibility.",
+    tools: [
+      "React",
+      "JavaScript",
+      "CSS",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Chatbot",
+      "JWT"
+    ],
+    githubLink: "https://github.com/Kushagra-369/Travelling-Client",
+    deploymentLink: "https://travelling-client-orcin.vercel.app/",
+    category: "Full Stack",
+    isDeleted: false,
+    createdAt: "2025-11-09T17:05:20.297+00:00",
+    updatedAt: "2025-11-09T17:05:20.297+00:00",
+    __v: 0
+  },
+
+
+  {
+    _id: "6910c9d084a2c11a9b7f6ab5",
+    profilePhoto: {
+      _id: "6910c9d084a2c11a9b7f6ab6",
+      public_id: "course/feel-special-project",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1779253105/Screenshot_From_2026-05-20_10-25-07_lwwtwu.png"
+    },
+    name: "Feel Special",
+    description:
+      "An immersive and visually rich frontend experience built with React and Framer Motion. Features cinematic transitions, smooth scroll animations, modern UI interactions, and responsive design focused on storytelling aesthetics.",
+    tools: ["React", "JavaScript", "CSS", "Framer Motion"],
+    githubLink: "https://github.com/Kushagra-369/Feel_Special",
+    deploymentLink: "https://feel-special.vercel.app/",
+    category: "Frontend",
+    isDeleted: false,
+    createdAt: "2025-11-09T17:05:20.297+00:00",
+    updatedAt: "2025-11-09T17:05:20.297+00:00",
+    __v: 0
+  },
+  {
+    _id: "6910c9d084a2c11a9b7f6ab7",
+    profilePhoto: {
+      _id: "6910c9d084a2c11a9b7f6ab8",
+      public_id: "course/jg-university-project",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1779253177/Screenshot_From_2026-05-20_10-29-23_jjxu7q.png"
+    },
+    name: "JG University",
+    description:
+      "A modern university website redesign focused on clean UI, responsive layouts, smooth animations, and improved user experience. Built using React and Framer Motion with attention to accessibility and professional academic presentation.",
+    tools: ["React", "JavaScript", "CSS", "Framer Motion"],
+    githubLink: "https://github.com/Kushagra-369/jguni-redesign",
+    deploymentLink: "https://jguni-redesign-kappa.vercel.app/",
+    category: "Frontend",
+    isDeleted: false,
+    createdAt: "2025-11-09T17:05:20.297+00:00",
+    updatedAt: "2025-11-09T17:05:20.297+00:00",
+    __v: 0
+  },
+  {
     _id: "6910ca6784a2c11a9b7f6ab8",
     profilePhoto: {
       _id: "6910ca6784a2c11a9b7f6ab9",
@@ -111,7 +207,7 @@ const staticProjects: Project[] = [
     tools: ["React", "TypeScript", "Framer Motion", "TailwindCSS", "Node.js", "Express"],
     githubLink: "https://github.com/Kushagra-369/portfolio-client",
     deploymentLink: "https://portfolio-client-swart.vercel.app/",
-    category: "Full Stack",
+    category: "Frontend",
     isDeleted: false,
     createdAt: "2025-11-09T17:00:56.538+00:00",
     updatedAt: "2025-11-09T17:00:56.538+00:00",
