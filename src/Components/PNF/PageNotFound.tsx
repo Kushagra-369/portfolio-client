@@ -53,7 +53,7 @@ export default function PageNotFound() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
       <motion.div
         className="text-center max-w-2xl mx-auto"
         variants={containerVariants}
@@ -66,7 +66,7 @@ export default function PageNotFound() {
           variants={itemVariants}
         >
           <motion.h1
-            className="text-9xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
+            className="text-9xl font-bold bg-linear-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
             animate={floatingAnimation}
           >
             404
@@ -137,7 +137,7 @@ export default function PageNotFound() {
         >
           <Link to="/">
             <motion.button
-              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-linear-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

@@ -3,8 +3,30 @@ import type { Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Github, ExternalLink } from "lucide-react";
 
+// Types
+interface ProfilePhoto {
+  _id: string;
+  public_id: string;
+  secure_url: string;
+}
+
+interface Project {
+  _id: string;
+  profilePhoto?: ProfilePhoto;
+  name: string;
+  description: string;
+  tools: string[];
+  githubLink: string;
+  deploymentLink: string;
+  category: string;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 // Complete static project data with all fields from your JSON
-const staticProjects = [
+const staticProjects: Project[] = [
   {
     _id: "6910c9d084a2c11a9b7f6ab5",
     profilePhoto: {
@@ -29,7 +51,7 @@ const staticProjects = [
       _id: "6910ca6784a2c11a9b7f6ab9",
       public_id: "course/r0saxyqjivs8adhbcpmd",
       secure_url: "https://res.cloudinary.com/dynodadq0/image/upload/v1762708070/course/r0saxyqjivs8adhbcpmd.jpg"
-    }, // No image data for this project
+    },
     name: "Life is Strange",
     description: "Interactive web experience with scroll-triggered animations and emotional storytelling through code.",
     tools: ["React", "Framer Motion", "CSS", "GSAP"],
@@ -116,7 +138,7 @@ const staticProjects = [
 ];
 
 // Fallback gradient colors for projects without images
-const gradientColors = [
+const gradientColors: string[] = [
   "from-purple-900 to-blue-900",
   "from-emerald-900 to-cyan-900",
   "from-orange-900 to-red-900",
@@ -124,9 +146,16 @@ const gradientColors = [
   "from-indigo-900 to-violet-900"
 ];
 
+// Section Props Type
+interface SectionProps {
+  title: string;
+  projects: Project[];
+  fadeIn: Variants;
+}
+
 export default function Project() {
-  const [projects, setProjects] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -158,8 +187,8 @@ export default function Project() {
   }
 
   // Splitting projects based on category
-  const fullStackProjects = projects.filter(p => p.category === "Full Stack");
-  const frontendProjects = projects.filter(p => p.category === "Frontend");
+  const fullStackProjects: Project[] = projects.filter(p => p.category === "Full Stack");
+  const frontendProjects: Project[] = projects.filter(p => p.category === "Frontend");
 
   return (
     <div
@@ -171,7 +200,7 @@ export default function Project() {
         <motion.h1
           variants={fadeIn}
           custom={0}
-          className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
+          className="text-4xl md:text-5xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
         >
           Projects
         </motion.h1>
@@ -208,7 +237,7 @@ export default function Project() {
   );
 }
 
-function Section({ title, projects, fadeIn }: any) {
+function Section({ title, projects, fadeIn }: SectionProps) {
   return (
     <>
       <motion.h2 variants={fadeIn} className="text-2xl font-semibold text-cyan-400 mb-6">
@@ -216,7 +245,7 @@ function Section({ title, projects, fadeIn }: any) {
       </motion.h2>
 
       <motion.div variants={fadeIn} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 select-none">
-        {projects.map((project: any, i: number) => {
+        {projects.map((project: Project, i: number) => {
           // Get consistent gradient based on project index
           const gradientIndex = i % gradientColors.length;
 
@@ -235,7 +264,7 @@ function Section({ title, projects, fadeIn }: any) {
                   style={{ backgroundImage: `url(${project.profilePhoto.secure_url})` }}
                 ></div>
               ) : (
-                <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors[gradientIndex]} opacity-60 group-hover:opacity-80 transition-all duration-500`}></div>
+                <div className={`absolute inset-0 bg-linear-to-br ${gradientColors[gradientIndex]} opacity-60 group-hover:opacity-80 transition-all duration-500`}></div>
               )}
 
               {/* Overlay */}
