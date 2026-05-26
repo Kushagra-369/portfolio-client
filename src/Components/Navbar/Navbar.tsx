@@ -39,7 +39,7 @@ export default function Navbar() {
   const { toggleTheme, isDark } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [, setMousePosition] = useState({ x: 0, y: 0 });
 
   // 🟢 default fallback values
   const [admin, setAdmin] = useState<AdminData>({
@@ -132,32 +132,7 @@ export default function Navbar() {
     }
   };
 
-  const navTiltVariant: Variants = {
-    initial: { rotateX: 0, rotateY: 0, boxShadow: "0 20px 40px -20px rgba(0,0,0,0.3)" },
-    animate: {
-      rotateX: (mousePosition.y / window.innerHeight - 0.5) * 3,
-      rotateY: (mousePosition.x / window.innerWidth - 0.5) * 3,
-      transition: { type: "spring", stiffness: 200, damping: 25 }
-    }
-  };
 
-  const shineVariant: Variants = {
-    rest: { opacity: 0, x: "-100%" },
-    hover: {
-      opacity: [0, 0.3, 0],
-      x: "100%",
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
-
-  const rippleVariant: Variants = {
-    rest: { scale: 0, opacity: 0 },
-    tap: {
-      scale: [0, 2],
-      opacity: [0.5, 0],
-      transition: { duration: 0.4 }
-    }
-  };
 
   const icons: Icon[] = [
     {
