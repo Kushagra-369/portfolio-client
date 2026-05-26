@@ -95,12 +95,17 @@ export default function Navbar() {
     },
   };
 
+  // Updated bounce variant - bounces twice then settles
   const bounceVariant: Variants = {
     rest: { scale: 1, y: 0 },
     hover: {
-      scale: 1.08,
-      y: -4,
-      transition: { type: "spring", stiffness: 400, damping: 10 }
+      scale: 1,
+      y: [0, -12, 0, -8, 0, -4, 0],
+      transition: { 
+        duration: 0.6,
+        ease: "easeOut",
+        times: [0, 0.2, 0.4, 0.5, 0.7, 0.85, 1]
+      }
     },
     tap: { scale: 0.95, transition: { duration: 0.1 } }
   };
@@ -108,19 +113,21 @@ export default function Navbar() {
   const iconHoverVariant: Variants = {
     rest: { scale: 1 },
     hover: {
-      scale: 1.08,
+      scale: 1,
+      y: [0, -6, 0, -4, 0],
       transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      },
+        duration: 0.5,
+        ease: "easeOut",
+        times: [0, 0.2, 0.4, 0.6, 1]
+      }
     },
   };
+  
   const sectionHoverVariant: Variants = {
     rest: { x: 0, scale: 1 },
     hover: {
       x: 6,
-      scale: 1.02,
+      scale: 1,
       transition: { type: "spring", stiffness: 400, damping: 15 }
     }
   };
@@ -216,7 +223,8 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0, scale: 0.95 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut", type: "spring", stiffness: 200 }}
-        whileHover={{ scale: 1.005 }}
+        whileHover="hover"
+        variants={bounceVariant}
       >
         {/* Animated border linear */}
         <motion.div
@@ -239,7 +247,6 @@ export default function Navbar() {
             className="flex items-center space-x-3 sm:space-x-4 cursor-pointer shrink-0 select-none relative group"
             variants={floatingVariant}
             animate="float"
-            whileHover="hover"
           >
             <motion.div
               className="relative border-2 border-cyan-400/80 rounded-full text-white flex items-center justify-center font-bold bg-linear-to-br from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-500 shadow-lg shadow-cyan-500/25 w-10 h-10 sm:w-12 sm:h-12 overflow-hidden"
@@ -477,7 +484,7 @@ export default function Navbar() {
         {/* Hamburger with animation */}
         <motion.button
           className="block xl:hidden p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-white relative overflow-hidden group"
-          whileHover={{ scale: 1.05, rotate: 5 }}
+          whileHover={{ scale: 1, y: [0, -6, 0, -4, 0] }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen((s) => !s)}
         >
@@ -545,7 +552,7 @@ export default function Navbar() {
               {/* Resume + Icons (mobile only) */}
               <div className="mt-2 md:hidden">
                 <motion.div
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1, y: [0, -6, 0, -4, 0] }}
                   whileTap={{ scale: 0.98 }}
                   className="mb-2"
                 >
@@ -580,7 +587,7 @@ export default function Navbar() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} relative overflow-hidden group`}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileHover={{ scale: 1, y: [0, -6, 0, -4, 0] }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <motion.div
@@ -599,7 +606,7 @@ export default function Navbar() {
                           setIsOpen(false);
                         }}
                         className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} relative overflow-hidden group`}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileHover={{ scale: 1, y: [0, -6, 0, -4, 0] }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <motion.div

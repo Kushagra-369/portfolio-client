@@ -1,7 +1,16 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Github, ExternalLink } from "lucide-react";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules';
+import type { Swiper as SwiperType } from 'swiper';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
 
 // Types
 interface ProfilePhoto {
@@ -101,12 +110,10 @@ const staticProjects: Project[] = [
     updatedAt: "2025-11-09T17:05:20.297+00:00",
     __v: 0
   },
-
-
   {
-    _id: "6910c9d084a2c11a9b7f6ab5",
+    _id: "6910c9d084a2c11a9b7f6ab5-2",
     profilePhoto: {
-      _id: "6910c9d084a2c11a9b7f6ab6",
+      _id: "6910c9d084a2c11a9b7f6ab6-2",
       public_id: "course/feel-special-project",
       secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1779253105/Screenshot_From_2026-05-20_10-25-07_lwwtwu.png"
     },
@@ -334,82 +341,197 @@ export default function Project() {
 }
 
 function Section({ title, projects, fadeIn }: SectionProps) {
+  const swiperRef = useRef<SwiperType | null>(null);
+
   return (
     <>
       <motion.h2 variants={fadeIn} className="text-2xl font-semibold text-cyan-400 mb-6">
         {title}
       </motion.h2>
 
-      <motion.div variants={fadeIn} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-16 select-none">
-        {projects.map((project: Project, i: number) => {
-          // Get consistent gradient based on project index
-          const gradientIndex = i % gradientColors.length;
+      <motion.div
+        variants={fadeIn}
+        className="mb-16 select-none relative w-full overflow-hidden"
+      >
+        <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
+          effect="coverflow"
+          coverflowEffect={{
+            rotate: 12,
+            stretch: 0,
+            depth: 120,
+            modifier: 2,
+            scale: 0.9,
+            slideShadows: false,
+          }}
 
-          return (
-            <motion.div
-              key={project._id}
-              variants={fadeIn}
-              custom={i * 0.2}
-              whileHover={{ scale: 1.05 }}
-              className="relative group rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg overflow-hidden transition-all duration-300"
-            >
-              {/* Background - either image or gradient */}
-              {project.profilePhoto?.secure_url ? (
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-all duration-500"
-                  style={{ backgroundImage: `url(${project.profilePhoto.secure_url})` }}
-                ></div>
-              ) : (
-                <div className={`absolute inset-0 bg-linear-to-br ${gradientColors[gradientIndex]} opacity-60 group-hover:opacity-80 transition-all duration-500`}></div>
-              )}
+          watchOverflow={true}
+          centeredSlides={true}
+          simulateTouch={true}
+          allowTouchMove={true}
+          grabCursor={true}
+          slidesPerView={1}
+          spaceBetween={30}
+          loop={true}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          pagination={{
+            clickable: true,
+            dynamicBullets: true,
+          }}
+          breakpoints={{
+            640: {
+              slidesPerView: 1,
+              spaceBetween: 20,
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 30,
+            },
+            1024: {
+              slidesPerView: 3,
+              spaceBetween: 40,
+            },
+          }}
+          className="project-swiper"
+        >
+          {projects.map((project: Project, i: number) => {
+            const gradientIndex = i % gradientColors.length;
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-500"></div>
-
-              {/* Content */}
-              <div className="relative z-10 p-6 backdrop-blur-[2px]">
-                <h3 className="text-xl font-semibold text-cyan-400 mb-3">{project.name}</h3>
-                <p className="text-gray-200 text-sm mb-4 leading-relaxed">{project.description}</p>
-
-                <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
-                  {project.tools?.map((tech: string) => (
-                    <span
-                      key={tech}
-                      className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex justify-center sm:justify-start gap-4 mt-3">
-                  {project.githubLink && (
-                    <a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 transition-colors"
-                    >
-                      <Github className="w-4 h-4" /> GitHub
-                    </a>
+            return (
+              <SwiperSlide key={project._id}>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="relative group rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg overflow-hidden transition-all duration-300 h-full"
+                >
+                  {/* Background - either image or gradient */}
+                  {project.profilePhoto?.secure_url ? (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-all duration-500"
+                      style={{ backgroundImage: `url(${project.profilePhoto.secure_url})` }}
+                    ></div>
+                  ) : (
+                    <div className={`absolute inset-0 bg-linear-to-br ${gradientColors[gradientIndex]} opacity-60 group-hover:opacity-80 transition-all duration-500`}></div>
                   )}
 
-                  {project.deploymentLink && (
-                    <a
-                      href={project.deploymentLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-sm text-blue-300 hover:text-blue-100 transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" /> Live
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-500"></div>
+
+                  {/* Content */}
+                  <div className="relative z-10 p-6 backdrop-blur-[2px] min-h-[400px] flex flex-col">
+                    <h3 className="text-xl font-semibold text-cyan-400 mb-3">{project.name}</h3>
+                    <p className="text-gray-200 text-sm mb-4 leading-relaxed grow">{project.description}</p>
+
+                    <div className="flex flex-wrap gap-2 mb-4 justify-center sm:justify-start">
+                      {project.tools?.slice(0, 4).map((tech: string) => (
+                        <span
+                          key={tech}
+                          className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.tools?.length > 4 && (
+                        <span className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full">
+                          +{project.tools.length - 4}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex justify-center sm:justify-start gap-4 mt-3">
+                      {project.githubLink && (
+                        <a
+                          href={project.githubLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 transition-colors"
+                        >
+                          <Github className="w-4 h-4" /> GitHub
+                        </a>
+                      )}
+
+                      {project.deploymentLink && (
+                        <a
+                          href={project.deploymentLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 transition-colors"
+                        >
+                          <ExternalLink className="w-4 h-4" /> Live
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+
+        {/* Custom Navigation Buttons */}
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={() => swiperRef.current?.slidePrev()}
+            className="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400 p-3 rounded-full transition-all duration-300 hover:scale-110"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={() => swiperRef.current?.slideNext()}
+            className="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400 p-3 rounded-full transition-all duration-300 hover:scale-110"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </motion.div>
+
+      <style>{`
+  .project-swiper {
+    padding: 20px 0 40px 0;
+    overflow: hidden;
+  }
+
+  .project-swiper .swiper-wrapper {
+    overflow: visible;
+  }
+
+  .project-swiper .swiper-slide {
+    height: auto;
+  }
+
+  .project-swiper .swiper-pagination {
+    bottom: 0px;
+  }
+
+  .project-swiper .swiper-pagination-bullet {
+    background: #22d3ee;
+    opacity: 0.5;
+  }
+
+  .project-swiper .swiper-pagination-bullet-active {
+    background: #06b6d4;
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .project-swiper {
+      padding: 10px 0 30px 0;
+    }
+  }
+`}</style>
     </>
   );
 }
