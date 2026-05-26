@@ -228,7 +228,7 @@ const staticProjects: Project[] = [
       secure_url: "https://res.cloudinary.com/dynodadq0/image/upload/v1762707764/course/jjsbdelj7n1zg7hoejdd.jpg"
     },
     name: "Food King",
-    description: "A full-stack food ordering app with user authentication, cart, and admin panel. Integrated payment gateway and real-time order tracking.",
+    description: "A full-stack food ordering app with user authentication, cart, and admin panel. Integrated real-time order tracking.",
     tools: ["React", "JavaScript", "Framer-Motion", "Express", "MongoDB", "Postman", "Nodejs", "JWT"],
     githubLink: "https://github.com/Kushagra-369/food_client",
     deploymentLink: "https://food-client-33mf.vercel.app/",
