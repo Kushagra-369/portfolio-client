@@ -78,9 +78,14 @@ def get_response(user_text):
 
     cleaned = preprocess(user_text)
 
+    print("RAW =", user_text)
+    print("CLEANED =", cleaned)
+
     X = vectorizer.transform([cleaned])
 
     intent = model.predict(X)[0]
+
+    print("INTENT =", intent)
  
 
     if intent == "about_me":
