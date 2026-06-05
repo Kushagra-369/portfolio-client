@@ -35,7 +35,7 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     message: str
-
+ 
 
 @app.get("/")
 def home():
