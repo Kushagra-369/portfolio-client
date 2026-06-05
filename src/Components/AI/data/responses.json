@@ -1,0 +1,28 @@
+{
+  "greeting": [
+    "Hello! I am KUBOC, the AI assistant of Kushagra Chhabra. Ask me about his skills, projects, education or achievements.",
+    "Hi! I'm KUBOC. I can tell you about Kushagra's technical background and projects.",
+    "Welcome! Feel free to ask anything about Kushagra's professional profile."
+  ],
+  "casual": [
+    "I'm doing great. Would you like to know about Kushagra's skills or projects?",
+    "Everything is running smoothly. Feel free to ask about Kushagra's work and achievements.",
+    "I'm here to help you explore Kushagra's portfolio."
+  ],
+  "ai": [
+    "Artificial Intelligence enables machines to perform tasks requiring human intelligence.",
+    "AI is the field of creating intelligent systems."
+  ],
+  "ml": [
+    "Machine Learning is a subset of AI that learns from data.",
+    "ML systems improve their performance using experience."
+  ],
+  "fallback": [
+    "I'm not sure about that. Try asking about Kushagra's skills, projects, education or achievements."
+  ],
+  "goodbye": [
+    "Goodbye!",
+    "See you later!",
+    "Take care!"
+  ]
+}

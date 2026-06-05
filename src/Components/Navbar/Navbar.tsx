@@ -192,7 +192,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-4 z-50 w-full px-4 font-[Outfit]">
+    <header className="fixed top-6 z-50 w-full px-4 font-[Outfit]">
       <motion.nav
         className="relative w-full mx-auto px-5 py-3 flex justify-between items-center rounded-3xl backdrop-blur-xl border border-white/20 bg-linear-to-br from-slate-900/90 via-blue-900/85 to-cyan-900/90 dark:from-black dark:via-blue-950 dark:to-cyan-900 shadow-2xl shadow-cyan-500/20 dark:shadow-blue-900/30 overflow-hidden"
         initial={{ y: -80, opacity: 0, scale: 0.95 }}

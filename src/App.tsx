@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Components/Navbar/Navbar";
 import CustomCursor from "./Components/CustomCursor";
+import Chatbot from "./Components/AI/Chatbot";
 import {
   BrowserRouter,
   Route,
@@ -267,6 +268,8 @@ export default function App() {
       />
 
       <AppContent />
+      <Chatbot />
+
     </BrowserRouter>
   );
 }

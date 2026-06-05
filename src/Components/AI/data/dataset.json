@@ -1,0 +1,186 @@
+[
+  {
+    "text": "hello",
+    "intent": "greeting"
+  },
+  {
+    "text": "hi",
+    "intent": "greeting"
+  },
+  {
+    "text": "hey",
+    "intent": "greeting"
+  },
+  {
+    "text": "good morning",
+    "intent": "greeting"
+  },
+  {
+    "text": "how are you",
+    "intent": "casual"
+  },
+  {
+    "text": "how is your day",
+    "intent": "casual"
+  },
+  {
+    "text": "are you okay",
+    "intent": "casual"
+  },
+  {
+    "text": "what is ai",
+    "intent": "ai"
+  },
+  {
+    "text": "tell me about artificial intelligence",
+    "intent": "ai"
+  },
+  {
+    "text": "explain ai",
+    "intent": "ai"
+  },
+  {
+    "text": "what is machine learning",
+    "intent": "ml"
+  },
+  {
+    "text": "tell me about machine learning",
+    "intent": "ml"
+  },
+  {
+    "text": "explain machine learning",
+    "intent": "ml"
+  },
+  {
+    "text": "what is ml",
+    "intent": "ml"
+  },
+  {
+    "text": "can you tell what is ml",
+    "intent": "ml"
+  },
+  {
+    "text": "define ml",
+    "intent": "ml"
+  },
+  {
+    "text": "meaning of machine learning",
+    "intent": "ml"
+  },
+  {
+    "text": "what does ml mean",
+    "intent": "ml"
+  },
+  {
+    "text": "tell me about ml",
+    "intent": "ml"
+  },
+  {
+    "text": "explain ml",
+    "intent": "ml"
+  },
+  {
+    "text": "what is artificial intelligence",
+    "intent": "ai"
+  },
+  {
+    "text": "define ai",
+    "intent": "ai"
+  },
+  {
+    "text": "meaning of ai",
+    "intent": "ai"
+  },
+  {
+    "text": "what does ai mean",
+    "intent": "ai"
+  },
+  {
+    "text": "tell me about ai",
+    "intent": "ai"
+  },
+  {
+    "text": "bye",
+    "intent": "goodbye"
+  },
+  {
+    "text": "good night",
+    "intent": "goodbye"
+  },
+  {
+    "text": "see you later",
+    "intent": "goodbye"
+  },
+  {
+    "text": "who is kushagra",
+    "intent": "about_me"
+  },
+  {
+    "text": "tell me about kushagra",
+    "intent": "about_me"
+  },
+  {
+    "text": "introduce kushagra",
+    "intent": "about_me"
+  },
+  {
+    "text": "what skills does kushagra have",
+    "intent": "skills"
+  },
+  {
+    "text": "what technologies does kushagra know",
+    "intent": "skills"
+  },
+  {
+    "text": "tell me his skills",
+    "intent": "skills"
+  },
+  {
+    "text": "show projects",
+    "intent": "projects"
+  },
+  {
+    "text": "what projects has kushagra built",
+    "intent": "projects"
+  },
+  {
+    "text": "tell me about his projects",
+    "intent": "projects"
+  },
+  {
+    "text": "what is his cgpa",
+    "intent": "education"
+  },
+  {
+    "text": "tell me about education",
+    "intent": "education"
+  },
+  {
+    "text": "how can i contact kushagra",
+    "intent": "contact"
+  },
+  {
+    "text": "give contact details",
+    "intent": "contact"
+  },
+  {
+    "text": "what achievements does he have",
+    "intent": "achievements"
+  },
+  {
+    "text": "tell me his achievements",
+    "intent": "achievements"
+  },
+  {
+    "text": "does kushagra have a girlfriend",
+    "intent": "personal_question"
+  },
+  {
+    "text": "where does kushagra live",
+    "intent": "personal_question"
+  },
+  {
+    "text": "what is his personal life",
+    "intent": "personal_question"
+  }
+]
