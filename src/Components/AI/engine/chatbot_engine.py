@@ -18,11 +18,42 @@ with open("../data/portfolio.json", "r") as file:
 
 def get_response(user_text):
 
+    text = user_text.lower()
+    
+
+    for topic in portfolio["privacy"]["blocked_topics"]:
+
+        if topic in text:
+
+            return (
+                "Sorry, I cannot reveal personal information "
+                "about Kushagra. I can only discuss his "
+                "professional profile, skills, projects, "
+                "education and achievements."
+            )
+
     cleaned = preprocess(user_text)
 
     X = vectorizer.transform([cleaned])
 
     intent = model.predict(X)[0]
+    probabilities = model.predict_proba(X)[0]
+
+    confidence = max(probabilities)
+
+    print("CONFIDENCE:", confidence)
+    print("INTENT:", intent)
+
+    if confidence < 0.50:
+
+        return (
+            "I didn't understand that.\n\n"
+            "Try asking about:\n"
+            "- Kushagra's skills\n"
+            "- Projects\n"
+            "- Education\n"
+            "- Achievements"
+        )
 
     if intent == "about_me":
         return portfolio["about"]["summary"]
@@ -103,11 +134,13 @@ def get_response(user_text):
     )
 
 
-while True:
+if __name__ == "__main__":
 
-    user = input("You: ")
+    while True:
 
-    if user.lower() == "exit":
-        break
+        user = input("You: ")
 
-    print("Bot:", get_response(user))
+        if user.lower() == "exit":
+            break
+
+        print("Bot:", get_response(user))

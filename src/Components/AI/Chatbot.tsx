@@ -33,32 +33,30 @@ export default function Chatbot() {
     // =========================
     // AI RESPONSE
     // =========================
-    const getAIResponse = (msg: string) => {
-        const text = msg.toLowerCase();
+    const getAIResponse = async (msg: string) => {
 
-        if (text.includes("hack")) {
-            return "💀 Access Granted // Firewall Breached";
-        }
+        const response = await fetch(
+            "http://127.0.0.1:8000/chat",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    message: msg,
+                }),
+            }
+        );
 
-        if (text.includes("game")) {
-            return "🎮 Gamer mode activated...";
-        }
+        const data = await response.json();
 
-        if (text.includes("ai")) {
-            return "🧠 AIML neural core synced.";
-        }
-
-        if (text.includes("hello") || text.includes("hi")) {
-            return "⚡ Yo hacker.";
-        }
-
-        return "👾 Unknown command. Type: hack / game / ai";
+        return data.response;
     };
 
     // =========================
     // SEND MESSAGE
     // =========================
-    const sendMessage = () => {
+    const sendMessage = async () => {
         if (!input.trim()) return;
 
         const userMessage: Message = {
@@ -67,9 +65,11 @@ export default function Chatbot() {
             sender: "user",
         };
 
+        const response = await getAIResponse(input);
+
         const botMessage: Message = {
             id: Date.now() + 1,
-            text: getAIResponse(input),
+            text: response,
             sender: "bot",
         };
 
