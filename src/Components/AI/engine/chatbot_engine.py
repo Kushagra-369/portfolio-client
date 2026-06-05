@@ -1,19 +1,64 @@
 import json
 import random
 import joblib
+import os
 import sys
 
-sys.path.append("../training")
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
+
+TRAINING_DIR = os.path.join(
+    BASE_DIR,
+    "training"
+)
+
+MODELS_DIR = os.path.join(
+    BASE_DIR,
+    "models"
+)
+
+DATA_DIR = os.path.join(
+    BASE_DIR,
+    "data"
+)
+
+sys.path.append(TRAINING_DIR)
 
 from preprocess import preprocess
 
+model = joblib.load(
+    os.path.join(
+        MODELS_DIR,
+        "model.pkl"
+    )
+)
 
-model = joblib.load("../models/model.pkl")
-vectorizer = joblib.load("../models/vectorizer.pkl")
+vectorizer = joblib.load(
+    os.path.join(
+        MODELS_DIR,
+        "vectorizer.pkl"
+    )
+)
 
-with open("../data/responses.json", "r") as file:
+with open(
+    os.path.join(
+        DATA_DIR,
+        "responses.json"
+    ),
+    "r"
+) as file:
     responses = json.load(file)
-with open("../data/portfolio.json", "r") as file:
+
+with open(
+    os.path.join(
+        DATA_DIR,
+        "portfolio.json"
+    ),
+    "r"
+) as file:
     portfolio = json.load(file)
 
 def get_response(user_text):
