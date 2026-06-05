@@ -1,10 +1,23 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import os
 import sys
-sys.path.append("../engine")
 
-from chatbot_engine import get_response 
+BASE_DIR = os.path.dirname(
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
+)
+
+ENGINE_DIR = os.path.join(
+    BASE_DIR,
+    "engine"
+)
+
+sys.path.append(ENGINE_DIR)
+
+from chatbot_engine import get_response
 
 app = FastAPI()
 app.add_middleware(
