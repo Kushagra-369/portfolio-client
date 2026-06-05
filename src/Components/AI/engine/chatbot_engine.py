@@ -62,7 +62,6 @@ with open(
     portfolio = json.load(file)
 
 def get_response(user_text):
-    return "DEBUG WORKING"
     text = user_text.lower()
     
 
