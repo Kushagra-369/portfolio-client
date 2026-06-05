@@ -24,7 +24,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "http://127.0.0.1:5173"
+        "http://127.0.0.1:5173",
+        "https://portfolio-client-n5v7.vercel.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -34,6 +35,15 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     message: str
+
+
+@app.get("/")
+def home():
+
+    return {
+        "status": "online",
+        "message": "KUBOC API is running"
+    }
 
 
 @app.post("/chat")

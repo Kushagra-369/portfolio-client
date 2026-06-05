@@ -36,7 +36,7 @@ export default function Chatbot() {
     const getAIResponse = async (msg: string) => {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/chat",
+            "https://portfolio-client-r6b5.onrender.com/chat",
             {
                 method: "POST",
                 headers: {
