@@ -2,27 +2,50 @@
   "greeting": [
     "Hello! I am KUBOC, the AI assistant of Kushagra Chhabra. Ask me about his skills, projects, education or achievements.",
     "Hi! I'm KUBOC. I can tell you about Kushagra's technical background and projects.",
-    "Welcome! Feel free to ask anything about Kushagra's professional profile."
+    "Welcome! Feel free to ask anything about Kushagra's professional profile.",
+    "Hey there! KUBOC here. Want to know about Kushagra's MERN stack projects?",
+    "Greetings! I can answer anything about Kushagra's skills, 12+ projects, or 8.7 CGPA.",
+    "Namaste! I'm KUBOC. Try asking 'show projects' or 'what skills does he have'"
   ],
   "casual": [
-    "I'm doing great. Would you like to know about Kushagra's skills or projects?",
+    "I'm doing great! Would you like to know about Kushagra's skills or projects?",
     "Everything is running smoothly. Feel free to ask about Kushagra's work and achievements.",
-    "I'm here to help you explore Kushagra's portfolio."
+    "I'm here to help you explore Kushagra's portfolio.",
+    "Doing fantastic! He just completed another full-stack project called AuraLink.",
+    "All systems operational! Kushagra is currently focusing on Backend Engineering and AI.",
+    "Better than ever! Ask me about his 250+ DSA problems or production-grade apps.",
+    "Running on 100% focus. What would you like to know about his tech stack?",
+    "Feeling productive! Kushagra recently added more features to his portfolio assistant KUBOC.",
+    "I'm great! By the way, he's open for opportunities right now.",
+    "Awesome! Want to see his GitHub? It's Kushagra-369"
   ],
   "ai": [
-    "Artificial Intelligence enables machines to perform tasks requiring human intelligence.",
-    "AI is the field of creating intelligent systems."
+    "Artificial Intelligence enables machines to perform tasks requiring human intelligence. Kushagra is actively learning and implementing AI in his projects like KUBOC.",
+    "AI is the field of creating intelligent systems. Kushagra has built an AI-powered portfolio assistant using Machine Learning and FastAPI.",
+    "Artificial Intelligence mimics human cognition. Check out Kushagra's KUBOC project - it's an AI assistant built with Python and ML!"
   ],
   "ml": [
-    "Machine Learning is a subset of AI that learns from data.",
-    "ML systems improve their performance using experience."
+    "Machine Learning is a subset of AI that learns from data. Kushagra used scikit-learn to train intent classification for KUBOC.",
+    "ML systems improve their performance using experience. Kushagra's chatbot uses a trained model to understand user questions.",
+    "Machine Learning = data + algorithms. Kushagra implemented ML for text classification in his portfolio assistant."
   ],
   "fallback": [
-    "I'm not sure about that. Try asking about Kushagra's skills, projects, education or achievements."
+    "I'm not sure about that. Try asking about Kushagra's skills, projects, education or achievements.",
+    "Can you rephrase? I can answer about: skills (React, Node.js, Python), projects (AuraLink, Globex, KUBOC), education (B.Tech, 8.7 CGPA), or achievements (250+ DSA problems)",
+    "Hmm, I don't understand. Try: 'what skills', 'show projects', 'tell me about education', or 'what achievements'",
+    "Not sure about that. Kushagra's expertise is in Full Stack Development, Backend Engineering, and Machine Learning.",
+    "I can't answer that. But I can tell you about his 12+ projects, tech stack, or professional background."
   ],
   "goodbye": [
-    "Goodbye!",
-    "See you later!",
-    "Take care!"
+    "Goodbye! Feel free to come back if you want to know more about Kushagra's work.",
+    "See you later! You can also check his projects on GitHub: Kushagra-369",
+    "Take care! Visit his portfolio at https://portfolio-client-n5v7.vercel.app/",
+    "Bye! Don't forget to check out AuraLink - his real-time messaging platform.",
+    "Goodbye! Kushagra is open for opportunities - you can reach him at kushagra369chhabra@gmail.com"
+  ],
+  "personal_blocked": [
+    "Sorry, I cannot reveal personal information about Kushagra. I can only discuss his professional profile, skills, projects, education and achievements.",
+    "I'm not allowed to share personal details. Ask me about his technical skills or projects instead!",
+    "That's personal information. Let's talk about his 12+ projects or full-stack development experience instead."
   ]
 }
