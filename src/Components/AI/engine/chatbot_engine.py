@@ -15,7 +15,6 @@ from response_builder import (
     format_about_me,
     get_project_details
 )
-# ============================================
 
 BASE_DIR = os.path.dirname(
     os.path.dirname(
@@ -90,7 +89,6 @@ def get_response(user_text):
                 "professional profile, skills, projects, "
                 "education and achievements."
             )
-    # ============================================
     
     # ========== PROJECT DETAILS (UPDATED - USING NEW FUNCTION) ==========
     for project in portfolio["projects"]:
@@ -98,7 +96,6 @@ def get_response(user_text):
             detailed = get_project_details(project["name"])
             if detailed:
                 return detailed
-    # ============================================
     
     # ========== KEYWORD CHECKS (UPDATED - USING NEW FORMATTERS) ==========
     if "achievement" in text:
@@ -112,7 +109,6 @@ def get_response(user_text):
     
     if "skill" in text:
         return format_skills()
-    # ============================================
     
     # ========== ML INTENT CLASSIFICATION (SAME LOGIC, UPDATED FORMATTERS) ==========
     cleaned = preprocess(user_text)
@@ -152,7 +148,6 @@ def get_response(user_text):
         return random.choice(responses[intent])
     
     return random.choice(responses["fallback"])
-    # ============================================
 
 
 if __name__ == "__main__":
