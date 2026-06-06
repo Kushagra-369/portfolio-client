@@ -76,16 +76,67 @@ def get_response(user_text):
                 "education and achievements."
             )
 
+    for project in portfolio["projects"]:
+
+        if project["name"].lower() in text:
+
+            return (
+                f"Project: {project['name']}\n\n"
+                f"Category: {project['category']}\n\n"
+                f"Description: {project['description']}\n\n"
+                f"Technologies: {', '.join(project['tools'])}\n\n"
+                f"GitHub: {project['github']}\n"
+                f"Live Demo: {project['live']}"
+            )
+
+    if "achievement" in text:
+
+        return "\n".join(
+        portfolio["achievements"]
+        )
+
+
+    if "education" in text or "cgpa" in text:
+
+        return (
+            f"Degree: {portfolio['education']['degree']}\n"
+            f"CGPA: {portfolio['education']['cgpa']}"
+        )
+
+
+    if "contact" in text or "email" in text:
+
+        return (
+            f"Email: {portfolio['contact']['email']}\n"
+            f"GitHub: {portfolio['profiles']['github']}\n"
+            f"LinkedIn: {portfolio['profiles']['linkedin']}"
+        )
+
+
+    if "skill" in text:
+
+        skills = []
+
+        skills.extend(portfolio["skills"]["frontend"])
+        skills.extend(portfolio["skills"]["backend"])
+        skills.extend(portfolio["skills"]["database"])
+        skills.extend(portfolio["skills"]["devops"])
+        skills.extend(portfolio["skills"]["languages"])
+
+        return (
+            "Kushagra's Skills:\n\n" +
+            ", ".join(skills)
+        )
+
+
+
+
     cleaned = preprocess(user_text)
 
-    print("RAW =", user_text)
-    print("CLEANED =", cleaned)
 
     X = vectorizer.transform([cleaned])
 
     intent = model.predict(X)[0]
-
-    print("INTENT =", intent)
  
 
     if intent == "about_me":
@@ -128,7 +179,7 @@ def get_response(user_text):
 
             result += (
                 f"{project['name']} "
-                f"({project['type']})\n"
+                f"({project['category']})\n"
             )
 
         return result

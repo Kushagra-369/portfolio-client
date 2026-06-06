@@ -60,19 +60,164 @@
     "projects": [
         {
             "name": "AuraLink",
-            "type": "Real-time Communication Platform"
+            "category": "Full Stack",
+            "description": "A modern real-time messaging platform with sleek UI, responsive chat layouts, authentication, and smooth user interactions. Built for seamless communication with a focus on performance, clean design, and modern frontend experience.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "CSS",
+                "Node.js",
+                "Express",
+                "MongoDB",
+                "Socket.io",
+                "JWT"
+            ],
+            "github": "https://github.com/Kushagra-369/AuraLink",
+            "live": "https://aura-link-bw7g.vercel.app/"
         },
         {
             "name": "Globex",
-            "type": "Travel Platform"
+            "category": "Full Stack",
+            "description": "A full-stack travel and destination platform featuring responsive UI, interactive travel exploration, and an AI-powered chatbot assistant for user guidance and trip-related interactions.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "CSS",
+                "Node.js",
+                "Express",
+                "MongoDB",
+                "Chatbot",
+                "JWT"
+            ],
+            "github": "https://github.com/Kushagra-369/Travelling-Client",
+            "live": "https://travelling-client-orcin.vercel.app/"
         },
         {
-            "name": "FoodKing",
-            "type": "Food Ordering Platform"
+            "name": "Food King",
+            "category": "Full Stack",
+            "description": "A full-stack food ordering application with authentication, cart management, admin functionality and real-time order tracking.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "Framer Motion",
+                "Node.js",
+                "Express",
+                "MongoDB",
+                "JWT"
+            ],
+            "github": "https://github.com/Kushagra-369/food_client",
+            "live": "https://food-client-33mf.vercel.app/"
+        },
+        {
+            "name": "HCM",
+            "category": "Full Stack",
+            "description": "A Monsterverse-inspired application based on the novel Empty Spaces, featuring authentication, database integration and real-time functionality.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "Node.js",
+                "Express",
+                "MongoDB",
+                "JWT",
+                "Postman"
+            ],
+            "github": "https://github.com/Kushagra-369/HCM",
+            "live": "https://hcm-rho.vercel.app/"
         },
         {
             "name": "KUBOC",
-            "type": "AI Portfolio Assistant"
+            "category": "AI / Full Stack",
+            "description": "An AI-powered portfolio assistant that answers questions about Kushagra's skills, projects, education, achievements and professional profile using machine learning and FastAPI.",
+            "tools": [
+                "Python",
+                "FastAPI",
+                "Machine Learning",
+                "Scikit-Learn",
+                "React",
+                "TypeScript"
+            ],
+            "github": "https://github.com/Kushagra-369/portfolio-client",
+            "live": "https://portfolio-client-n5v7.vercel.app/"
+        },
+        {
+            "name": "Sekiro",
+            "category": "Frontend",
+            "description": "A cinematic landing page inspired by Sekiro: Shadows Die Twice with immersive visuals and smooth animations.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "CSS",
+                "Framer Motion"
+            ],
+            "github": "https://github.com/Kushagra-369/Sekiro",
+            "live": "https://sekiro.vercel.app/"
+        },
+        {
+            "name": "Feel Special",
+            "category": "Frontend",
+            "description": "An immersive frontend experience featuring cinematic transitions, storytelling aesthetics and modern animations.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "CSS",
+                "Framer Motion"
+            ],
+            "github": "https://github.com/Kushagra-369/Feel_Special",
+            "live": "https://feel-special.vercel.app/"
+        },
+        {
+            "name": "JG University",
+            "category": "Frontend",
+            "description": "A university website redesign focused on responsive layouts, accessibility and smooth user interactions.",
+            "tools": [
+                "React",
+                "JavaScript",
+                "CSS",
+                "Framer Motion"
+            ],
+            "github": "https://github.com/Kushagra-369/jguni-redesign",
+            "live": "https://jguni-redesign-kappa.vercel.app/"
+        },
+        {
+            "name": "Life is Strange",
+            "category": "Frontend",
+            "description": "An interactive web experience with scroll-triggered animations and storytelling through code.",
+            "tools": [
+                "React",
+                "Framer Motion",
+                "CSS",
+                "GSAP"
+            ],
+            "github": "https://github.com/Kushagra-369/BEST-GAME",
+            "live": "https://best-game.vercel.app/"
+        },
+        {
+            "name": "Abandoned Places",
+            "category": "Frontend",
+            "description": "A photography showcase website with responsive layouts, smooth transitions and visual storytelling.",
+            "tools": [
+                "React",
+                "Tailwind CSS",
+                "JavaScript",
+                "Framer Motion"
+            ],
+            "github": "https://github.com/Kushagra-369/abondoned-client",
+            "live": "https://abondoned-client.vercel.app/"
+        },
+        {
+            "name": "My Portfolio",
+            "category": "Frontend",
+            "description": "A fully responsive portfolio built with React, TypeScript and Framer Motion showcasing projects, skills and achievements.",
+            "tools": [
+                "React",
+                "TypeScript",
+                "Framer Motion",
+                "Tailwind CSS",
+                "Node.js",
+                "Express"
+            ],
+            "github": "https://github.com/Kushagra-369/portfolio-client",
+            "live": "https://portfolio-client-swart.vercel.app/"
         }
     ],
     "achievements": [
