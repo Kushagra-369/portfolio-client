@@ -52,9 +52,7 @@ def format_projects(is_detailed: bool = False) -> str:
     is_terminal = not hasattr(sys, 'ps1') or 'IPython' not in sys.modules
     
     if is_detailed:
-        result = "\n" + "="*60 + "\n"
         result += "📁 KUSHAGRA'S PROJECTS (DETAILED)\n"
-        result += "="*60 + "\n\n"
         
         for i, project in enumerate(projects, 1):
             result += f"{i}. 🚀 {project['name']} [{project['category']}]\n"
@@ -73,7 +71,6 @@ def format_projects(is_detailed: bool = False) -> str:
                 result += f"   🌐 Live: <a href='{project['live']}' target='_blank'>{project['live']}</a>\n"
             result += "\n"
         
-        result += "="*60
         return result
     
     else:
@@ -159,9 +156,7 @@ def get_project_details(project_name: str) -> str:
             import sys
             is_terminal = not hasattr(sys, 'ps1') or 'IPython' not in sys.modules
             
-            result = f"\n{'='*60}\n"
             result += f"🚀 {project['name']}\n"
-            result += f"{'='*60}\n\n"
             result += f"📂 Category: {project['category']}\n"
             result += f"📝 Description: {project['description']}\n"
             result += f"🛠️ Technologies: {', '.join(project['tools'])}\n\n"
@@ -173,7 +168,6 @@ def get_project_details(project_name: str) -> str:
                 result += f"🔗 GitHub: <a href='{project['github']}' target='_blank'>{project['github']}</a>\n"
                 result += f"🌐 Live Demo: <a href='{project['live']}' target='_blank'>{project['live']}</a>\n"
             
-            result += f"\n{'='*60}"
             return result
     
     return None
