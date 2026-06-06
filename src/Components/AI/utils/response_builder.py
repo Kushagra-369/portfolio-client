@@ -22,15 +22,12 @@ def format_skills() -> str:
     if is_terminal:
         # Terminal output with emojis
         return (
-            "\n" + "="*50 + "\n"
-            "🎨 KUSHAGRA'S SKILLS\n"
-            "="*50 + "\n\n"
-            f"🎨 Frontend     : {', '.join(s['frontend'])}\n"
-            f"⚙️ Backend      : {', '.join(s['backend'])}\n"
-            f"🗄️ Database     : {', '.join(s['database'])}\n"
-            f"☁️ DevOps       : {', '.join(s['devops'])}\n"
-            f"📝 Languages    : {', '.join(s['languages'])}\n"
-            "\n" + "="*50
+            "🎨 Kushagra's Skills\n\n"
+            f"Frontend: {', '.join(s['frontend'])}\n"
+            f"Backend: {', '.join(s['backend'])}\n"
+            f"Database: {', '.join(s['database'])}\n"
+            f"DevOps: {', '.join(s['devops'])}\n"
+            f"Languages: {', '.join(s['languages'])}"
         )
     else:
         # Web output with line breaks
@@ -52,7 +49,7 @@ def format_projects(is_detailed: bool = False) -> str:
     is_terminal = not hasattr(sys, 'ps1') or 'IPython' not in sys.modules
     
     if is_detailed:
-        result += "📁 KUSHAGRA'S PROJECTS (DETAILED)\n"
+        result = "📁 KUSHAGRA'S PROJECTS (DETAILED)\n"
         
         for i, project in enumerate(projects, 1):
             result += f"{i}. 🚀 {project['name']} [{project['category']}]\n"
@@ -88,14 +85,11 @@ def format_achievements() -> str:
     """Return formatted achievements"""
     achievements = portfolio["achievements"]
     
-    result = "\n" + "="*50 + "\n"
-    result += "🏆 ACHIEVEMENTS\n"
-    result += "="*50 + "\n\n"
+    result = "🏆 Achievements\n\n"
     
     for ach in achievements:
         result += f"✓ {ach}\n"
     
-    result += "\n" + "="*50
     return result
 
 
@@ -127,10 +121,10 @@ def format_contact() -> str:
         )
     else:
         return (
-            f"📧 **Email**: {contact['email']}\n\n"
-            f"🐙 **GitHub**: <a href='https://github.com/{profiles['github']}' target='_blank'>{profiles['github']}</a>\n"
-            f"🔗 **LinkedIn**: <a href='https://linkedin.com/in/{profiles['linkedin']}' target='_blank'>{profiles['linkedin']}</a>\n"
-            f"💻 **LeetCode**: <a href='https://leetcode.com/{profiles['leetcode']}' target='_blank'>{profiles['leetcode']}</a>"
+            f"📧 Email: {contact['email']}\n\n"
+            f"🐙 GitHub: https://github.com/{profiles['github']}\n"
+            f"🔗 LinkedIn: https://linkedin.com/in/{profiles['linkedin']}\n"
+            f"💻 LeetCode: https://leetcode.com/{profiles['leetcode']}"
         )
 
 
@@ -156,17 +150,16 @@ def get_project_details(project_name: str) -> str:
             import sys
             is_terminal = not hasattr(sys, 'ps1') or 'IPython' not in sys.modules
             
-            result += f"🚀 {project['name']}\n"
-            result += f"📂 Category: {project['category']}\n"
-            result += f"📝 Description: {project['description']}\n"
-            result += f"🛠️ Technologies: {', '.join(project['tools'])}\n\n"
-            
-            if is_terminal:
-                result += f"🔗 GitHub: {project['github']}\n"
-                result += f"🌐 Live Demo: {project['live']}\n"
-            else:
-                result += f"🔗 GitHub: <a href='{project['github']}' target='_blank'>{project['github']}</a>\n"
-                result += f"🌐 Live Demo: <a href='{project['live']}' target='_blank'>{project['live']}</a>\n"
+            result = (
+                f"🚀 {project['name']}\n\n"
+                f"📂 Category: {project['category']}\n\n"
+                f"📝 Description:\n{project['description']}\n\n"
+                f"🛠️ Technologies:\n{', '.join(project['tools'])}\n\n"
+                f"🔗 GitHub:\n{project['github']}\n\n"
+                f"🌐 Live Demo:\n{project['live']}"
+            )
+
+
             
             return result
     
