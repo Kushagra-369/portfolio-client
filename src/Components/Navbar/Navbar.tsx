@@ -27,6 +27,7 @@ interface Section {
   name: string;
   path: string;
   icon?: ReactElement;
+  id: string;
 }
 
 interface AdminData {
@@ -40,8 +41,9 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeSection, setActiveSection] = useState("home");
+  const [borderWidth, setBorderWidth] = useState(0);
 
-  // 🟢 default fallback values
   const [admin, setAdmin] = useState<AdminData>({
     name: "Kushagra Chhabra",
     socialLinks: [
@@ -50,7 +52,6 @@ export default function Navbar() {
     ],
   });
 
-  // 🟢 Fetch admin data from backend
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
@@ -69,7 +70,6 @@ export default function Navbar() {
     fetchAdmin();
   }, []);
 
-  // Track mouse position for 3D tilt effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -78,7 +78,6 @@ export default function Navbar() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // 🟢 Safe social links
   const linkedin =
     admin.socialLinks.find((l) => l.name.toLowerCase() === "linkedin")?.link ||
     "https://www.linkedin.com/in/kushagra-chhabra-83b215355";
@@ -86,7 +85,78 @@ export default function Navbar() {
     admin.socialLinks.find((l) => l.name.toLowerCase() === "github")?.link ||
     "https://github.com/Kushagra-369";
 
-  // 🔹 Enhanced Animations
+  const sections: Section[] = [
+    { name: "Home", path: "/", icon: <HomeIcon fontSize="small" />, id: "home" },
+    { name: "Skills", path: "#skills", icon: <SkillsIcon fontSize="small" />, id: "skills" },
+    { name: "Projects", path: "#projects", icon: <ProjectsIcon fontSize="small" />, id: "projects" },
+    { name: "About", path: "#about", icon: <AboutIcon fontSize="small" />, id: "about" },
+    { name: "Contact", path: "#signup", icon: <ContactIcon fontSize="small" />, id: "signup" },
+    { name: "Footer", path: "#footer", icon: <FooterIcon fontSize="small" />, id: "footer" },
+  ];
+
+  // Smooth scroll detection with animation
+  useEffect(() => {
+let timeoutId: ReturnType<typeof setTimeout>;    
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 200;
+      let newActiveSection = activeSection;
+      
+      // Find active section
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = document.getElementById(sections[i].id);
+        if (section) {
+          const { offsetTop } = section;
+          if (scrollPosition >= offsetTop) {
+            newActiveSection = sections[i].id;
+            break;
+          }
+        }
+      }
+
+      // Update active section with debounce for smoother transitions
+      if (newActiveSection !== activeSection) {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          setActiveSection(newActiveSection);
+        }, 50);
+      }
+
+      // Calculate border width based on actual scroll position
+      const footer = document.getElementById("footer");
+      if (footer) {
+        const footerPosition = footer.offsetTop + footer.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const maxScroll = footerPosition - windowHeight;
+        const currentScroll = window.scrollY;
+        let progress = Math.min(Math.max(currentScroll / maxScroll, 0), 1);
+        
+        // Smooth easing function for better animation
+        const easedProgress = 1 - Math.pow(1 - progress, 1.5);
+        setBorderWidth(easedProgress);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [activeSection]);
+
+  // Map section to specific progress values for click navigation
+  const getTargetBorderWidth = (sectionId: string) => {
+    const sectionMap: { [key: string]: number } = {
+      "home": 0,
+      "skills": 0.2,
+      "projects": 0.4,
+      "about": 0.6,
+      "signup": 0.8,
+      "footer": 1
+    };
+    return sectionMap[sectionId] || 0;
+  };
+
   const floatingVariant: Variants = {
     float: {
       y: [0, -8, 0],
@@ -95,7 +165,6 @@ export default function Navbar() {
     },
   };
 
-  // Updated bounce variant - bounces twice then settles
   const bounceVariant: Variants = {
     rest: { scale: 1, y: 0 },
     hover: {
@@ -132,8 +201,6 @@ export default function Navbar() {
     }
   };
 
-
-
   const icons: Icon[] = [
     {
       id: "linkedin",
@@ -153,24 +220,24 @@ export default function Navbar() {
       id: "theme",
       element: isDark ? <Sun className="w-5 h-5 sm:w-6 sm:h-6" /> : <Moon className="w-5 h-5 sm:w-6 sm:h-6" />,
       href: "",
-      hoverColor: "hover:text-amber-400 ",
+      hoverColor: "hover:text-amber-400",
       external: false,
     },
   ];
 
-  const sections: Section[] = [
-    { name: "Home", path: "/", icon: <HomeIcon fontSize="small" /> },
-    { name: "Skills", path: "#skills", icon: <SkillsIcon fontSize="small" /> },
-    { name: "Projects", path: "#projects", icon: <ProjectsIcon fontSize="small" /> },
-    { name: "About", path: "#about", icon: <AboutIcon fontSize="small" /> },
-    { name: "Contact", path: "#signup", icon: <ContactIcon fontSize="small" /> },
-    { name: "Footer", path: "#footer", icon: <FooterIcon fontSize="small" /> },
-  ];
+  const isActive = (path: string, id: string) => {
+    if (path === "/") return location.pathname === "/" && activeSection === "home";
+    return activeSection === id;
+  };
 
-  const isActive = (path: string) => location.pathname === path;
-
-  const handleScroll = (path: string) => {
-    const sectionId = path.replace("#", "");
+  const handleScroll = (path: string, sectionId?: string) => {
+    const sectionIdToScroll = path.replace("#", "");
+    
+    // Smoothly animate border to target width when clicking
+    if (sectionId && getTargetBorderWidth(sectionId) !== undefined) {
+      setBorderWidth(getTargetBorderWidth(sectionId));
+    }
+    
     if (path === "/" || path === "#home") {
       if (location.pathname !== "/") navigate("/#home");
       else {
@@ -185,7 +252,7 @@ export default function Navbar() {
     if (path.startsWith("#")) {
       if (location.pathname !== "/") navigate("/" + path);
       else {
-        const section = document.getElementById(sectionId);
+        const section = document.getElementById(sectionIdToScroll);
         if (section) section.scrollIntoView({ behavior: "smooth" });
       }
     } else navigate(path);
@@ -201,7 +268,7 @@ export default function Navbar() {
         whileHover="hover"
         variants={bounceVariant}
       >
-        {/* Animated border linear */}
+        {/* Animated border linear - Original effect */}
         <motion.div
           className="absolute inset-0 rounded-3xl bg-linear-to-r from-transparent via-cyan-500/30 to-transparent"
           animate={{
@@ -214,6 +281,47 @@ export default function Navbar() {
             ease: "easeInOut",
           }}
           style={{ filter: "blur(20px)" }}
+        />
+
+        {/* Smooth Growing bottom border with spring animation */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400 rounded-full"
+          initial={{ width: "0%" }}
+          animate={{ 
+            width: `${borderWidth * 100}%`,
+            transition: {
+              type: "spring",
+              stiffness: 100,
+              damping: 20,
+              mass: 0.5
+            }
+          }}
+          whileHover={{
+            boxShadow: "0 0 20px rgba(6,182,212,0.8)",
+            transition: { duration: 0.3 }
+          }}
+        />
+
+        {/* Animated glowing effect on the border */}
+        <motion.div
+          className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400 rounded-full blur-sm"
+          animate={{ 
+            width: `${borderWidth * 100}%`,
+            opacity: [0.5, 1, 0.5],
+            transition: {
+              width: {
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                mass: 0.5
+              },
+              opacity: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }
+          }}
         />
 
         {/* Left: KC + Dynamic Name */}
@@ -314,7 +422,7 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Large: Sections */}
+        {/* Large: Sections with Highlight */}
         <motion.div
           className="hidden xl:flex items-center gap-2"
           initial="hidden"
@@ -332,10 +440,14 @@ export default function Navbar() {
               {section.path.startsWith("#") ? (
                 <button
                   onClick={() => {
-                    handleScroll(section.path);
+                    handleScroll(section.path, section.id);
                     setIsOpen(false);
                   }}
-                  className="relative px-4 py-2 select-none rounded-xl font-semibold text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600 transition-all overflow-hidden group"
+                  className={`relative px-4 py-2 select-none rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${
+                    isActive(section.path, section.id)
+                      ? "text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-lg shadow-cyan-500/25"
+                      : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
+                  }`}
                 >
                   <motion.div
                     className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-xl"
@@ -343,19 +455,29 @@ export default function Navbar() {
                     whileHover={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.2 }}
                   />
+                  {isActive(section.path, section.id) && (
+                    <motion.div
+                      className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, delay: 0.1 }}
+                      style={{ x: "-50%" }}
+                    />
+                  )}
                   <span className="relative flex items-center gap-2">
-                    {section.icon && <span className="text-cyan-400 dark:text-cyan-300">{section.icon}</span>}
-                    <span>{section.name}</span>
+                    {section.icon && <span className={`${isActive(section.path, section.id) ? "text-cyan-300" : "text-cyan-400 dark:text-cyan-300"} transition-all duration-300`}>{section.icon}</span>}
+                    <span className="transition-all duration-300">{section.name}</span>
                   </span>
                 </button>
               ) : (
                 <Link
                   to={section.path}
                   onClick={() => setIsOpen(false)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all overflow-hidden group ${isActive(section.path)
-                    ? "text-white dark:text-white bg-linear-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-400/30"
-                    : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
-                    }`}
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${
+                    isActive(section.path, section.id)
+                      ? "text-white dark:text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-lg shadow-cyan-500/25"
+                      : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
+                  }`}
                 >
                   <motion.div
                     className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20"
@@ -363,9 +485,18 @@ export default function Navbar() {
                     whileHover={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.2 }}
                   />
+                  {isActive(section.path, section.id) && (
+                    <motion.div
+                      className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 500, delay: 0.1 }}
+                      style={{ x: "-50%" }}
+                    />
+                  )}
                   <span className="relative flex items-center gap-2">
-                    {section.icon && <span className="text-cyan-400 dark:text-cyan-300">{section.icon}</span>}
-                    <span>{section.name}</span>
+                    {section.icon && <span className={`${isActive(section.path, section.id) ? "text-cyan-300" : "text-cyan-400 dark:text-cyan-300"} transition-all duration-300`}>{section.icon}</span>}
+                    <span className="transition-all duration-300">{section.name}</span>
                   </span>
                 </Link>
               )}
@@ -478,7 +609,7 @@ export default function Navbar() {
         </motion.button>
       </motion.nav>
 
-      {/* Mobile Dropdown with enhanced animations */}
+      {/* Mobile Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -505,10 +636,14 @@ export default function Navbar() {
                 >
                   <button
                     onClick={() => {
-                      handleScroll(section.path);
+                      handleScroll(section.path, section.id);
                       setIsOpen(false);
                     }}
-                    className="relative flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold text-gray-300 dark:text-white hover:text-white hover:bg-white/10 dark:hover:bg-black/10 transition-all overflow-hidden group"
+                    className={`relative flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${
+                      isActive(section.path, section.id)
+                        ? "text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50"
+                        : "text-gray-300 dark:text-white hover:text-white hover:bg-white/10 dark:hover:bg-black/10"
+                    }`}
                   >
                     <motion.div
                       className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20"
@@ -517,7 +652,7 @@ export default function Navbar() {
                       transition={{ duration: 0.2 }}
                     />
                     <span className="relative">
-                      {section.icon && <span className="text-cyan-400 dark:text-cyan-300">{section.icon}</span>}
+                      {section.icon && <span className={`${isActive(section.path, section.id) ? "text-cyan-300" : "text-cyan-400 dark:text-cyan-300"} transition-all duration-300`}>{section.icon}</span>}
                     </span>
                     <span className="relative">{section.name}</span>
                   </button>
