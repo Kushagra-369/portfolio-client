@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 
-
 interface Message {
     id: number;
     text: string;
@@ -26,15 +25,54 @@ export default function Chatbot() {
     });
 
     const [dragging, setDragging] = useState(false);
+    const [isBackendLoading, setIsBackendLoading] = useState(true);
+    const [isSending, setIsSending] = useState(false);
 
     const dragOffset = useRef({ x: 0, y: 0 });
     const chatbotRef = useRef<HTMLDivElement>(null);
 
     // =========================
+    // WAKE UP BACKEND
+    // =========================
+    const wakeUpBackend = async () => {
+        setIsBackendLoading(true);
+        try {
+            const response = await fetch(
+                "https://portfolio-client-r6b5.onrender.com/chat",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        message: "wakeup",
+                    }),
+                }
+            );
+            
+            if (response.ok) {
+                setIsBackendLoading(false);
+            }
+        } catch (error) {
+            console.error("Wake up failed:", error);
+            // Retry after 2 seconds
+            setTimeout(() => {
+                wakeUpBackend();
+            }, 2000);
+        }
+    };
+
+    // =========================
+    // INITIAL WAKE UP
+    // =========================
+    useEffect(() => {
+        wakeUpBackend();
+    }, []);
+
+    // =========================
     // AI RESPONSE
     // =========================
     const getAIResponse = async (msg: string) => {
-
         const response = await fetch(
             "https://portfolio-client-r6b5.onrender.com/chat",
             {
@@ -49,7 +87,6 @@ export default function Chatbot() {
         );
 
         const data = await response.json();
-
         return data.response;
     };
 
@@ -57,13 +94,17 @@ export default function Chatbot() {
     // SEND MESSAGE
     // =========================
     const sendMessage = async () => {
-        if (!input.trim()) return;
+        if (!input.trim() || isSending) return;
 
         const userMessage: Message = {
             id: Date.now(),
             text: input,
             sender: "user",
         };
+
+        setMessages((prev) => [...prev, userMessage]);
+        setInput("");
+        setIsSending(true);
 
         const response = await getAIResponse(input);
 
@@ -73,9 +114,8 @@ export default function Chatbot() {
             sender: "bot",
         };
 
-        setMessages((prev) => [...prev, userMessage, botMessage]);
-
-        setInput("");
+        setMessages((prev) => [...prev, botMessage]);
+        setIsSending(false);
     };
 
     // =========================
@@ -270,29 +310,77 @@ export default function Chatbot() {
 
                     {/* CHAT AREA */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                        {messages.map((msg) => (
-                            <div
-                                key={msg.id}
-                                className={`flex ${msg.sender === "user"
-                                    ? "justify-end"
-                                    : "justify-start"
-                                    }`}
-                            >
+                        {isBackendLoading ? (
+                            // Loading Screen inside chat area
+                            <div className="flex flex-col items-center justify-center h-full gap-4 py-8">
+                                {/* Animated AI Core */}
+                                <div className="relative">
+                                    <div className="w-16 h-16 rounded-full bg-cyan-500/20 animate-pulse flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-cyan-500/40 animate-pulse flex items-center justify-center">
+                                            <div className="w-4 h-4 rounded-full bg-cyan-500 animate-ping" />
+                                        </div>
+                                    </div>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-2xl animate-pulse">⚡</span>
+                                    </div>
+                                </div>
+
+                                {/* Loading Text */}
+                                <div className="text-center space-y-2">
+                                    <div className="text-cyan-400 font-mono text-xs animate-pulse">
+                                        WAKING UP KUBOC CORE...
+                                    </div>
+                                    <div className="text-cyan-500/60 text-[10px] font-mono">
+                                        ESTABLISHING NEURAL LINK
+                                    </div>
+                                </div>
+
+                                {/* Animated Dots */}
+                                <div className="flex gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                                </div>
+                            </div>
+                        ) : (
+                            // Normal messages
+                            messages.map((msg) => (
                                 <div
-                                    className={`
+                                    key={msg.id}
+                                    className={`flex ${msg.sender === "user"
+                                        ? "justify-end"
+                                        : "justify-start"
+                                        }`}
+                                >
+                                    <div
+                                        className={`
                   max-w-[80%]
                   px-4 py-2 rounded-xl
                   text-sm
                   ${msg.sender === "user"
-                                            ? "bg-cyan-600"
-                                            : "bg-zinc-900 border border-cyan-500/20 text-cyan-300"
-                                        }
+                                                ? "bg-cyan-600"
+                                                : "bg-zinc-900 border border-cyan-500/20 text-cyan-300"
+                                            }
                 `}
-                                >
-                                    {msg.text}
+                                    >
+                                        {msg.text}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                        
+                        {/* Typing indicator */}
+                        {isSending && !isBackendLoading && (
+                            <div className="flex justify-start">
+                                <div className="bg-zinc-900 border border-cyan-500/20 px-4 py-2 rounded-xl">
+                                    <div className="flex gap-1">
+                                        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+                                        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                                        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                                    </div>
                                 </div>
                             </div>
-                        ))}
+                        )}
                     </div>
 
                     {/* INPUT */}
@@ -302,11 +390,12 @@ export default function Chatbot() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
+                                    if (e.key === "Enter" && !isBackendLoading && !isSending) {
                                         sendMessage();
                                     }
                                 }}
-                                placeholder="Enter command..."
+                                placeholder={isBackendLoading ? "Waking up AI..." : "Enter command..."}
+                                disabled={isBackendLoading || isSending}
                                 className="
                 flex-1
                 bg-zinc-900
@@ -315,16 +404,21 @@ export default function Chatbot() {
                 px-3 py-2
                 outline-none
                 text-cyan-300
+                disabled:opacity-50
+                disabled:cursor-not-allowed
               "
                             />
 
                             <button
                                 onClick={sendMessage}
+                                disabled={isBackendLoading || isSending}
                                 className="
                 px-4
                 rounded-xl
                 bg-cyan-600
                 hover:bg-cyan-500
+                disabled:opacity-50
+                disabled:cursor-not-allowed
               "
                             >
                                 ⚡
