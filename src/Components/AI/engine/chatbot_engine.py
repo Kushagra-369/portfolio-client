@@ -89,10 +89,14 @@ def get_response(user_text):
                 "professional profile, skills, projects, "
                 "education and achievements."
             )
-            
+
     for skill, description in portfolio["skill_details"].items():
 
-        if skill.lower() in text:
+        skill_key = skill.lower().replace(".", "").replace(" ", "")
+
+        user_query = text.replace(".", "").replace(" ", "")
+
+        if skill_key in user_query:
 
             return description
 
