@@ -124,6 +124,20 @@ def get_response(user_text):
     cleaned = preprocess(user_text)
     X = vectorizer.transform([cleaned])
     intent = model.predict(X)[0]
+    probabilities = model.predict_proba(X)[0]
+
+    confidence = max(probabilities)
+
+    if confidence < 0.60:
+        return random.choice(responses["fallback"])
+    
+    intent = model.predict(X)[0]
+    probabilities = model.predict_proba(X)[0]
+
+    confidence = max(probabilities)
+
+    if confidence < 0.60:
+        return random.choice(responses["fallback"])
     
     # Using new formatters for better output
     if intent == "about_me":
