@@ -138,6 +138,11 @@ def get_response(user_text):
 
     if confidence < 0.60:
         return random.choice(responses["fallback"])
+
+    print("RAW =", user_text)
+    print("CLEANED =", cleaned)
+    print("INTENT =", intent)
+    print("CONFIDENCE =", confidence)
     
     # Using new formatters for better output
     if intent == "about_me":
