@@ -260,5 +260,21 @@
             "Fast Learner",
             "Technology Enthusiast"
         ]
+    },
+    "skill_details": {
+        "javascript": "JavaScript is the core language of the web. Kushagra uses it for both frontend and backend development across all projects.",
+        "react": "React is a JavaScript library for building fast and interactive UIs. Kushagra uses React in AuraLink, Globex, and Portfolio projects.",
+        "next.js": "Next.js is a React framework for server-side rendering and SEO-friendly web apps. Kushagra uses it for high-performance projects.",
+        "node.js": "Node.js is a JavaScript runtime for backend development. Kushagra uses Node.js with Express to build scalable APIs.",
+        "express": "Express.js is a minimal backend framework for Node.js, used by Kushagra in most full-stack applications.",
+        "mongodb": "MongoDB is a NoSQL database for flexible, document-based storage. Kushagra uses it in AuraLink, Globex, and Food King.",
+        "postgresql": "PostgreSQL is a powerful relational database. Kushagra uses it for data integrity and complex queries in scalable apps.",
+        "typescript": "TypeScript adds static typing to JavaScript, improving maintainability. Kushagra uses it in modern React and Node projects.",
+        "python": "Python is used by Kushagra for machine learning, backend systems, and AI projects like KUBOC.",
+        "tailwind": "Tailwind CSS is a utility-first framework for rapid, custom UI development without leaving HTML.",
+        "docker": "Docker containerizes applications for consistent development and simplified deployment workflows.",
+        "redis": "Redis is an in-memory data store used by Kushagra for caching and real-time performance optimization.",
+        "graphql": "GraphQL is a query language for APIs. Kushagra uses it to fetch precise data and reduce over-fetching.",
+        "jest": "Jest is a JavaScript testing framework. Kushagra writes unit and integration tests to ensure code reliability."
     }
 }

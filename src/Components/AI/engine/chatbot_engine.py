@@ -89,7 +89,13 @@ def get_response(user_text):
                 "professional profile, skills, projects, "
                 "education and achievements."
             )
-    
+            
+    for skill, description in portfolio["skill_details"].items():
+
+        if skill.lower() in text:
+
+            return description
+
     # ========== PROJECT DETAILS (UPDATED - USING NEW FUNCTION) ==========
     for project in portfolio["projects"]:
         if project["name"].lower() in text:
