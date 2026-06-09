@@ -175,6 +175,8 @@ def get_response(user_text):
     
     if "skill" in text:
         return format_skills()
+    if "project" in text or "projects" in text:
+        return format_projects(is_detailed=False)
 
     # match, score = semantic_search(
     #     user_text
@@ -216,14 +218,13 @@ def get_response(user_text):
 
     if confidence < 0.60:
         return random.choice(responses["fallback"])
+
     
     intent = model.predict(X)[0]
     probabilities = model.predict_proba(X)[0]
 
     confidence = max(probabilities)
 
-    if confidence < 0.60:
-        return random.choice(responses["fallback"])
 
     print("RAW =", user_text)
     print("CLEANED =", cleaned)
@@ -236,6 +237,11 @@ def get_response(user_text):
     
     if intent == "skills":
         return format_skills()
+    
+
+
+    print("INTENT =", intent)
+    print("CONFIDENCE =", confidence)
     
     if intent == "projects":
         return format_projects(is_detailed=False)
