@@ -127,6 +127,21 @@ def get_response(user_text):
         text,
         all_skills
     )
+    
+    project_names = [
+        p["name"] for p in portfolio["projects"]
+    ]
+
+    project_match = process.extractOne(
+        text,
+        project_names
+    )
+
+    if project_match and project_match[1] > 70:
+
+        return get_project_details(
+            project_match[0]
+        )
 
     if best_match and best_match[1] > 80:
         return portfolio["skill_details"][
@@ -164,19 +179,74 @@ def get_response(user_text):
                 return detailed
     
     # ========== KEYWORD CHECKS (UPDATED - USING NEW FORMATTERS) ==========
-    if "achievement" in text:
+    achievement_words = [
+        "achievement",
+        "achievements",
+        "dsa",
+        "problem solved",
+        "problems solved",
+        "hackathon"
+    ]   
+
+    if any(word in text for word in achievement_words):
         return format_achievements()
     
-    if "education" in text or "cgpa" in text:
+    education_words = [
+        "education",
+        "study",
+        "studies",
+        "college",
+        "degree",
+        "cgpa",
+        "btech",
+        "qualification"
+    ]
+
+    if any(word in text for word in education_words):
         return format_education()
     
-    if "contact" in text or "email" in text:
+    contact_words = [
+        "contact",
+        "email",
+        "mail",
+        "reach",
+        "linkedin",
+        "github",
+        "leetcode"
+    ]
+
+    if any(word in text for word in contact_words):
         return format_contact()
     
-    if "skill" in text:
-        return format_skills()
-    if "project" in text or "projects" in text:
-        return format_projects(is_detailed=False)
+    about_words = [
+        "about",
+        "who is",
+        "introduce",
+        "introduction",
+        "profile"
+    ]
+
+    if any(word in text for word in about_words):
+        return format_about_me()
+
+    keywords = {
+        "skills": format_skills,
+        "projects": lambda: format_projects(False),
+        "education": format_education,
+        "contact": format_contact,
+        "achievements": format_achievements
+    }
+
+    best_keyword = process.extractOne(
+        text,
+        keywords.keys()
+    )
+
+    if best_keyword and best_keyword[1] > 80:
+        return keywords[
+            best_keyword[0]
+        ]()
+
 
     # match, score = semantic_search(
     #     user_text
@@ -229,21 +299,10 @@ def get_response(user_text):
 
     if intent == "casual":
         return random.choice(responses["casual"])
-        
+
     if confidence < 0.20:
         return random.choice(responses["fallback"])
 
-    
-    intent = model.predict(X)[0]
-    probabilities = model.predict_proba(X)[0]
-
-    confidence = max(probabilities)
-
-
-    print("RAW =", user_text)
-    print("CLEANED =", cleaned)
-    print("INTENT =", intent)
-    print("CONFIDENCE =", confidence)
     
     # Using new formatters for better output
     if intent == "about_me":
