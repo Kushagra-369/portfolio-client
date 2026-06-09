@@ -5,3 +5,9 @@ joblib
 pydantic
 numpy
 scipy
+
+sentence-transformers
+torch
+rapidfuzz
+transformers
+huggingface-hub
