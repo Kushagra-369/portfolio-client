@@ -221,6 +221,15 @@ def get_response(user_text):
     print("INTENT =", intent)
     print("CONFIDENCE =", confidence)
 
+    if intent == "greeting":
+        return random.choice(responses["greeting"])
+
+    if intent == "goodbye":
+        return random.choice(responses["goodbye"])
+
+    if intent == "casual":
+        return random.choice(responses["casual"])
+        
     if confidence < 0.20:
         return random.choice(responses["fallback"])
 
