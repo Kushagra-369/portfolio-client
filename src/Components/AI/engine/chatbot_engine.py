@@ -3,8 +3,8 @@ import random
 import joblib
 import os
 import sys
-import numpy as np
-from sentence_transformers import SentenceTransformer
+# import numpy as np
+# from sentence_transformers import SentenceTransformer
 from rapidfuzz import process
 # ========== ADD THIS - UTILS IMPORT ==========
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "utils"))
@@ -75,48 +75,48 @@ with open(
 ) as file:
     portfolio = json.load(file)
 
-embeddings = joblib.load(
-    os.path.join(
-        MODELS_DIR,
-        "embeddings.pkl"
-    )
-)
+# embeddings = joblib.load(
+#     os.path.join(
+#         MODELS_DIR,
+#         "embeddings.pkl"
+#     )
+# )
 
-metadata = joblib.load(
-    os.path.join(
-        MODELS_DIR,
-        "metadata.pkl"
-    )
-)
+# metadata = joblib.load(
+#     os.path.join(
+#         MODELS_DIR,
+#         "metadata.pkl"
+#     )
+# )
 
-semantic_model = SentenceTransformer(
-    "all-MiniLM-L6-v2"
-)
+# semantic_model = SentenceTransformer(
+#     "all-MiniLM-L6-v2"
+# )
 
-def semantic_search(query):
+# def semantic_search(query):
 
-    query_embedding = semantic_model.encode(
-        query,
-        convert_to_numpy=True
-    )
+#     query_embedding = semantic_model.encode(
+#         query,
+#         convert_to_numpy=True
+#     )
 
-    similarities = np.dot(
-        embeddings,
-        query_embedding
-    )
+#     similarities = np.dot(
+#         embeddings,
+#         query_embedding
+#     )
 
-    best_idx = np.argmax(
-        similarities
-    )
+#     best_idx = np.argmax(
+#         similarities
+#     )
 
-    best_score = similarities[
-        best_idx
-    ]
+#     best_score = similarities[
+#         best_idx
+#     ]
 
-    return (
-        metadata[best_idx],
-        best_score
-    )
+#     return (
+#         metadata[best_idx],
+#         best_score
+#     )
 
 def get_response(user_text):
 
@@ -176,35 +176,35 @@ def get_response(user_text):
     if "skill" in text:
         return format_skills()
 
-    match, score = semantic_search(
-        user_text
-    )
-    print("MATCH =", match)
-    print("SCORE =", score)
-    if score < 0.3:
-        return random.choice(
-            responses["fallback"]
-        )
+    # match, score = semantic_search(
+    #     user_text
+    # )
+    # print("MATCH =", match)
+    # print("SCORE =", score)
+    # if score < 0.3:
+    #     return random.choice(
+    #         responses["fallback"]
+    #     )
 
 
-    if score > 0.3:
+    # if score > 0.3:
 
-        if match["type"] == "skill":
+    #     if match["type"] == "skill":
 
-            return match["response"]
+    #         return match["response"]
 
-        if match["type"] == "project":
+    #     if match["type"] == "project":
 
-            project = match["response"]
+    #         project = match["response"]
 
-            return (
-                f"🚀 {project['name']}\n\n"
-                f"📂 Category: {project['category']}\n\n"
-                f"📝 {project['description']}\n\n"
-                f"🛠️ {', '.join(project['tools'])}\n\n"
-                f"🔗 {project['github']}\n\n"
-                f"🌐 {project['live']}"
-            )
+    #         return (
+    #             f"🚀 {project['name']}\n\n"
+    #             f"📂 Category: {project['category']}\n\n"
+    #             f"📝 {project['description']}\n\n"
+    #             f"🛠️ {', '.join(project['tools'])}\n\n"
+    #             f"🔗 {project['github']}\n\n"
+    #             f"🌐 {project['live']}"
+    #         )
     
     # ========== ML INTENT CLASSIFICATION (SAME LOGIC, UPDATED FORMATTERS) ==========
     cleaned = preprocess(user_text)
