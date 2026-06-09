@@ -216,7 +216,12 @@ def get_response(user_text):
 
     confidence = max(probabilities)
 
-    if confidence < 0.60:
+
+    print("RAW =", user_text)
+    print("INTENT =", intent)
+    print("CONFIDENCE =", confidence)
+
+    if confidence < 0.20:
         return random.choice(responses["fallback"])
 
     
