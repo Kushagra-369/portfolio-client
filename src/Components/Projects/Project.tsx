@@ -55,6 +55,35 @@ const staticProjects: Project[] = [
     __v: 0
   },
   {
+    _id: "6910c9d084a2c11a9b7f6ab7",
+    profilePhoto: {
+      _id: "6910c9d084a2c11a9b7f6ab8",
+      public_id: "projects/sentinelforgeai",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1781699306/Screenshot_From_2026-06-17_17-55-05_rpshyn.png"
+    },
+    name: "SentinelForge AI",
+    description: "An AI-powered cybersecurity platform for Email Spam Detection, URL Phishing Detection, and File Malware Analysis with real-time threat intelligence, user analytics, subscription plans, and personalized security dashboards.",
+    tools: [
+      "React",
+      "TypeScript",
+      "Python",
+      "FastAPI",
+      "Machine Learning",
+      "MongoDB",
+      "Google OAuth",
+      "Razorpay",
+      "Recharts",
+      "REST API"
+    ],
+    githubLink: "https://github.com/Kushagra-369/SentinelForgeAI",
+    deploymentLink: "https://sentinel-forge-ai.vercel.app/dashboard",
+    category: "Full Stack",
+    isDeleted: false,
+    createdAt: "2026-06-17T17:55:05.000+00:00",
+    updatedAt: "2026-06-17T17:55:05.000+00:00",
+    __v: 0
+  },
+  {
     _id: "6910c9d084a2c11a9b7f6ac1",
     profilePhoto: {
       _id: "6910c9d084a2c11a9b7f6ac2",
