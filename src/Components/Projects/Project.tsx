@@ -76,7 +76,7 @@ const staticProjects: Project[] = [
       "REST API"
     ],
     githubLink: "https://github.com/Kushagra-369/SentinelForgeAI",
-    deploymentLink: "https://sentinel-forge-ai.vercel.app/dashboard",
+    deploymentLink: "https://sentinel-forge-ai.vercel.app",
     category: "Full Stack",
     isDeleted: false,
     createdAt: "2026-06-17T17:55:05.000+00:00",
