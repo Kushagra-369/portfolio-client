@@ -84,6 +84,39 @@ const staticProjects: Project[] = [
     __v: 0
   },
   {
+    _id: "6910c9d084a2c11a9b7f6ab7",
+    profilePhoto: {
+      _id: "6910c9d084a2c11a9b7f6ab8",
+      public_id: "projects/youtube-clone-internship",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1783576837/Screenshot_From_2026-07-09_11-29-22_icxjre.png"
+    },
+    name: "YouTube Clone",
+    description:
+      "A feature-rich full-stack YouTube Clone built using the MERN Stack with Google OAuth authentication, region-based Email & Mobile OTP verification, Razorpay premium subscriptions, watch-time restrictions, video downloading with daily limits, WebRTC voice/video calling, screen sharing, call recording, gesture-based video controls, comment translation, real-time online/offline user presence using Socket.IO, and Cloudinary media uploads.",
+    tools: [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Socket.IO",
+      "WebRTC",
+      "Google OAuth",
+      "Razorpay",
+      "Cloudinary",
+      "SendGrid",
+      "Twilio",
+      "REST API"
+    ],
+    githubLink: "https://github.com/Kushagra-369/youtube-clone-internship",
+    deploymentLink: "https://youtube-clone-internship-fm9z.vercel.app/",
+    category: "Full Stack",
+    isDeleted: false,
+    createdAt: "2026-07-09T11:29:22.000+00:00",
+    updatedAt: "2026-07-09T11:29:22.000+00:00",
+    __v: 0
+  },
+  {
     _id: "6910c9d084a2c11a9b7f6ac1",
     profilePhoto: {
       _id: "6910c9d084a2c11a9b7f6ac2",
