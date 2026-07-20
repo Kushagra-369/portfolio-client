@@ -38,6 +38,17 @@ interface AdminData {
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { toggleTheme, isDark } = useTheme();
+
+  const handleThemeToggle = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    toggleTheme(
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2
+    );
+  };
   const location = useLocation();
   const navigate = useNavigate();
   const [, setMousePosition] = useState({ x: 0, y: 0 });
@@ -96,11 +107,11 @@ export default function Navbar() {
 
   // Smooth scroll detection with animation
   useEffect(() => {
-let timeoutId: ReturnType<typeof setTimeout>;    
+    let timeoutId: ReturnType<typeof setTimeout>;
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200;
       let newActiveSection = activeSection;
-      
+
       // Find active section
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i].id);
@@ -129,7 +140,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
         const maxScroll = footerPosition - windowHeight;
         const currentScroll = window.scrollY;
         let progress = Math.min(Math.max(currentScroll / maxScroll, 0), 1);
-        
+
         // Smooth easing function for better animation
         const easedProgress = 1 - Math.pow(1 - progress, 1.5);
         setBorderWidth(easedProgress);
@@ -170,7 +181,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
     hover: {
       scale: 1,
       y: [0, -12, 0, -8, 0, -4, 0],
-      transition: { 
+      transition: {
         duration: 0.6,
         ease: "easeOut",
         times: [0, 0.2, 0.4, 0.5, 0.7, 0.85, 1]
@@ -191,7 +202,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
       }
     },
   };
-  
+
   const sectionHoverVariant: Variants = {
     rest: { x: 0, scale: 1 },
     hover: {
@@ -232,12 +243,12 @@ let timeoutId: ReturnType<typeof setTimeout>;
 
   const handleScroll = (path: string, sectionId?: string) => {
     const sectionIdToScroll = path.replace("#", "");
-    
+
     // Smoothly animate border to target width when clicking
     if (sectionId && getTargetBorderWidth(sectionId) !== undefined) {
       setBorderWidth(getTargetBorderWidth(sectionId));
     }
-    
+
     if (path === "/" || path === "#home") {
       if (location.pathname !== "/") navigate("/#home");
       else {
@@ -287,7 +298,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
         <motion.div
           className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400 rounded-full"
           initial={{ width: "0%" }}
-          animate={{ 
+          animate={{
             width: `${borderWidth * 100}%`,
             transition: {
               type: "spring",
@@ -305,7 +316,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
         {/* Animated glowing effect on the border */}
         <motion.div
           className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400 rounded-full blur-sm"
-          animate={{ 
+          animate={{
             width: `${borderWidth * 100}%`,
             opacity: [0.5, 1, 0.5],
             transition: {
@@ -403,7 +414,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
             ) : (
               <motion.button
                 key={icon.id}
-                onClick={toggleTheme}
+                onClick={handleThemeToggle}
                 className={`relative p-2 rounded-xl bg-white/10 dark:bg-black/10 border dark:text-white border-white/20 dark:border-black/20 ${icon.hoverColor} overflow-hidden group`}
                 variants={iconHoverVariant}
                 initial="rest"
@@ -443,11 +454,10 @@ let timeoutId: ReturnType<typeof setTimeout>;
                     handleScroll(section.path, section.id);
                     setIsOpen(false);
                   }}
-                  className={`relative px-4 py-2 select-none rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${
-                    isActive(section.path, section.id)
-                      ? "text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-lg shadow-cyan-500/25"
-                      : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
-                  }`}
+                  className={`relative px-4 py-2 select-none rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${isActive(section.path, section.id)
+                    ? "text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-lg shadow-cyan-500/25"
+                    : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
+                    }`}
                 >
                   <motion.div
                     className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 rounded-xl"
@@ -473,11 +483,10 @@ let timeoutId: ReturnType<typeof setTimeout>;
                 <Link
                   to={section.path}
                   onClick={() => setIsOpen(false)}
-                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${
-                    isActive(section.path, section.id)
-                      ? "text-white dark:text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-lg shadow-cyan-500/25"
-                      : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
-                  }`}
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${isActive(section.path, section.id)
+                    ? "text-white dark:text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-lg shadow-cyan-500/25"
+                    : "text-gray-300 dark:text-white hover:text-white dark:hover:text-red-600"
+                    }`}
                 >
                   <motion.div
                     className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20"
@@ -568,7 +577,7 @@ let timeoutId: ReturnType<typeof setTimeout>;
             ) : (
               <motion.button
                 key={icon.id}
-                onClick={toggleTheme}
+                onClick={handleThemeToggle}
                 className={`relative p-3 rounded-xl dark:text-white bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} overflow-hidden group`}
                 variants={iconHoverVariant}
                 initial="rest"
@@ -639,11 +648,10 @@ let timeoutId: ReturnType<typeof setTimeout>;
                       handleScroll(section.path, section.id);
                       setIsOpen(false);
                     }}
-                    className={`relative flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${
-                      isActive(section.path, section.id)
-                        ? "text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50"
-                        : "text-gray-300 dark:text-white hover:text-white hover:bg-white/10 dark:hover:bg-black/10"
-                    }`}
+                    className={`relative flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl font-semibold transition-all duration-300 overflow-hidden group ${isActive(section.path, section.id)
+                      ? "text-white bg-linear-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50"
+                      : "text-gray-300 dark:text-white hover:text-white hover:bg-white/10 dark:hover:bg-black/10"
+                      }`}
                   >
                     <motion.div
                       className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20"
@@ -711,8 +719,14 @@ let timeoutId: ReturnType<typeof setTimeout>;
                     ) : (
                       <motion.button
                         key={icon.id}
-                        onClick={() => {
-                          toggleTheme();
+                        onClick={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+
+                          toggleTheme(
+                            rect.left + rect.width / 2,
+                            rect.top + rect.height / 2
+                          );
+
                           setIsOpen(false);
                         }}
                         className={`p-3 rounded-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 ${icon.hoverColor} relative overflow-hidden group`}
