@@ -122,7 +122,7 @@ export default function Footer() {
     { value: "250+", label: "DSA Problems Solved", icon: <Hash className="w-4 h-4" /> },
     { value: "12+", label: "Projects Completed", icon: <Briefcase className="w-4 h-4" /> },
     { value: "3+", label: "Production Apps", icon: <ThumbsUp className="w-4 h-4" /> },
-    { value: "8.7", label: "B.Tech CGPA", icon: <GraduationCap className="w-4 h-4" /> },
+    { value: "8.88", label: "B.Tech CGPA", icon: <GraduationCap className="w-4 h-4" /> },
   ];
 
   return (
