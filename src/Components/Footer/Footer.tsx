@@ -1,45 +1,31 @@
 import { motion } from "framer-motion";
-import { 
-  Github, Linkedin, Mail, Eye, Heart, ChevronUp, Sparkles, MapPin, Phone, 
-  Code, Briefcase, Award,  MessageCircle,
-  Zap,  GraduationCap, Trophy, Database, Server, Cloud,
-  ShoppingBag, Plane, MessageSquare,  ExternalLink, 
-   Hash, ThumbsUp, 
+import {
+  Github, Linkedin, Mail, Eye, Heart, ChevronUp, Sparkles, MapPin, Phone,
+  Code, Briefcase, Award, MessageCircle,
+  Zap, GraduationCap, Trophy, Database, Server, Cloud,
+  ShoppingBag, Plane, MessageSquare, ExternalLink,
+  Hash, ThumbsUp,
 
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { APIURL } from "../../GlobalAPIURL";
 
 export default function Footer() {
   const [visitors, setVisitors] = useState<number>(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // 24-hour visitor counter with localStorage
+
   useEffect(() => {
-    const getOrUpdateVisitorCount = () => {
-      const lastVisit = localStorage.getItem("lastVisitTimestamp");
-      const currentTime = new Date().getTime();
-      const twentyFourHours = 24 * 60 * 60 * 1000;
-      
-      let currentCount = localStorage.getItem("visitorCount");
-      let count = currentCount ? parseInt(currentCount) : 0;
-      
-      if (!lastVisit || (currentTime - parseInt(lastVisit)) > twentyFourHours) {
-        const newCount = count + 1;
-        localStorage.setItem("visitorCount", newCount.toString());
-        localStorage.setItem("lastVisitTimestamp", currentTime.toString());
-        setVisitors(newCount);
-      } else {
-        setVisitors(count);
-      }
-    };
-    
-    getOrUpdateVisitorCount();
-    
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    axios
+      .post(`${APIURL}/track_visitor`)
+      .then((res) => {
+        console.log("👀 Total visitors:", res.data.totalVisitors);
+        setVisitors(res.data.totalVisitors);
+      })
+      .catch((error) => {
+        console.error("❌ Visitor tracking failed:", error);
+      });
   }, []);
 
   const scrollToTop = () => {
@@ -57,38 +43,38 @@ export default function Footer() {
 
   // Social Links (Only GitHub, LinkedIn, Mail, LeetCode, WhatsApp)
   const socialLinks = [
-    { 
-      name: "GitHub", 
-      url: "https://github.com/Kushagra-369", 
-      icon: Github, 
+    {
+      name: "GitHub",
+      url: "https://github.com/Kushagra-369",
+      icon: Github,
       color: "hover:text-gray-900 dark:hover:text-white",
       bgColor: "hover:bg-gray-900"
     },
-    { 
-      name: "LinkedIn", 
-      url: "https://www.linkedin.com/in/kushagra-chhabra-83b215355/", 
-      icon: Linkedin, 
+    {
+      name: "LinkedIn",
+      url: "https://www.linkedin.com/in/kushagra-chhabra-83b215355/",
+      icon: Linkedin,
       color: "hover:text-blue-600",
       bgColor: "hover:bg-blue-600"
     },
-    { 
-      name: "LeetCode", 
-      url: "https://leetcode.com/kushagra-369/", 
-      icon: Code, 
+    {
+      name: "LeetCode",
+      url: "https://leetcode.com/kushagra-369/",
+      icon: Code,
       color: "hover:text-orange-500",
       bgColor: "hover:bg-orange-500"
     },
-    { 
-      name: "WhatsApp", 
-      url: "https://wa.me/919468436924", 
-      icon: MessageCircle, 
+    {
+      name: "WhatsApp",
+      url: "https://wa.me/919468436924",
+      icon: MessageCircle,
       color: "hover:text-green-500",
       bgColor: "hover:bg-green-500"
     },
-    { 
-      name: "Email", 
-      url: "mailto:kushagra369chhabra@gmail.com", 
-      icon: Mail, 
+    {
+      name: "Email",
+      url: "mailto:kushagra369chhabra@gmail.com",
+      icon: Mail,
       color: "hover:text-red-500",
       bgColor: "hover:bg-red-500"
     },
@@ -130,7 +116,7 @@ export default function Footer() {
     <footer className="relative w-full mt-20 overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 bg-linear-to-t from-gray-100 via-gray-50 to-white dark:from-slate-950 dark:via-blue-950/30 dark:to-cyan-950/20" />
-      
+
       {/* Animated Orbs */}
       <motion.div
         className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-400/20 rounded-full blur-3xl"
@@ -197,7 +183,7 @@ export default function Footer() {
                     <Eye className="text-cyan-500" />
                   </motion.div>
                   <span className="text-sm font-semibold text-cyan-600 dark:text-cyan-400">
-                    {visitors.toLocaleString()} Unique Visitors
+                    {visitors.toLocaleString()} Today's Visitors
                   </span>
                 </div>
               </div>
@@ -222,10 +208,10 @@ export default function Footer() {
                 Full Stack Developer | Backend Engineer | MERN Stack
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                Full Stack Developer specializing in MERN stack with strong expertise in backend engineering, 
+                Full Stack Developer specializing in MERN stack with strong expertise in backend engineering,
                 scalable system design, and API development. Focused on writing clean, production-grade code.
               </p>
-              
+
               {/* Contact Info */}
               <div className="space-y-2 mb-4">
                 {contactInfo.map((info, idx) => (
@@ -308,7 +294,7 @@ export default function Footer() {
               >
                 Tech Stack
               </motion.h3>
-              
+
               <div className="space-y-3">
                 <div>
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
@@ -322,7 +308,7 @@ export default function Footer() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
                     <Database className="w-3 h-3" /> Backend & Database
@@ -340,7 +326,7 @@ export default function Footer() {
                     ))}
                   </div>
                 </div>
-                
+
                 <div>
                   <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
                     <Cloud className="w-3 h-3" /> DevOps & Tools
@@ -368,7 +354,7 @@ export default function Footer() {
               >
                 Achievements
               </motion.h3>
-              
+
               <div className="grid grid-cols-2 gap-3 mb-6">
                 {stats.map((stat, index) => (
                   <motion.div
