@@ -13,7 +13,7 @@ import { APIURL } from "../../GlobalAPIURL";
 
 export default function Footer() {
   const [visitors, setVisitors] = useState<number>(0);
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showScrollTop, ] = useState(false);
 
 
   useEffect(() => {
