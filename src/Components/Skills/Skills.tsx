@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   SiJavascript,
   SiReact,
-  SiVercel,
+    SiVercel,
   SiRender,
   SiTailwindcss,
   SiExpress,
@@ -39,17 +39,12 @@ import {
 } from "react-icons/si";
 import image1 from "../Home/image.png";
 
-interface Skill {
-  name: string;
-  icon: React.ReactNode;
-}
-
 export default function Skills() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // ==================== Image 3D tilt (hover) ====================
+  // ==================== LEFT: Image 3D tilt (Home-style) ====================
   const cardRef = useRef<HTMLDivElement | null>(null);
   const mouseX = useMotionValue<number>(0);
   const mouseY = useMotionValue<number>(0);
@@ -66,7 +61,7 @@ export default function Skills() {
 
   const glareX = useTransform(mouseX, [-0.5, 0.5], ["0%", "100%"]);
   const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"]);
-  const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.28), transparent 60%)`;
+  const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.25), transparent 60%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -83,16 +78,16 @@ export default function Skills() {
     mouseY.set(0);
   };
 
-  // ==================== Orbit rotation ====================
+  // ==================== RIGHT: Controllable cylinder ====================
   const rotation = useMotionValue<number>(0);
   const inverseRotation = useTransform(rotation, (v) => -v);
   const isDragging = useRef<boolean>(false);
   const lastX = useRef<number>(0);
 
-  // 🐢 Slow auto-spin: ~20s per full revolution
+  // 🐢 Slow auto-spin
   useAnimationFrame((_, delta) => {
     if (!isDragging.current) {
-      rotation.set(rotation.get() + delta * 0.018);
+      rotation.set(rotation.get() + delta * 0.006);
     }
   });
 
@@ -129,54 +124,138 @@ export default function Skills() {
     }),
   };
 
-  const skills: Skill[] = [
+  const skills = [
     // Frontend
-    { name: "JavaScript", icon: <SiJavascript className="text-yellow-400 text-3xl sm:text-4xl" /> },
-    { name: "TypeScript", icon: <SiTypescript className="text-blue-600 text-3xl sm:text-4xl" /> },
-    { name: "React.js", icon: <SiReact className="text-cyan-400 text-3xl sm:text-4xl" /> },
-    { name: "Next.js", icon: <SiNextdotjs className="text-gray-200 dark:text-gray-100 text-3xl sm:text-4xl" /> },
-    { name: "Tailwind CSS", icon: <SiTailwindcss className="text-teal-400 text-3xl sm:text-4xl" /> },
-    { name: "Framer Motion", icon: <SiFramer className="text-pink-500 text-3xl sm:text-4xl" /> },
-    { name: "HTML5", icon: <SiHtml5 className="text-orange-500 text-3xl sm:text-4xl" /> },
-    { name: "CSS3", icon: <SiCss3 className="text-blue-500 text-3xl sm:text-4xl" /> },
+    {
+      name: "JavaScript",
+      icon: <SiJavascript className="text-yellow-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "TypeScript",
+      icon: <SiTypescript className="text-blue-600 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "React.js",
+      icon: <SiReact className="text-cyan-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Next.js",
+      icon: <SiNextdotjs className="text-gray-200 dark:text-gray-100 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Tailwind CSS",
+      icon: <SiTailwindcss className="text-teal-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Framer Motion",
+      icon: <SiFramer className="text-pink-500 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "HTML5",
+      icon: <SiHtml5 className="text-orange-500 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "CSS3",
+      icon: <SiCss3 className="text-blue-500 text-5xl sm:text-6xl" />,
+    },
 
     // Backend
-    { name: "Node.js", icon: <SiNodedotjs className="text-green-600 text-3xl sm:text-4xl" /> },
-    { name: "Express.js", icon: <SiExpress className="text-gray-400 text-3xl sm:text-4xl" /> },
-    { name: "FastAPI", icon: <SiFastapi className="text-teal-400 text-3xl sm:text-4xl" /> },
+    {
+      name: "Node.js",
+      icon: <SiNodedotjs className="text-green-600 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Express.js",
+      icon: <SiExpress className="text-gray-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "FastAPI",
+      icon: <SiFastapi className="text-teal-400 text-5xl sm:text-6xl" />,
+    },
 
     // Programming
-    { name: "Python", icon: <SiPython className="text-yellow-300 text-3xl sm:text-4xl" /> },
-    { name: "C++", icon: <SiCplusplus className="text-blue-500 text-3xl sm:text-4xl" /> },
+    {
+      name: "Python",
+      icon: <SiPython className="text-yellow-300 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "C++",
+      icon: <SiCplusplus className="text-blue-500 text-5xl sm:text-6xl" />,
+    },
 
     // AI / ML
-    { name: "PyTorch", icon: <SiPytorch className="text-orange-500 text-3xl sm:text-4xl" /> },
-    { name: "Pandas", icon: <SiPandas className="text-indigo-400 text-3xl sm:text-4xl" /> },
-    { name: "NumPy", icon: <SiNumpy className="text-blue-400 text-3xl sm:text-4xl" /> },
+    {
+      name: "PyTorch",
+      icon: <SiPytorch className="text-orange-500 text-5xl sm:text-6xl" />,
+    },
+
+    {
+      name: "Pandas",
+      icon: <SiPandas className="text-indigo-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "NumPy",
+      icon: <SiNumpy className="text-blue-400 text-5xl sm:text-6xl" />,
+    },
 
     // Databases
-    { name: "MongoDB", icon: <SiMongodb className="text-green-500 text-3xl sm:text-4xl" /> },
-    { name: "PostgreSQL", icon: <SiPostgresql className="text-blue-400 text-3xl sm:text-4xl" /> },
-    { name: "MySQL", icon: <SiMysql className="text-blue-500 text-3xl sm:text-4xl" /> },
+    {
+      name: "MongoDB",
+      icon: <SiMongodb className="text-green-500 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "PostgreSQL",
+      icon: <SiPostgresql className="text-blue-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "MySQL",
+      icon: <SiMysql className="text-blue-500 text-5xl sm:text-6xl" />,
+    },
 
     // Tools
-    { name: "Git", icon: <SiGit className="text-orange-600 text-3xl sm:text-4xl" /> },
-    { name: "GitHub", icon: <SiGithub className="text-gray-200 text-3xl sm:text-4xl" /> },
-    { name: "Linux", icon: <SiLinux className="text-yellow-300 text-3xl sm:text-4xl" /> },
-    { name: "AWS", icon: <SiAmazonwebservices className="text-orange-400 text-3xl sm:text-4xl" /> },
-    { name: "Vercel", icon: <SiVercel className="text-gray-900 dark:text-white text-3xl sm:text-4xl" /> },
-    { name: "Render", icon: <SiRender className="text-purple-400 text-3xl sm:text-4xl" /> },
+    {
+      name: "Git",
+      icon: <SiGit className="text-orange-600 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "GitHub",
+      icon: <SiGithub className="text-gray-200 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Linux",
+      icon: <SiLinux className="text-yellow-300 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "AWS",
+      icon: <SiAmazonwebservices className="text-orange-400 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Vercel",
+      icon: <SiVercel className="text-gray-900 dark:text-white text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Render",
+      icon: <SiRender className="text-purple-400 text-5xl sm:text-6xl" />,
+    },
 
     // UI / Design
-    { name: "Figma", icon: <SiFigma className="text-indigo-500 text-3xl sm:text-4xl" /> },
-    { name: "Material UI", icon: <SiMui className="text-blue-500 text-2xl sm:text-3xl" /> },
+    {
+      name: "Figma",
+      icon: <SiFigma className="text-indigo-500 text-5xl sm:text-6xl" />,
+    },
+    {
+      name: "Material UI",
+      icon: <SiMui className="text-blue-500 text-4xl sm:text-5xl" />,
+    },
   ];
 
-  // ===== Orbit geometry =====
-  const CARD_W = 160;
-  const CARD_H = 200;
-  const RADIUS = 820; // pushed further out so big image doesn't get overlapped
-  const IMAGE_SIZE = 700; // ⬅️ BIG center image
+  // Cylinder geometry
+  const CARD_W = 200;
+  const CARD_H = 260;
+
+  // Larger radius prevents cards from overlapping
+  const RADIUS = 900;
+
   const ANGLE_STEP = 360 / skills.length;
 
   return (
@@ -191,95 +270,85 @@ export default function Skills() {
         <motion.h1
           variants={fadeIn}
           custom={0}
-          className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-6 bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
+          className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-14 sm:mb-20 bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
         >
           ⚙️ Skills & Tools
         </motion.h1>
 
-        <motion.p
-          variants={fadeIn}
-          custom={1}
-          className="text-center text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-12"
-        >
-          Grab and drag the ring — or just watch the skills orbit around ↻
-        </motion.p>
+        {/* =============== TWO-COLUMN LAYOUT =============== */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-4 items-center">
 
-        {/* ============================================================
-            ORBIT STAGE — big image in center, skills around it
-            ============================================================ */}
-        <div
-          className="relative w-full flex items-center justify-center select-none"
-          style={{ height: 900 }}
-        >
-          {/* Floor glow beneath the orbit */}
-          <div className="absolute bottom-14 w-[820px] max-w-[94vw] h-32 rounded-[100%] bg-cyan-500/20 dark:bg-cyan-500/10 blur-3xl pointer-events-none" />
-
-          {/* Responsive scale wrapper — keeps the whole 3D scene visible */}
-          <div className="scale-[0.42] sm:scale-[0.52] md:scale-[0.62] lg:scale-[0.72] xl:scale-[0.85] 2xl:scale-100 origin-center">
-            {/* Perspective context */}
+          {/* =================================================
+              LEFT: IMAGE — hugs viewport left edge,
+              wall-mounted slant FIXED
+              ================================================= */}
+          <div className="flex justify-start order-2 lg:order-1 -ml-4 sm:-ml-8 md:-ml-12 lg:-ml-16 xl:-ml-24 2xl:-ml-28">
+            {/* Perspective root */}
             <div
               style={{
-                perspective: 2400,
-                perspectiveOrigin: "50% 50%",
-                transformStyle: "preserve-3d",
+                perspective: 1400,
+                perspectiveOrigin: "30% 50%",
               }}
             >
-              {/* Zero-sized anchor at the geometric center of the scene */}
+              {/* Wall-mount slant — FIXED:
+                  left side goes INTO wall, right side comes OUT toward viewer */}
               <div
-                className="relative"
                 style={{
-                  width: 0,
-                  height: 0,
+                  transform: "rotateY(22deg) rotateX(4deg) rotateZ(1.2deg)",
+                  transformOrigin: "left center",
                   transformStyle: "preserve-3d",
                 }}
               >
-                {/* ==================================================
-                    CENTER IMAGE — big, clear, the "sun" of the orbit
-                    ================================================== */}
+                {/* Hover interaction wrapper */}
                 <motion.div
                   ref={cardRef}
-                  className="absolute select-none"
-                  style={{
-                    left: 0,
-                    top: 0,
-                    width: IMAGE_SIZE,
-                    transform: "translate(-50%, -50%) translateZ(0px)",
-                    transformStyle: "preserve-3d",
-                  }}
+                  className="relative select-none w-full max-w-104 sm:max-w-lg lg:max-w-160 xl:max-w-184"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
                   onMouseEnter={() => setIsHoveringImg(true)}
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
+                  style={{ transformStyle: "preserve-3d" }}
                 >
                   <motion.div
-                    className="relative rounded-3xl p-4"
+                    className="relative rounded-3xl p-4 sm:p-6"
                     style={{
                       transformStyle: "preserve-3d",
                       rotateX: isHoveringImg ? rotateX : 0,
                       rotateY: isHoveringImg ? rotateY : 0,
                     }}
-                    animate={{ y: isHoveringImg ? -6 : 0 }}
+                    animate={{ y: isHoveringImg ? -8 : 0 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   >
-                    {/* Soft cyan aura behind the image */}
+                    {/* Soft depth glow */}
                     <motion.div
-                      className="absolute -inset-6 rounded-3xl bg-linear-to-br from-cyan-500/35 via-transparent to-blue-500/35 blur-3xl"
+                      className="absolute inset-0 rounded-3xl bg-linear-to-br from-cyan-500/20 via-transparent to-blue-500/20 blur-2xl"
                       animate={{
-                        opacity: isHoveringImg ? 1 : 0.8,
-                        scale: isHoveringImg ? 1.06 : 1,
+                        opacity: isHoveringImg ? 0.9 : 0.5,
+                        scale: isHoveringImg ? 1.05 : 1,
                       }}
                       transition={{ duration: 0.4 }}
                       style={{ transform: "translateZ(-40px)" }}
                     />
 
-                    {/* Frame */}
+                    {/* Frame border */}
                     <div
-                      className="absolute inset-0 rounded-3xl border-2 border-cyan-400/30 dark:border-cyan-400/20"
+                      className="absolute inset-0 rounded-3xl border border-cyan-400/20 dark:border-cyan-400/10"
                       style={{ transform: "translateZ(0px)" }}
                     />
 
-                    {/* Image */}
+                    {/* Wall shadow — now cast to the LEFT (light from right) */}
                     <div
-                      className="relative rounded-2xl overflow-hidden"
+                      className="absolute inset-0 rounded-3xl bg-black/10 dark:bg-black/40 blur-2xl"
+                      style={{
+                        transform: "translateX(-24px) translateZ(-60px)",
+                        opacity: 0.6,
+                      }}
+                    />
+
+                    <div
+                      className="relative select-none rounded-2xl overflow-hidden"
                       style={{ transform: "translateZ(30px)" }}
                     >
                       <motion.img
@@ -314,140 +383,166 @@ export default function Skills() {
                     />
                   </motion.div>
                 </motion.div>
+              </div>
+            </div>
+          </div>
 
-                {/* ==================================================
-                    ORBIT RING — skills revolving around the image
-                    ================================================== */}
-                <motion.div
-                  className="absolute cursor-grab active:cursor-grabbing"
-                  onPointerDown={handlePointerDown}
+          {/* =================================================
+              RIGHT: 3D CYLINDER
+              ================================================= */}
+          <div className="flex flex-col items-center justify-center order-1 lg:order-2">
+            <div
+              className="relative w-full flex items-center justify-center"
+              style={{ height: 560 }}
+            >
+              {/* Floor glow */}
+              <div className="absolute bottom-12 w-[620px] max-w-[92vw] h-28 rounded-[100%] bg-cyan-500/20 blur-3xl pointer-events-none" />
+
+              {/* Responsive scale so cylinder fits in column */}
+              <div className="scale-[0.52] sm:scale-[0.58] md:scale-[0.62] lg:scale-[0.55] xl:scale-[0.62] origin-center">
+                {/* Perspective context */}
+                <div
                   style={{
-                    left: 0,
-                    top: 0,
+                    width: CARD_W,
+                    height: CARD_H,
+                    perspective: 1800,
+                    perspectiveOrigin: "50% 50%",
                     transformStyle: "preserve-3d",
-                    rotateY: rotation,
-                    touchAction: "none",
                   }}
                 >
-                  {skills.map((skill, i) => {
-                    const angle = i * ANGLE_STEP;
-                    return (
-                      <div
-                        key={skill.name}
-                        style={{
-                          position: "absolute",
-                          left: -CARD_W / 2,
-                          top: -CARD_H / 2,
-                          width: CARD_W,
-                          height: CARD_H,
-                          transformStyle: "preserve-3d",
-                          transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
-                        }}
-                      >
-                        {/* Static counter-rotation: undo the base angle */}
+                  {/* Revolving ring — draggable */}
+                  <motion.div
+                    className="relative cursor-grab active:cursor-grabbing"
+                    onPointerDown={handlePointerDown}
+                    style={{
+                      width: CARD_W,
+                      height: CARD_H,
+                      transformStyle: "preserve-3d",
+                      rotateY: rotation,
+                      touchAction: "none",
+                    }}
+                  >
+                    {skills.map((skill, i) => {
+                      const angle = i * ANGLE_STEP;
+                      return (
                         <div
+                          key={skill.name}
+                          className="absolute top-1/2 left-1/2"
                           style={{
-                            width: "100%",
-                            height: "100%",
+                            width: CARD_W,
+                            height: CARD_H,
+                            marginLeft: -CARD_W / 2,
+                            marginTop: -CARD_H / 2,
                             transformStyle: "preserve-3d",
-                            transform: `rotateY(${-angle}deg)`,
+                            transform: `rotateY(${angle}deg) translateZ(${RADIUS}px)`,
                           }}
                         >
-                          {/* Dynamic counter-rotation: undo the ring spin */}
-                          <motion.div
+                          {/* Static counter-rotation (base angle) */}
+                          <div
                             style={{
                               width: "100%",
                               height: "100%",
                               transformStyle: "preserve-3d",
-                              rotateY: inverseRotation,
+                              transform: `rotateY(${-angle}deg)`,
                             }}
                           >
-                            {/* ===== CARD ===== */}
+                            {/* Dynamic counter-rotation so card always faces viewer */}
                             <motion.div
-                              whileHover={{ scale: 1.08 }}
-                              transition={{ type: "spring", stiffness: 250, damping: 14 }}
-                              className="relative w-full h-full flex flex-col items-center justify-center rounded-2xl 
-                              border border-cyan-400/30 bg-white/40 dark:bg-white/5 
-                              backdrop-blur-md text-gray-800 dark:text-gray-200 
-                              overflow-visible group shadow-md hover:shadow-cyan-400/40 
-                              transition-all duration-300"
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                transformStyle: "preserve-3d",
+                                rotateY: inverseRotation,
+                              }}
                             >
-                              {/* Horizontal rotating cyan ring (always spinning) */}
+                              {/* ===== CARD ===== */}
                               <motion.div
-                                className="absolute -inset-3 rounded-full border-2 border-cyan-400/40 opacity-100 group-hover:opacity-100"
-                                style={{
-                                  transformStyle: "preserve-3d",
-                                  borderLeftColor: "rgba(34,211,238,0.6)",
-                                }}
-                                initial={{ rotateX: 0 }}
-                                animate={{ rotateY: 360 }}
-                                transition={{
-                                  repeat: Infinity,
-                                  duration: 6,
-                                  ease: "linear",
-                                }}
-                              />
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: "spring", stiffness: 250, damping: 12 }}
+                                className="relative w-full h-full flex flex-col items-center justify-center rounded-2xl 
+                                border border-cyan-400/30 bg-white/30 dark:bg-white/5 
+                                backdrop-blur-md text-gray-800 dark:text-gray-200 
+                                overflow-visible group shadow-md hover:shadow-cyan-400/30 
+                                transition-all duration-300"
+                              >
+                                {/* Horizontal rotating cyan ring */}
+                                <motion.div
+                                  className="absolute -inset-4 sm:-inset-5 rounded-full border-2 border-cyan-400/40 opacity-100 group-hover:opacity-100"
+                                  style={{
+                                    transformStyle: "preserve-3d",
+                                    borderLeftColor: "rgba(34,211,238,0.6)",
+                                  }}
+                                  initial={{ rotateX: 0 }}
+                                  animate={{ rotateY: 360 }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    duration: 6,
+                                    ease: "linear",
+                                  }}
+                                />
 
-                              {/* Vertical red hover ring */}
-                              <motion.div
-                                className="absolute -inset-3 rounded-full border-2 border-red-600 opacity-0 group-hover:opacity-100"
-                                initial={{ rotateX: 0 }}
-                                animate={{ rotateX: 360 }}
-                                transition={{
-                                  repeat: Infinity,
-                                  duration: 3,
-                                  ease: "linear",
-                                }}
-                                style={{
-                                  transformStyle: "preserve-3d",
-                                  borderLeftColor: "rgba(34,211,238,0.6)",
-                                }}
-                              />
+                                {/* Vertical red hover ring */}
+                                <motion.div
+                                  className="absolute -inset-4 sm:-inset-5 rounded-full border-2 border-red-600 opacity-0 group-hover:opacity-100"
+                                  initial={{ rotateX: 0 }}
+                                  animate={{ rotateX: 360 }}
+                                  transition={{
+                                    repeat: Infinity,
+                                    duration: 3,
+                                    ease: "linear",
+                                  }}
+                                  style={{
+                                    transformStyle: "preserve-3d",
+                                    borderLeftColor: "rgba(34,211,238,0.6)",
+                                  }}
+                                />
 
-                              {/* Icon */}
-                              <div className="relative z-10 mb-3">{skill.icon}</div>
+                                {/* Icon */}
+                                <div className="relative z-10 mb-3 scale-90">
+                                  {skill.icon}
+                                </div>
 
-                              {/* Name */}
-                              <span className="relative z-10 font-semibold tracking-wide text-sm sm:text-base text-center px-3 leading-tight">
-                                {skill.name}
-                              </span>
+                                <span className="relative z-10 font-semibold tracking-wide text-base sm:text-lg text-center px-3">
+                                  {skill.name}
+                                </span>
 
-                              {/* Cyan glow on hover */}
-                              <motion.div className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                                {/* Cyan glow on hover */}
+                                <motion.div className="absolute inset-0 rounded-2xl bg-cyan-400/10 blur-md opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                              </motion.div>
+                              {/* ===== /CARD ===== */}
                             </motion.div>
-                            {/* ===== /CARD ===== */}
-                          </motion.div>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                </div>
               </div>
             </div>
+
+            {/* Drag hint */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2, duration: 0.6 }}
+              className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center justify-center gap-2"
+            >
+              <motion.span
+                animate={{ x: [-4, 4, -4] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                ←
+              </motion.span>
+              <span>drag to spin</span>
+              <motion.span
+                animate={{ x: [4, -4, 4] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              >
+                →
+              </motion.span>
+            </motion.p>
           </div>
         </div>
-
-        {/* Drag hint */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-          className="mt-2 text-xs text-gray-400 dark:text-gray-500 flex items-center justify-center gap-2"
-        >
-          <motion.span
-            animate={{ x: [-4, 4, -4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            ←
-          </motion.span>
-          <span>drag to spin</span>
-          <motion.span
-            animate={{ x: [4, -4, 4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            →
-          </motion.span>
-        </motion.p>
 
         {/* =============== QUOTE =============== */}
         <motion.div
