@@ -18,13 +18,26 @@ export default function Footer() {
 
   useEffect(() => {
     axios
-      .post(`${APIURL}/track_visitor`)
+      .post(
+        `${APIURL}/track_visitor`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
-        console.log("👀 Total visitors:", res.data.totalVisitors);
+        console.log(
+          "👀 Total visitors:",
+          res.data.totalVisitors
+        );
+
         setVisitors(res.data.totalVisitors);
       })
       .catch((error) => {
-        console.error("❌ Visitor tracking failed:", error);
+        console.error(
+          "❌ Visitor tracking failed:",
+          error
+        );
       });
   }, []);
 
