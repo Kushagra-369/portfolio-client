@@ -100,7 +100,7 @@ export default function Navbar() {
     { name: "Home", path: "/", icon: <HomeIcon fontSize="small" />, id: "home" },
     { name: "Skills", path: "#skills", icon: <SkillsIcon fontSize="small" />, id: "skills" },
     { name: "Projects", path: "#projects", icon: <ProjectsIcon fontSize="small" />, id: "projects" },
-    { name: "About", path: "#about", icon: <AboutIcon fontSize="small" />, id: "about" },
+    { name: "Experience", path: "#about", icon: <AboutIcon fontSize="small" />, id: "about" },
     { name: "Contact", path: "#signup", icon: <ContactIcon fontSize="small" />, id: "signup" },
     { name: "Footer", path: "#footer", icon: <FooterIcon fontSize="small" />, id: "footer" },
   ];
