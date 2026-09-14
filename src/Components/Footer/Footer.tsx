@@ -59,7 +59,7 @@ export default function Footer() {
   const [loadingGithub, setLoadingGithub] = useState<boolean>(true);
   const [loadingLeetcode, setLoadingLeetcode] = useState<boolean>(true);
 
-  // ==================== Visitor tracking ====================
+  // ==================== Visitor tracking (ORIGINAL API — intact) ====================
   useEffect(() => {
     axios
       .post(
@@ -70,6 +70,7 @@ export default function Footer() {
         }
       )
       .then((res) => {
+        console.log("👀 Total visitors:", res.data.totalVisitors);
         setVisitors(res.data.totalVisitors);
       })
       .catch((error) => {
@@ -77,6 +78,7 @@ export default function Footer() {
       });
   }, []);
 
+  // ==================== LeetCode live data ====================
   useEffect(() => {
     const fetchLeetcode = async () => {
       try {
@@ -113,7 +115,7 @@ export default function Footer() {
     fetchLeetcode();
   }, []);
 
-  // ==================== Fetch GitHub live data ====================
+  // ==================== GitHub live data ====================
   useEffect(() => {
     const fetchGithub = async () => {
       try {
@@ -136,14 +138,11 @@ export default function Footer() {
     fetchGithub();
   }, []);
 
-
-
   // ==================== Computed stats ====================
   const totalStars = githubRepos.reduce(
     (sum, repo) => sum + repo.stargazers_count,
     0
   );
-
 
   const currentYear = new Date().getFullYear();
 
@@ -231,6 +230,7 @@ export default function Footer() {
               </div>
             </motion.div>
 
+            {/* Visitor Counter — powered by the SAME original API */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
@@ -391,7 +391,7 @@ export default function Footer() {
                 )}
 
                 {/* Contribution Graph (LIVE) */}
-                <div className="rounded-xl bg-white/60 dark:bg-gray-900/40 border border-cyan-400/15 p-3 mb-4 overflow-hidden">
+                <div className="rounded-xl bg-white/60 dark:bg-gray-900/40 border border-cyan-400/15 p-3 overflow-hidden mt-auto">
                   <p className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-1">
                     <GitBranch className="w-3 h-3 text-cyan-500" /> Contributions (Last Year)
                   </p>
@@ -402,8 +402,6 @@ export default function Footer() {
                     loading="lazy"
                   />
                 </div>
-
-
               </div>
             </motion.div>
 
