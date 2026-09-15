@@ -1,114 +1,224 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
 
 export default function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  /* =========================
+     MOUSE POSITION
+  ========================= */
+
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+
+  /* =========================
+     MAIN DOT
+     Very fast / almost locked
+  ========================= */
+
+  const dotX = useSpring(mouseX, {
+    stiffness: 1800,
+    damping: 65,
+    mass: 0.08,
+  });
+
+  const dotY = useSpring(mouseY, {
+    stiffness: 1800,
+    damping: 65,
+    mass: 0.08,
+  });
+
+  /* =========================
+     OUTER RING
+     Slight smooth follow
+  ========================= */
+
+  const ringX = useSpring(mouseX, {
+    stiffness: 650,
+    damping: 38,
+    mass: 0.18,
+  });
+
+  const ringY = useSpring(mouseY, {
+    stiffness: 650,
+    damping: 38,
+    mass: 0.18,
+  });
+
+  /* =========================
+     MOUSE LISTENER
+  ========================= */
 
   useEffect(() => {
     const moveCursor = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
 
     window.addEventListener("mousemove", moveCursor);
-    return () => window.removeEventListener("mousemove", moveCursor);
-  }, []);
+
+    return () => {
+      window.removeEventListener("mousemove", moveCursor);
+    };
+  }, [mouseX, mouseY]);
 
   return (
     <>
-      {/* MAIN CURSOR DOT - medium size */}
+      {/* =================================
+          MAIN CURSOR
+      ================================= */}
+
       <motion.div
-        animate={{
-          x: position.x - 6,
-          y: position.y - 6,
+        style={{
+          x: dotX,
+          y: dotY,
         }}
-        transition={{ duration: 0.008 }}
         className="
-          fixed top-0 left-0
-          w-3 h-3
+          fixed
+          top-0
+          left-0
+          w-4
+          h-4
+          -translate-x-1/2
+          -translate-y-1/2
           rounded-full
           pointer-events-none
           z-999999
-          bg-linear-to-br from-cyan-300 via-emerald-400 to-teal-500
-          shadow-[0_0_20px_5px_rgba(45,212,191,0.7)]
+          bg-linear-to-br
+          from-cyan-200
+          via-emerald-400
+          to-teal-500
+          shadow-[0_0_25px_7px_rgba(45,212,191,0.65)]
         "
       />
 
-      {/* OUTER RING - subtle */}
+      {/* =================================
+          INNER GLOW
+      ================================= */}
+
       <motion.div
-        animate={{
-          x: position.x - 12,
-          y: position.y - 12,
+        style={{
+          x: dotX,
+          y: dotY,
         }}
-        transition={{ duration: 0.015 }}
         className="
-          fixed top-0 left-0
-          w-6 h-6
+          fixed
+          top-0
+          left-0
+          w-8
+          h-8
+          -translate-x-1/2
+          -translate-y-1/2
           rounded-full
           pointer-events-none
           z-999998
-          border border-cyan-400/30
-          bg-linear-to-br from-cyan-400/5 to-emerald-400/5
-          shadow-[0_0_15px_rgba(34,211,238,0.3)]
+          bg-cyan-300/5
+          blur-md
         "
       />
 
-      {/* SPREAD GLITTER 1 - top-left */}
+      {/* =================================
+          OUTER RING
+      ================================= */}
+
       <motion.div
+        style={{
+          x: ringX,
+          y: ringY,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-8
+          h-8
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          pointer-events-none
+          z-999997
+          border
+          border-cyan-300/40
+          bg-linear-to-br
+          from-cyan-400/10
+          to-emerald-400/5
+          shadow-[0_0_18px_rgba(34,211,238,0.35)]
+        "
+      />
+
+      {/* =================================
+          SPARKLE 1 — TOP LEFT
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
         animate={{
-          x: position.x - 18,
-          y: position.y - 18,
+          x: ["-50%", "-50%"],
+          y: ["-50%", "-50%"],
           opacity: [0, 1, 0],
+          scale: [0, 1.4, 0],
+        }}
+        transition={{
+          duration: 0.65,
+          repeat: Infinity,
+          delay: 0,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-2
+          h-2
+          rounded-full
+          pointer-events-none
+          z-999996
+          bg-cyan-200
+          shadow-[0_0_12px_#67e8f9]
+          -translate-x-7
+          -translate-y-7
+        "
+      />
+
+      {/* =================================
+          SPARKLE 2 — TOP RIGHT
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
+        animate={{
+          opacity: [0, 0.9, 0],
           scale: [0, 1.2, 0],
         }}
         transition={{
-          duration: 0.6,
-          repeat: Infinity,
-          delay: 0,
-          x: { duration: 0.01 },
-          y: { duration: 0.01 },
-        }}
-        className="
-          fixed top-0 left-0
-          w-1.5 h-1.5
-          rounded-full
-          bg-cyan-200
-          pointer-events-none
-          z-999997
-          shadow-[0_0_10px_cyan]
-        "
-      />
-
-      {/* SPREAD GLITTER 2 - top-right */}
-      <motion.div
-        animate={{
-          x: position.x + 16,
-          y: position.y - 20,
-          opacity: [0, 0.8, 0],
-          scale: [0, 1, 0],
-        }}
-        transition={{
-          duration: 0.7,
+          duration: 0.75,
           repeat: Infinity,
           delay: 0.15,
-          x: { duration: 0.012 },
-          y: { duration: 0.012 },
         }}
         className="
-          fixed top-0 left-0
-          w-1 h-1
+          fixed
+          top-0
+          left-0
+          w-1.5
+          h-1.5
           rounded-full
-          bg-emerald-300
           pointer-events-none
-          z-999997
-          shadow-[0_0_8px_#6ee7b7]
+          z-999996
+          bg-emerald-300
+          shadow-[0_0_12px_#6ee7b7]
+          translate-x-7
+          -translate-y-8
         "
       />
 
-      {/* SPREAD GLITTER 3 - bottom-right */}
+      {/* =================================
+          SPARKLE 3 — BOTTOM RIGHT
+      ================================= */}
+
       <motion.div
+        style={{ x: mouseX, y: mouseY }}
         animate={{
-          x: position.x + 20,
-          y: position.y + 14,
           opacity: [0, 1, 0],
           scale: [0, 1.3, 0],
         }}
@@ -116,77 +226,91 @@ export default function CustomCursor() {
           duration: 0.8,
           repeat: Infinity,
           delay: 0.3,
-          x: { duration: 0.011 },
-          y: { duration: 0.011 },
         }}
         className="
-          fixed top-0 left-0
-          w-1 
+          fixed
+          top-0
+          left-0
+          w-1.5
+          h-1.5
           rounded-full
-          bg-teal-200
-          pointer-events-none
-          z-999997
-          shadow-[0_0_10px_#5eead4]
-        "
-      />
-
-      {/* SPREAD GLITTER 4 - bottom-left */}
-      <motion.div
-        animate={{
-          x: position.x - 22,
-          y: position.y + 12,
-          opacity: [0, 0.9, 0],
-          scale: [0, 1.1, 0],
-        }}
-        transition={{
-          duration: 0.65,
-          repeat: Infinity,
-          delay: 0.45,
-          x: { duration: 0.013 },
-          y: { duration: 0.013 },
-        }}
-        className="
-          fixed top-0 left-0
-          w-1.5 h-1.5
-          rounded-full
-          bg-cyan-100
           pointer-events-none
           z-999996
-          shadow-[0_0_12px_rgba(165,243,252,1)]
+          bg-teal-200
+          shadow-[0_0_12px_#5eead4]
+          translate-x-8
+          translate-y-7
         "
       />
 
-      {/* SPREAD GLITTER 5 - far left */}
+      {/* =================================
+          SPARKLE 4 — BOTTOM LEFT
+      ================================= */}
+
       <motion.div
+        style={{ x: mouseX, y: mouseY }}
         animate={{
-          x: position.x - 28,
-          y: position.y - 4,
-          opacity: [0, 0.7, 0],
-          scale: [0, 0.9, 0],
+          opacity: [0, 0.9, 0],
+          scale: [0, 1.3, 0],
         }}
         transition={{
-          duration: 0.55,
+          duration: 0.7,
+          repeat: Infinity,
+          delay: 0.42,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-2
+          h-2
+          rounded-full
+          pointer-events-none
+          z-999996
+          bg-cyan-100
+          shadow-[0_0_14px_#a5f3fc]
+          -translate-x-9
+          translate-y-6
+        "
+      />
+
+      {/* =================================
+          SPARKLE 5 — FAR LEFT
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
+        animate={{
+          opacity: [0, 0.8, 0],
+          scale: [0, 1, 0],
+        }}
+        transition={{
+          duration: 0.6,
           repeat: Infinity,
           delay: 0.2,
-          x: { duration: 0.014 },
-          y: { duration: 0.014 },
         }}
         className="
-          fixed top-0 left-0
-          w-1 h-1
+          fixed
+          top-0
+          left-0
+          w-1.5
+          h-1.5
           rounded-full
-          bg-white
           pointer-events-none
           z-999996
-          shadow-[0_0_8px_white]
+          bg-white
+          shadow-[0_0_10px_white]
+          -translate-x-11
         "
       />
 
-      {/* SPREAD GLITTER 6 - far right */}
+      {/* =================================
+          SPARKLE 6 — FAR RIGHT
+      ================================= */}
+
       <motion.div
+        style={{ x: mouseX, y: mouseY }}
         animate={{
-          x: position.x + 26,
-          y: position.y + 2,
           opacity: [0, 0.85, 0],
           scale: [0, 1.15, 0],
         }}
@@ -194,68 +318,206 @@ export default function CustomCursor() {
           duration: 0.75,
           repeat: Infinity,
           delay: 0.5,
-          x: { duration: 0.015 },
-          y: { duration: 0.015 },
         }}
         className="
-          fixed top-0 left-0
-          w-1.5 h-1.5
+          fixed
+          top-0
+          left-0
+          w-2
+          h-2
           rounded-full
-          bg-emerald-200
           pointer-events-none
           z-999996
-          shadow-[0_0_10px_#a7f3d0]
+          bg-emerald-200
+          shadow-[0_0_14px_#a7f3d0]
+          translate-x-10
+          translate-y-1
         "
       />
 
-      {/* SPREAD GLITTER 7 - top center */}
+      {/* =================================
+          SPARKLE 7 — TOP CENTER
+      ================================= */}
+
       <motion.div
+        style={{ x: mouseX, y: mouseY }}
         animate={{
-          x: position.x - 2,
-          y: position.y - 24,
           opacity: [0, 1, 0],
-          scale: [0, 0.8, 0],
+          scale: [0, 1, 0],
         }}
         transition={{
-          duration: 0.5,
+          duration: 0.55,
           repeat: Infinity,
           delay: 0.1,
-          x: { duration: 0.009 },
-          y: { duration: 0.009 },
         }}
         className="
-          fixed top-0 left-0
-          w-0.5 h-0.5
+          fixed
+          top-0
+          left-0
+          w-1
+          h-1
           rounded-full
-          bg-cyan-50
           pointer-events-none
           z-999995
+          bg-cyan-50
+          shadow-[0_0_10px_#cffafe]
+          -translate-y-10
         "
       />
 
-      {/* SPREAD GLITTER 8 - bottom center */}
+      {/* =================================
+          SPARKLE 8 — BOTTOM CENTER
+      ================================= */}
+
       <motion.div
+        style={{ x: mouseX, y: mouseY }}
         animate={{
-          x: position.x + 3,
-          y: position.y + 22,
-          opacity: [0, 0.75, 0],
-          scale: [0, 1, 0],
+          opacity: [0, 0.8, 0],
+          scale: [0, 1.1, 0],
         }}
         transition={{
           duration: 0.7,
           repeat: Infinity,
           delay: 0.4,
-          x: { duration: 0.01 },
-          y: { duration: 0.01 },
         }}
         className="
-          fixed top-0 left-0
-          w-1 h-1
+          fixed
+          top-0
+          left-0
+          w-1.5
+          h-1.5
           rounded-full
-          bg-teal-100
           pointer-events-none
           z-999995
-          shadow-[0_0_8px_#ccfbf1]
+          bg-teal-100
+          shadow-[0_0_10px_#ccfbf1]
+          translate-y-9
+        "
+      />
+
+      {/* =================================
+          SPARKLE 9 — DIAGONAL
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
+        animate={{
+          opacity: [0, 0.9, 0],
+          scale: [0, 1.2, 0],
+          rotate: [0, 90, 180],
+        }}
+        transition={{
+          duration: 0.9,
+          repeat: Infinity,
+          delay: 0.25,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-1
+          h-3
+          rounded-full
+          pointer-events-none
+          z-999995
+          bg-cyan-200
+          shadow-[0_0_10px_cyan]
+          translate-x-5
+          translate-y-6
+        "
+      />
+
+      {/* =================================
+          SPARKLE 10 — DIAGONAL
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
+        animate={{
+          opacity: [0, 1, 0],
+          scale: [0, 1.1, 0],
+          rotate: [90, 180, 270],
+        }}
+        transition={{
+          duration: 0.85,
+          repeat: Infinity,
+          delay: 0.55,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-1
+          h-3
+          rounded-full
+          pointer-events-none
+          z-999995
+          bg-emerald-200
+          shadow-[0_0_10px_#6ee7b7]
+          -translate-x-6
+          -translate-y-5
+        "
+      />
+
+      {/* =================================
+          SPARKLE 11
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
+        animate={{
+          opacity: [0, 0.7, 0],
+          scale: [0, 1.4, 0],
+        }}
+        transition={{
+          duration: 0.5,
+          repeat: Infinity,
+          delay: 0.35,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-1
+          h-1
+          rounded-full
+          pointer-events-none
+          z-999994
+          bg-white
+          shadow-[0_0_8px_white]
+          translate-x-2
+          -translate-y-12
+        "
+      />
+
+      {/* =================================
+          SPARKLE 12
+      ================================= */}
+
+      <motion.div
+        style={{ x: mouseX, y: mouseY }}
+        animate={{
+          opacity: [0, 0.8, 0],
+          scale: [0, 1.3, 0],
+        }}
+        transition={{
+          duration: 0.65,
+          repeat: Infinity,
+          delay: 0.6,
+        }}
+        className="
+          fixed
+          top-0
+          left-0
+          w-1.5
+          h-1.5
+          rounded-full
+          pointer-events-none
+          z-999994
+          bg-teal-100
+          shadow-[0_0_10px_#99f6e4]
+          -translate-x-3
+          translate-y-11
         "
       />
     </>
