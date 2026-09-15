@@ -118,85 +118,22 @@ export default function About() {
   };
 
   return (
-    <main
-      className="
-        relative min-h-screen overflow-hidden
-        bg-white dark:bg-[#030712]
-        px-6 pb-20 pt-28
-        text-gray-900 dark:text-white
-        transition-colors duration-500
-        sm:px-10
-        md:px-14
-        lg:px-16
-        xl:px-20
-      "
-    >
+  <main
+  className="
+    relative min-h-screen overflow-hidden
+    bg-transparent
+    px-6 pb-20 pt-28
+    text-gray-900 dark:text-white
+    sm:px-10
+    md:px-14
+    lg:px-16
+    xl:px-20
+  "
+>
       {/* =========================================
           BACKGROUND
       ========================================= */}
 
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Cyan glow */}
-        <motion.div
-          animate={{
-            x: [0, 70, -30, 0],
-            y: [0, -40, 30, 0],
-            scale: [1, 1.1, 0.95, 1],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="
-            absolute
-            -left-48
-            top-20
-            h-[500px]
-            w-[500px]
-            rounded-full
-            bg-cyan-400/10
-            dark:bg-cyan-500/[0.07]
-            blur-[140px]
-          "
-        />
-
-        {/* Blue glow */}
-        <motion.div
-          animate={{
-            x: [0, -60, 30, 0],
-            y: [0, 40, -30, 0],
-            scale: [1, 0.9, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="
-            absolute
-            -right-48
-            top-[30%]
-            h-[500px]
-            w-[500px]
-            rounded-full
-            bg-blue-400/10
-            dark:bg-blue-600/[0.07]
-            blur-[140px]
-          "
-        />
-
-        {/* Grid */}
-        <div
-          className="
-            absolute inset-0
-            opacity-40 dark:opacity-20
-            bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.12)_1px,transparent_1px)]
-            dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.035)_1px,transparent_1px)]
-           bg-size-[32px_32px]
-          "
-        />
-      </div>
 
       {/* =========================================
           PAGE HEADER
