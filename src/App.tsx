@@ -50,7 +50,7 @@ function Snowfall() {
         pointer-events-none
         fixed
         inset-0
-        z-[-40]
+        z-40
         overflow-hidden
       "
       aria-hidden="true"
@@ -61,7 +61,7 @@ function Snowfall() {
           className="
             snowflake
             absolute
-            top-[-20px]
+          -top-5
             rounded-full
             bg-cyan-400/40
             shadow-[0_0_8px_rgba(34,211,238,0.35)]
