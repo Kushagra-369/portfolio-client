@@ -213,6 +213,38 @@ const staticProjects: Project[] = [
     __v: 0,
   },
   {
+    _id: "6910d56e84a2c11a9b7f6adf",
+    profilePhoto: {
+      _id: "6910d56e84a2c11a9b7f6ae0",
+      public_id: "sudarshana-ai",
+      secure_url: "https://res.cloudinary.com/dzrvibnxs/image/upload/v1789613393/Screenshot_From_2026-09-17_08-19-13_nrsmad.png",
+    },
+    name: "Sudarshana-AI",
+    description: "AI-powered defence intelligence and situational awareness system with real-time surveillance, object detection, team tracking, AI situation analysis, and secure role-based command access.",
+    tools: [
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "Express.js",
+      "Python",
+      "FastAPI",
+      "YOLOv8",
+      "OpenCV",
+      "MongoDB",
+      "Kotlin",
+      "JWT",
+      "TOTP",
+    ],
+    githubLink: "https://github.com/Kushagra-369/Sudarshana-AI",
+    deploymentLink: "https://sudarshana-ai.vercel.app/",
+    category: "Full Stack",
+    isDeleted: false,
+    createdAt: "2026-09-17T00:00:00.000+00:00",
+    updatedAt: "2026-09-17T00:00:00.000+00:00",
+    __v: 0,
+  },
+  {
     _id: "6910d5d584a2c11a9b7f6ae0",
     profilePhoto: {
       _id: "6910d5d584a2c11a9b7f6ae1",
@@ -286,18 +318,18 @@ interface SectionProps {
 // Split evenly between left and right so empty sides get filled.
 const AMBIENT_SHAPES: ShapeDef[] = [
   // LEFT SIDE
-  { id: 1,  x: "3%",  y: "12%", size: 70, depth: 0.9, color: "#22d3ee", kind: "crystal", rotation: 45, duration: 6.5, delay: 0 },
-  { id: 2,  x: "7%",  y: "32%", size: 46, depth: 0.5, color: "#60a5fa", kind: "ring",    rotation: 0,  duration: 5.2, delay: 1.1 },
-  { id: 3,  x: "2%",  y: "58%", size: 58, depth: 0.75, color: "#a78bfa", kind: "diamond", rotation: 45, duration: 7.3, delay: 0.6 },
-  { id: 4,  x: "9%",  y: "78%", size: 38, depth: 0.45, color: "#22d3ee", kind: "hexagon", rotation: 15, duration: 6.0, delay: 1.8 },
-  { id: 5,  x: "5%",  y: "92%", size: 14, depth: 0.35, color: "#67e8f9", kind: "dot",     rotation: 0,  duration: 4.2, delay: 0.4 },
+  { id: 1, x: "3%", y: "12%", size: 70, depth: 0.9, color: "#22d3ee", kind: "crystal", rotation: 45, duration: 6.5, delay: 0 },
+  { id: 2, x: "7%", y: "32%", size: 46, depth: 0.5, color: "#60a5fa", kind: "ring", rotation: 0, duration: 5.2, delay: 1.1 },
+  { id: 3, x: "2%", y: "58%", size: 58, depth: 0.75, color: "#a78bfa", kind: "diamond", rotation: 45, duration: 7.3, delay: 0.6 },
+  { id: 4, x: "9%", y: "78%", size: 38, depth: 0.45, color: "#22d3ee", kind: "hexagon", rotation: 15, duration: 6.0, delay: 1.8 },
+  { id: 5, x: "5%", y: "92%", size: 14, depth: 0.35, color: "#67e8f9", kind: "dot", rotation: 0, duration: 4.2, delay: 0.4 },
 
   // RIGHT SIDE
-  { id: 6,  x: "94%", y: "18%", size: 62, depth: 0.85, color: "#60a5fa", kind: "crystal", rotation: 20, duration: 6.8, delay: 0.9 },
-  { id: 7,  x: "90%", y: "42%", size: 50, depth: 0.55, color: "#22d3ee", kind: "ring",    rotation: 0,  duration: 5.8, delay: 2.1 },
-  { id: 8,  x: "95%", y: "66%", size: 68, depth: 0.8, color: "#818cf8", kind: "diamond", rotation: 45, duration: 7.6, delay: 0.3 },
-  { id: 9,  x: "88%", y: "86%", size: 42, depth: 0.5, color: "#67e8f9", kind: "hexagon", rotation: 30, duration: 6.2, delay: 1.4 },
-  { id: 10, x: "96%", y: "96%", size: 12, depth: 0.3, color: "#a78bfa", kind: "dot",     rotation: 0,  duration: 4.6, delay: 0.7 },
+  { id: 6, x: "94%", y: "18%", size: 62, depth: 0.85, color: "#60a5fa", kind: "crystal", rotation: 20, duration: 6.8, delay: 0.9 },
+  { id: 7, x: "90%", y: "42%", size: 50, depth: 0.55, color: "#22d3ee", kind: "ring", rotation: 0, duration: 5.8, delay: 2.1 },
+  { id: 8, x: "95%", y: "66%", size: 68, depth: 0.8, color: "#818cf8", kind: "diamond", rotation: 45, duration: 7.6, delay: 0.3 },
+  { id: 9, x: "88%", y: "86%", size: 42, depth: 0.5, color: "#67e8f9", kind: "hexagon", rotation: 30, duration: 6.2, delay: 1.4 },
+  { id: 10, x: "96%", y: "96%", size: 12, depth: 0.3, color: "#a78bfa", kind: "dot", rotation: 0, duration: 4.6, delay: 0.7 },
 ];
 
 // ==================== Main component ====================
