@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+@custom-variant love (&:where(.love, .love *));
+@custom-variant horror (&:where(.horror, .horror *));
 
 * {
   cursor: none;

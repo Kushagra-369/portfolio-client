@@ -5,6 +5,7 @@ import { Github, ExternalLink } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
+import { useTheme } from "../../Context/ThemeContext";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -315,16 +316,12 @@ interface SectionProps {
 }
 
 // ==================== Ambient 3D shape definitions ====================
-// Split evenly between left and right so empty sides get filled.
 const AMBIENT_SHAPES: ShapeDef[] = [
-  // LEFT SIDE
   { id: 1, x: "3%", y: "12%", size: 70, depth: 0.9, color: "#22d3ee", kind: "crystal", rotation: 45, duration: 6.5, delay: 0 },
   { id: 2, x: "7%", y: "32%", size: 46, depth: 0.5, color: "#60a5fa", kind: "ring", rotation: 0, duration: 5.2, delay: 1.1 },
   { id: 3, x: "2%", y: "58%", size: 58, depth: 0.75, color: "#a78bfa", kind: "diamond", rotation: 45, duration: 7.3, delay: 0.6 },
   { id: 4, x: "9%", y: "78%", size: 38, depth: 0.45, color: "#22d3ee", kind: "hexagon", rotation: 15, duration: 6.0, delay: 1.8 },
   { id: 5, x: "5%", y: "92%", size: 14, depth: 0.35, color: "#67e8f9", kind: "dot", rotation: 0, duration: 4.2, delay: 0.4 },
-
-  // RIGHT SIDE
   { id: 6, x: "94%", y: "18%", size: 62, depth: 0.85, color: "#60a5fa", kind: "crystal", rotation: 20, duration: 6.8, delay: 0.9 },
   { id: 7, x: "90%", y: "42%", size: 50, depth: 0.55, color: "#22d3ee", kind: "ring", rotation: 0, duration: 5.8, delay: 2.1 },
   { id: 8, x: "95%", y: "66%", size: 68, depth: 0.8, color: "#818cf8", kind: "diamond", rotation: 45, duration: 7.6, delay: 0.3 },
@@ -336,6 +333,16 @@ const AMBIENT_SHAPES: ShapeDef[] = [
 export default function Project() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { theme } = useTheme();
+  const isLove = theme === "love";
+  const isHorror = theme === "horror";
+
+  // Shape color depends on theme
+  const shapeColor = isHorror
+    ? "#ff1a1a"
+    : isLove
+    ? "#ff4d94"
+    : null; // null → use default per-shape color
 
   // Mouse tracking for ambient parallax
   const mouseX = useMotionValue<number>(0);
@@ -384,20 +391,82 @@ export default function Project() {
       id="projects"
       className="relative pt-16 pb-24 px-6 sm:px-12 md:px-20 lg:px-32 font-[Outfit] overflow-hidden min-h-screen"
     >
+      {/* ============ THEME FONTS + TEXT GLOW ============ */}
+      <style>
+        {`
+          /* HORROR — glowing white-red text */
+          .proj-horror-text,
+          .proj-horror-text * {
+            font-family: 'Creepster', 'Nosifer', 'Eater', 'Butcherman', cursive !important;
+            letter-spacing: 0.08em !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            text-shadow:
+              0 0 4px #ffdddd,
+              0 0 10px #ff3333,
+              0 0 20px #ff0000,
+              0 0 40px #cc0000,
+              0 0 80px #8b0000,
+              0 4px 2px #000 !important;
+          }
+          .proj-horror-text-soft,
+          .proj-horror-text-soft * {
+            font-family: 'Creepster', 'Nosifer', cursive !important;
+            color: #ffdddd !important;
+            -webkit-text-fill-color: #ffdddd !important;
+            text-shadow:
+              0 0 6px #ff3333,
+              0 0 16px #cc0000,
+              0 0 32px #8b0000,
+              0 2px 2px #000 !important;
+          }
+
+          /* LOVE — dark rose text with soft pink glow (visible on light bg) */
+          .proj-love-text,
+          .proj-love-text * {
+            font-family: 'Dancing Script', 'Great Vibes', cursive !important;
+            letter-spacing: 0.02em !important;
+            color: #7a0038 !important;
+            -webkit-text-fill-color: #7a0038 !important;
+            text-shadow:
+              0 0 6px rgba(255, 182, 213, 0.9),
+              0 0 14px rgba(244, 114, 182, 0.7),
+              0 1px 0 rgba(255, 255, 255, 0.6) !important;
+          }
+          .proj-love-text-soft,
+          .proj-love-text-soft * {
+            font-family: 'Dancing Script', cursive !important;
+            color: #8b0040 !important;
+            -webkit-text-fill-color: #8b0040 !important;
+            text-shadow:
+              0 0 6px rgba(244, 114, 182, 0.55),
+              0 1px 0 rgba(255, 255, 255, 0.55) !important;
+          }
+        `}
+      </style>
+
+      {/* Fonts */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Eater&family=Butcherman&family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap"
+      />
+
       {/* ============================================================
-          AMBIENT 3D FLOATING SHAPES (left + right)
-          — subtle parallax with mouse
-          — different depths → real 3D feel
-          — hidden on small screens so they don't overlap content
+          AMBIENT 3D FLOATING SHAPES
           ============================================================ */}
       <div className="hidden lg:block absolute inset-0 pointer-events-none overflow-hidden">
         {AMBIENT_SHAPES.map((s) => (
-          <FloatingShape key={s.id} shape={s} mouseX={mouseX} mouseY={mouseY} />
+          <FloatingShape
+            key={s.id}
+            shape={shapeColor ? { ...s, color: shapeColor } : s}
+            mouseX={mouseX}
+            mouseY={mouseY}
+          />
         ))}
       </div>
 
       {/* ============================================================
-          3D PERSPECTIVE FLOOR GRID at bottom
+          3D PERSPECTIVE FLOOR GRID
           ============================================================ */}
       <div
         className="hidden md:block absolute bottom-0 left-0 right-0 h-80 pointer-events-none overflow-hidden"
@@ -408,17 +477,19 @@ export default function Project() {
           style={{
             transform: "rotateX(72deg)",
             transformOrigin: "50% 100%",
-            backgroundImage:
-              "linear-gradient(rgba(34,211,238,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.22) 1px, transparent 1px)",
+            backgroundImage: isHorror
+              ? "linear-gradient(rgba(255,26,26,0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(255,26,26,0.28) 1px, transparent 1px)"
+              : isLove
+              ? "linear-gradient(rgba(255,77,148,0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(255,77,148,0.28) 1px, transparent 1px)"
+              : "linear-gradient(rgba(34,211,238,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.22) 1px, transparent 1px)",
             backgroundSize: "56px 56px",
           }}
         />
-        {/* Fade the grid away from bottom edge so it blends into page */}
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-[#0b1220] opacity-90" />
       </div>
 
       {/* ============================================================
-          Main content — everything original kept
+          Main content
           ============================================================ */}
       <motion.div
         initial="hidden"
@@ -429,7 +500,12 @@ export default function Project() {
         <motion.h1
           variants={fadeIn}
           custom={0}
-          className="text-4xl md:text-5xl font-bold mb-8 bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
+          className={`
+            text-4xl md:text-5xl font-bold mb-8
+            bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent
+            ${isHorror ? "proj-horror-text" : ""}
+            ${isLove ? "proj-love-text" : ""}
+          `}
         >
           Projects
         </motion.h1>
@@ -437,24 +513,46 @@ export default function Project() {
         <motion.p
           variants={fadeIn}
           custom={1}
-          className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed max-w-3xl mx-auto mb-12"
+          className={`
+            text-lg leading-relaxed max-w-3xl mx-auto mb-12
+            text-gray-700 dark:text-gray-300
+            ${isHorror ? "proj-horror-text-soft" : ""}
+            ${isLove ? "proj-love-text-soft" : ""}
+          `}
         >
           A showcase of my full-stack and frontend projects — combining design,
           logic, and performance.
         </motion.p>
 
         {fullStackProjects.length > 0 && (
-          <Section title="⚙️ Full Stack Projects" projects={fullStackProjects} fadeIn={fadeIn} />
+          <Section
+            title="⚙️ Full Stack Projects"
+            projects={fullStackProjects}
+            fadeIn={fadeIn}
+            isHorror={isHorror}
+            isLove={isLove}
+          />
         )}
 
         {frontendProjects.length > 0 && (
-          <Section title="🎨 Frontend Projects" projects={frontendProjects} fadeIn={fadeIn} />
+          <Section
+            title="🎨 Frontend Projects"
+            projects={frontendProjects}
+            fadeIn={fadeIn}
+            isHorror={isHorror}
+            isLove={isLove}
+          />
         )}
 
         <motion.div
           variants={fadeIn}
           custom={10}
-          className="mt-20 text-center text-lg italic text-gray-500 dark:text-gray-400"
+          className={`
+            mt-20 text-center text-lg italic
+            text-gray-500 dark:text-gray-400
+            ${isHorror ? "proj-horror-text-soft" : ""}
+            ${isLove ? "proj-love-text-soft" : ""}
+          `}
         >
           "Every project is a story — told through code and creativity."
         </motion.div>
@@ -473,7 +571,6 @@ function FloatingShape({
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
 }) {
-  // Parallax: nearer shapes move more (depth factor)
   const tx = useSpring(
     useTransform(mouseX, [-0.5, 0.5], [-shape.depth * 45, shape.depth * 45]),
     { stiffness: 40, damping: 18 }
@@ -501,7 +598,6 @@ function FloatingShape({
         transform: "translate(-50%, -50%)",
       }}
       animate={{
-        // Gentle float + slow spin (not full revolution — just drift)
         y: [0, -14, 0],
         rotate: [shape.rotation, shape.rotation + 20, shape.rotation],
       }}
@@ -546,13 +642,27 @@ function FloatingShape({
   );
 }
 
-// ==================== Section (unchanged) ====================
-function Section({ title, projects, fadeIn }: SectionProps) {
+// ==================== Section ====================
+function Section({
+  title,
+  projects,
+  fadeIn,
+  isHorror,
+  isLove,
+}: SectionProps & { isHorror: boolean; isLove: boolean }) {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
     <>
-      <motion.h2 variants={fadeIn} className="text-2xl font-semibold text-cyan-400 mb-6">
+      <motion.h2
+        variants={fadeIn}
+        className={`
+          text-2xl font-semibold mb-6
+          text-cyan-400
+          ${isHorror ? "proj-horror-text" : ""}
+          ${isLove ? "proj-love-text" : ""}
+        `}
+      >
         {title}
       </motion.h2>
 
@@ -608,12 +718,19 @@ function Section({ title, projects, fadeIn }: SectionProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                   whileHover={{ scale: 1.02 }}
-                  className="relative group rounded-2xl border border-cyan-400/20 hover:border-cyan-400/50 shadow-lg overflow-hidden transition-all duration-300 h-full"
+                  className={`
+                    relative group rounded-2xl border shadow-lg overflow-hidden transition-all duration-300 h-full
+                    border-cyan-400/20 hover:border-cyan-400/50
+                    ${isHorror ? "border-red-700/70! hover:border-red-500!" : ""}
+                    ${isLove ? "border-pink-400/50! hover:border-pink-500!" : ""}
+                  `}
                 >
                   {project.profilePhoto?.secure_url ? (
                     <div
                       className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-all duration-500"
-                      style={{ backgroundImage: `url(${project.profilePhoto.secure_url})` }}
+                      style={{
+                        backgroundImage: `url(${project.profilePhoto.secure_url})`,
+                      }}
                     ></div>
                   ) : (
                     <div
@@ -621,11 +738,32 @@ function Section({ title, projects, fadeIn }: SectionProps) {
                     ></div>
                   )}
 
-                  <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-all duration-500"></div>
+                  <div
+                    className="
+                      absolute inset-0 transition-all duration-500
+                      bg-black/50 group-hover:bg-black/40
+                    "
+                  ></div>
 
                   <div className="relative z-10 p-6 backdrop-blur-[2px] min-h-[400px] flex flex-col">
-                    <h3 className="text-xl font-semibold text-cyan-400 mb-3">{project.name}</h3>
-                    <p className="text-gray-200 text-sm mb-4 leading-relaxed grow">
+                    <h3
+                      className={`
+                        text-xl font-semibold mb-3
+                        text-cyan-400
+                        ${isHorror ? "proj-horror-text" : ""}
+                        ${isLove ? "proj-love-text" : ""}
+                      `}
+                    >
+                      {project.name}
+                    </h3>
+                    <p
+                      className={`
+                        text-sm mb-4 leading-relaxed grow
+                        text-gray-200
+                        ${isHorror ? "proj-horror-text-soft" : ""}
+                        ${isLove ? "proj-love-text-soft" : ""}
+                      `}
+                    >
                       {project.description}
                     </p>
 
@@ -633,13 +771,25 @@ function Section({ title, projects, fadeIn }: SectionProps) {
                       {project.tools?.slice(0, 4).map((tech: string) => (
                         <span
                           key={tech}
-                          className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full"
+                          className={`
+                            text-xs px-3 py-1 rounded-full
+                            bg-cyan-400/20 text-cyan-200
+                            ${isHorror ? "bg-red-900/60! text-red-100!" : ""}
+                            ${isLove ? "bg-pink-500/30! text-pink-50!" : ""}
+                          `}
                         >
                           {tech}
                         </span>
                       ))}
                       {project.tools?.length > 4 && (
-                        <span className="text-xs bg-cyan-400/20 text-cyan-200 px-3 py-1 rounded-full">
+                        <span
+                          className={`
+                            text-xs px-3 py-1 rounded-full
+                            bg-cyan-400/20 text-cyan-200
+                            ${isHorror ? "bg-red-900/60! text-red-100!" : ""}
+                            ${isLove ? "bg-pink-500/30! text-pink-50!" : ""}
+                          `}
+                        >
                           +{project.tools.length - 4}
                         </span>
                       )}
@@ -651,7 +801,12 @@ function Section({ title, projects, fadeIn }: SectionProps) {
                           href={project.githubLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 transition-colors"
+                          className={`
+                            flex items-center gap-2 text-sm transition-colors
+                            text-cyan-300 hover:text-cyan-100
+                            ${isHorror ? "text-red-300! hover:text-red-100!" : ""}
+                            ${isLove ? "text-pink-200! hover:text-pink-50!" : ""}
+                          `}
                         >
                           <Github className="w-4 h-4" /> GitHub
                         </a>
@@ -661,7 +816,12 @@ function Section({ title, projects, fadeIn }: SectionProps) {
                           href={project.deploymentLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-sm text-cyan-300 hover:text-cyan-100 transition-colors"
+                          className={`
+                            flex items-center gap-2 text-sm transition-colors
+                            text-cyan-300 hover:text-cyan-100
+                            ${isHorror ? "text-red-300! hover:text-red-100!" : ""}
+                            ${isLove ? "text-pink-200! hover:text-pink-50!" : ""}
+                          `}
                         >
                           <ExternalLink className="w-4 h-4" /> Live
                         </a>
@@ -677,7 +837,12 @@ function Section({ title, projects, fadeIn }: SectionProps) {
         <div className="flex justify-center gap-4 mt-8">
           <button
             onClick={() => swiperRef.current?.slidePrev()}
-            className="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400 p-3 rounded-full transition-all duration-300 hover:scale-110"
+            className={`
+              p-3 rounded-full transition-all duration-300 hover:scale-110
+              bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400
+              ${isHorror ? "bg-red-900/50! hover:bg-red-800/70! text-red-200!" : ""}
+              ${isLove ? "bg-pink-500/30! hover:bg-pink-500/50! text-pink-100!" : ""}
+            `}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -685,7 +850,12 @@ function Section({ title, projects, fadeIn }: SectionProps) {
           </button>
           <button
             onClick={() => swiperRef.current?.slideNext()}
-            className="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400 p-3 rounded-full transition-all duration-300 hover:scale-110"
+            className={`
+              p-3 rounded-full transition-all duration-300 hover:scale-110
+              bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400
+              ${isHorror ? "bg-red-900/50! hover:bg-red-800/70! text-red-200!" : ""}
+              ${isLove ? "bg-pink-500/30! hover:bg-pink-500/50! text-pink-100!" : ""}
+            `}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import { APIURL } from "../../GlobalAPIURL";
+import { useTheme } from "../../Context/ThemeContext";
 
 import {
   SiJavascript,
@@ -45,17 +46,19 @@ interface WorkItem {
   color: string;
 }
 
-
 export default function Home() {
   const location = useLocation();
+  const { theme } = useTheme();
+  const isLove = theme === "love";
+  const isHorror = theme === "horror";
 
   const [adminName, setAdminName] = useState<string>("Kushagra Chhabra");
   const [profileImg, setProfileImg] = useState<string>(
     "https://res.cloudinary.com/dynodadq0/image/upload/v1761790870/unnamed_adxxjm.jpg"
   );
   const [isHoveringImg, setIsHoveringImg] = useState<boolean>(false);
+  const [heartBurstKey, setHeartBurstKey] = useState<number>(0);
 
-  // ===== Profile image 3D tilt (UNCHANGED) =====
   const cardRef = useRef<HTMLDivElement | null>(null);
   const mouseX = useMotionValue<number>(0);
   const mouseY = useMotionValue<number>(0);
@@ -88,7 +91,11 @@ export default function Home() {
     mouseY.set(0);
   };
 
-  // ===== Controllable 3D revolution state =====
+  const handleMouseEnterImg = () => {
+    setIsHoveringImg(true);
+    if (isLove) setHeartBurstKey((k) => k + 1);
+  };
+
   const rotation = useMotionValue<number>(0);
   const isDragging = useRef<boolean>(false);
   const lastX = useRef<number>(0);
@@ -117,9 +124,6 @@ export default function Home() {
     };
   }, [rotation]);
 
-
-
-  // ✅ Fetch dynamic admin data
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
@@ -194,14 +198,157 @@ export default function Home() {
     { title: "Animation & UX", desc: "Enhancing user experiences using Framer Motion and creative design.", icon: "🎨", color: "from-purple-400 to-pink-500" },
   ];
 
-
-
-
   return (
     <div
       id="home"
       className="min-h-screen relative overflow-hidden pt-28 sm:pt-32 lg:pt-36 pb-20 sm:pb-28 lg:pb-32 px-4 sm:px-6 lg:px-12 xl:px-20 2xl:px-24 transition-colors duration-700"
     >
+      {/* ================= THEME TEXT STYLES ================= */}
+      <style>
+        {`
+          /* ============================================
+             HORROR — bright white-hot text with red aura
+          ============================================ */
+          .horror-text,
+          .horror-text * {
+            font-family: 'Creepster', 'Nosifer', 'Eater', 'Butcherman', cursive !important;
+            letter-spacing: 0.09em !important;
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            text-shadow:
+              0 0 4px #ffdddd,
+              0 0 10px #ff3333,
+              0 0 20px #ff0000,
+              0 0 40px #cc0000,
+              0 0 80px #8b0000,
+              0 4px 2px #000 !important;
+          }
+
+          .horror-text-soft,
+          .horror-text-soft * {
+            font-family: 'Creepster', 'Nosifer', cursive !important;
+            color: #ffdddd !important;
+            -webkit-text-fill-color: #ffdddd !important;
+            text-shadow:
+              0 0 6px #ff3333,
+              0 0 16px #cc0000,
+              0 0 32px #8b0000,
+              0 2px 2px #000 !important;
+          }
+
+          @keyframes horrorFlicker {
+            0%, 47%, 53%, 100% {
+              text-shadow:
+                0 0 4px #ffdddd,
+                0 0 10px #ff3333,
+                0 0 20px #ff0000,
+                0 0 40px #cc0000,
+                0 0 80px #8b0000,
+                0 4px 2px #000;
+            }
+            49% {
+              text-shadow:
+                0 0 2px #ffaaaa,
+                0 0 6px #aa0000,
+                0 0 12px #550000,
+                0 2px 2px #000;
+            }
+          }
+          .horror-flicker {
+            animation: horrorFlicker 4s infinite;
+          }
+
+          /* ============================================
+             LOVE — DARK rose text with soft pink glow
+             (dark text + light bg = clearly visible)
+          ============================================ */
+          .love-text,
+          .love-text * {
+            font-family: 'Dancing Script', 'Great Vibes', cursive !important;
+            letter-spacing: 0.02em !important;
+            color: #7a0038 !important;
+            -webkit-text-fill-color: #7a0038 !important;
+            text-shadow:
+              0 0 6px rgba(255, 182, 213, 0.9),
+              0 0 14px rgba(244, 114, 182, 0.7),
+              0 1px 0 rgba(255, 255, 255, 0.6) !important;
+          }
+          .love-text-soft,
+          .love-text-soft * {
+            font-family: 'Dancing Script', cursive !important;
+            color: #8b0040 !important;
+            -webkit-text-fill-color: #8b0040 !important;
+            text-shadow:
+              0 0 6px rgba(244, 114, 182, 0.55),
+              0 1px 0 rgba(255, 255, 255, 0.55) !important;
+          }
+
+          /* ============================================
+             HEART POP
+          ============================================ */
+          @keyframes heartPop {
+            0%   { transform: translate(-50%, -50%) scale(0) rotate(0deg);   opacity: 0; }
+            30%  { transform: translate(-50%, -50%) scale(1.2) rotate(-10deg); opacity: 1; }
+            60%  { transform: translate(-50%, -80%) scale(1.1) rotate(8deg);  opacity: 1; }
+            100% { transform: translate(-50%, -180%) scale(0.4) rotate(-15deg); opacity: 0; }
+          }
+          .heart-pop {
+            animation: heartPop 1.2s ease-out forwards;
+          }
+
+          /* ============================================
+             SHINY PHOTO + GLOW
+          ============================================ */
+          @keyframes shinySweep {
+            0%   { transform: translateX(-120%) rotate(8deg); }
+            100% { transform: translateX(220%) rotate(8deg); }
+          }
+          @keyframes horrorPhotoPulse {
+            0%, 100% {
+              box-shadow:
+                0 0 35px rgba(255, 20, 20, 0.85),
+                0 0 90px rgba(180, 0, 0, 0.65),
+                0 0 160px rgba(120, 0, 0, 0.4);
+            }
+            50% {
+              box-shadow:
+                0 0 55px rgba(255, 40, 40, 1),
+                0 0 140px rgba(220, 0, 0, 0.9),
+                0 0 220px rgba(150, 0, 0, 0.6);
+            }
+          }
+          @keyframes lovePhotoPulse {
+            0%, 100% {
+              box-shadow:
+                0 0 35px rgba(244, 114, 182, 0.9),
+                0 0 90px rgba(219, 39, 119, 0.65);
+            }
+            50% {
+              box-shadow:
+                0 0 55px rgba(255, 182, 213, 1),
+                0 0 140px rgba(244, 114, 182, 0.9);
+            }
+          }
+          .shiny-sweep {
+            animation: shinySweep 3s linear infinite;
+          }
+
+          /* Photo brightness boost for horror */
+          .horror-photo-bright {
+            filter: brightness(1.15) contrast(1.1) saturate(1.05);
+          }
+          .love-photo-bright {
+            filter: brightness(1.08) contrast(1.05) saturate(1.1);
+          }
+        `}
+      </style>
+
+      {/* Fonts */}
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Eater&family=Butcherman&family=Dancing+Script:wght@400;700&family=Great+Vibes&display=swap"
+      />
+
       {/* === 3D Background Layer === */}
       <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
         <motion.div
@@ -250,63 +397,55 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left max-w-2xl lg:max-w-xl xl:max-w-2xl"
           >
+            {/* HERO NAME */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.7 }}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
+              className={`
+                text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight
+                ${isHorror ? "horror-text horror-flicker" : ""}
+                ${isLove ? "love-text" : ""}
+              `}
             >
-              <motion.span
-                whileHover={{
-                  scale: 1.05,
-                  textShadow: "0 0 20px rgba(6, 182, 212, 0.5)",
-                  transition: { duration: 0.2 },
-                }}
-                className="bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-300 dark:via-white dark:to-orange-400 bg-clip-text text-transparent inline-block cursor-pointer"
-              >
+              <span className={isHorror || isLove ? "inline-block" : "bg-linear-to-r from-cyan-400 to-blue-400 dark:from-cyan-300 dark:via-white dark:to-orange-400 bg-clip-text text-transparent inline-block"}>
                 {adminName.split(" ")[0] || "Kushagra"}
-              </motion.span>{" "}
-              <motion.span
-                whileHover={{
-                  scale: 1.05,
-                  textShadow: "0 0 20px rgba(156, 163, 175, 0.5)",
-                  transition: { duration: 0.2 },
-                }}
-                className="bg-linear-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent inline-block cursor-pointer"
-              >
+              </span>{" "}
+              <span className={isHorror || isLove ? "inline-block" : "bg-linear-to-r from-gray-800 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent inline-block"}>
                 {adminName.split(" ")[1] || "Chhabra"}
-              </motion.span>
+              </span>
             </motion.h1>
 
+            {/* TAGLINE 1 */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.7 }}
-              className="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
+              className={`
+                text-lg sm:text-xl lg:text-2xl mb-6 leading-relaxed
+                text-gray-600 dark:text-gray-300
+                ${isHorror ? "horror-text-soft" : ""}
+                ${isLove ? "love-text-soft" : ""}
+              `}
             >
               Full-Stack Developer &{" "}
-              <motion.span
-                whileHover={{ scale: 1.1, color: "#06b6d4", transition: { duration: 0.2 } }}
-                className="font-semibold text-cyan-600 dark:text-cyan-400 inline-block cursor-pointer"
-              >
-                App developer
-              </motion.span>
+              <span className="font-semibold">App developer</span>
             </motion.p>
 
+            {/* TAGLINE 2 */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
-              className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-10 leading-relaxed"
+              className={`
+                text-base sm:text-lg mb-10 leading-relaxed
+                text-gray-500 dark:text-gray-400
+                ${isHorror ? "horror-text-soft" : ""}
+                ${isLove ? "love-text-soft" : ""}
+              `}
             >
-              I craft{" "}
-              <motion.span
-                whileHover={{ scale: 1.05, color: "#06b6d4", transition: { duration: 0.2 } }}
-                className="font-semibold text-cyan-600 dark:text-cyan-400 inline-block cursor-pointer"
-              >
-                digital experiences
-              </motion.span>{" "}
-              that blend innovative design with cutting-edge technology.
+              I craft <span className="font-semibold">digital experiences</span> that blend
+              innovative design with cutting-edge technology.
             </motion.p>
 
             {/* Dynamic Skill */}
@@ -318,7 +457,14 @@ export default function Home() {
             >
               <div className="flex items-center gap-4 mb-4 justify-center lg:justify-start">
                 <Star className="w-5 h-5 text-amber-400" />
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <span
+                  className={`
+                    text-sm font-semibold
+                    text-gray-700 dark:text-gray-300
+                    ${isHorror ? "horror-text-soft" : ""}
+                    ${isLove ? "love-text-soft" : ""}
+                  `}
+                >
                   Currently loving:
                 </span>
               </div>
@@ -346,15 +492,16 @@ export default function Home() {
               </AnimatePresence>
             </motion.div>
 
-            {/* ============ "What I Do" — ORIGINAL ANIMATION ============ */}
+            {/* What I Do */}
             <section className="mt-20 select-none mb-16 text-center lg:text-left">
               <motion.h2
-                whileHover={{
-                  scale: 1.05,
-                  textShadow: "0 0 20px rgba(6, 182, 212, 0.5)",
-                  transition: { duration: 0.2 },
-                }}
-                className="text-3xl font-bold mb-10 text-cyan-400 cursor-pointer inline-block"
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                className={`
+                  text-3xl font-bold mb-10 cursor-pointer inline-block
+                  text-cyan-400
+                  ${isHorror ? "horror-text horror-flicker" : ""}
+                  ${isLove ? "love-text" : ""}
+                `}
               >
                 What I Do
               </motion.h2>
@@ -371,10 +518,23 @@ export default function Home() {
                     }}
                     className="relative group cursor-pointer"
                   >
-                    {/* Card Glow Effect */}
-                    <div className="absolute -inset-0.5 bg-linear-to-r from-cyan-600 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-300" />
+                    <div
+                      className={`
+                        absolute -inset-0.5 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-300
+                        bg-linear-to-r from-cyan-600 to-blue-600
+                        love:from-pink-500 love:to-rose-500
+                        horror:from-red-600 horror:to-red-900
+                      `}
+                    />
 
-                    <div className="relative bg-transparent p-6 rounded-2xl border border-cyan-400/20 backdrop-blur-md hover:border-transparent transition-all duration-300 h-full">
+                    <div
+                      className={`
+                        relative bg-transparent p-6 rounded-2xl border backdrop-blur-md transition-all duration-300 h-full
+                        border-cyan-400/20 hover:border-transparent
+                        love:border-pink-400/60
+                        horror:border-red-700/70
+                      `}
+                    >
                       <motion.div
                         className="text-4xl mb-4 inline-block"
                         whileHover={{
@@ -388,23 +548,35 @@ export default function Home() {
 
                       <motion.h3
                         initial={{ x: 0 }}
-                        whileHover={{
-                          x: 10,
-                          color: "#06b6d4",
-                          transition: { duration: 0.2 },
-                        }}
-                        className="text-lg font-semibold text-cyan-400 mb-2"
+                        whileHover={{ x: 10, transition: { duration: 0.2 } }}
+                        className={`
+                          text-lg font-semibold mb-2
+                          text-cyan-400
+                          ${isHorror ? "horror-text" : ""}
+                          ${isLove ? "love-text" : ""}
+                        `}
                       >
                         {item.title}
                       </motion.h3>
 
-                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                      <p
+                        className={`
+                          text-sm leading-relaxed
+                          text-gray-600 dark:text-gray-300
+                          ${isHorror ? "horror-text-soft" : ""}
+                          ${isLove ? "love-text-soft" : ""}
+                        `}
+                      >
                         {item.desc}
                       </p>
 
-                      {/* Animated Border Bottom */}
                       <motion.div
-                        className="absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-cyan-400 to-blue-500"
+                        className={`
+                          absolute bottom-0 left-0 h-0.5
+                          bg-linear-to-r from-cyan-400 to-blue-500
+                          love:from-pink-400 love:to-rose-500
+                          horror:from-red-500 horror:to-red-800
+                        `}
                         initial={{ width: "0%" }}
                         whileHover={{ width: "100%" }}
                         transition={{ duration: 0.3 }}
@@ -425,14 +597,29 @@ export default function Home() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative">
                 <Link
                   to="#signup"
-                  className="relative inline-flex items-center gap-3 bg-linear-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-2xl font-semibold overflow-hidden group shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                  className="
+                    relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold overflow-hidden group shadow-lg hover:shadow-2xl transition-shadow duration-300
+                    bg-linear-to-r from-cyan-500 to-blue-500 text-white
+                    love:from-pink-500 love:to-rose-500
+                    horror:from-red-700 horror:via-red-800 horror:to-black
+                    horror:border horror:border-red-500/80
+                    horror:shadow-[0_0_35px_rgba(255,20,20,0.9)]
+                  "
                 >
                   <div className="absolute inset-0 w-full h-full">
                     <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                     <div className="absolute inset-0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left bg-linear-to-r from-white/0 via-white/30 to-white/0" />
                   </div>
                   <Mail className="w-5 h-5 relative z-10 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="relative z-10 font-medium tracking-wide">Get In Touch</span>
+                  <span
+                    className={`
+                      relative z-10 font-medium tracking-wide
+                      ${isHorror ? "horror-text-soft" : ""}
+                      ${isLove ? "love-text-soft" : ""}
+                    `}
+                  >
+                    Get In Touch
+                  </span>
                   <motion.div
                     animate={{ x: 0 }}
                     whileHover={{ x: 8 }}
@@ -446,11 +633,31 @@ export default function Home() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative">
                 <Link
                   to="/resume"
-                  className="relative inline-flex items-center gap-3 border-2 border-cyan-400 text-cyan-600 dark:text-cyan-400 px-8 py-4 rounded-2xl font-semibold backdrop-blur-sm overflow-hidden group hover:bg-cyan-500/10 transition-all duration-300"
+                  className="
+                    relative inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-semibold backdrop-blur-sm overflow-hidden group transition-all duration-300
+                    border-2 border-cyan-400 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/10
+                    love:border-pink-500 love:text-pink-700 love:hover:bg-pink-500/20
+                    horror:border-red-500 horror:text-red-200 horror:hover:bg-red-950/50
+                    horror:shadow-[0_0_22px_rgba(255,20,20,0.7)]
+                  "
                 >
-                  <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+                  <div
+                    className="
+                      absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10
+                      bg-linear-to-r from-cyan-400 to-blue-500
+                      love:from-pink-500 love:to-rose-500
+                      horror:from-red-700 horror:to-red-950
+                    "
+                  />
                   <Download className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="font-medium tracking-wide group-hover:text-white transition-colors duration-300">
+                  <span
+                    className={`
+                      font-medium tracking-wide transition-colors duration-300
+                      group-hover:text-white
+                      ${isHorror ? "horror-text-soft" : ""}
+                      ${isLove ? "love-text-soft" : ""}
+                    `}
+                  >
                     Download CV
                   </span>
                   <motion.div
@@ -465,7 +672,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          {/* === 3D Profile Image (UNCHANGED) === */}
+          {/* === 3D Profile Image === */}
           <div className="flex flex-col items-center">
             <motion.div
               ref={cardRef}
@@ -473,11 +680,45 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.85, rotateY: 20 }}
               animate={{ opacity: 1, scale: 1, rotateY: 0 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              onMouseEnter={() => setIsHoveringImg(true)}
+              onMouseEnter={handleMouseEnterImg}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               style={{ perspective: 1200 }}
             >
+              {/* LOVE HEART POP */}
+              {isLove && isHoveringImg && (
+                <AnimatePresence>
+                  {[...Array(6)].map((_, i) => {
+                    const angle = (i / 6) * 360;
+                    const dx = Math.cos((angle * Math.PI) / 180) * 90;
+                    const dy = Math.sin((angle * Math.PI) / 180) * 90;
+                    return (
+                      <motion.div
+                        key={`${heartBurstKey}-${i}`}
+                        initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
+                        animate={{
+                          opacity: [0, 1, 1, 0],
+                          scale: [0, 1.1, 1, 0.6],
+                          x: dx,
+                          y: dy,
+                        }}
+                        transition={{
+                          duration: 1.4,
+                          delay: i * 0.06,
+                          ease: "easeOut",
+                        }}
+                        className="absolute top-1/2 left-1/2 z-40 pointer-events-none text-2xl sm:text-3xl"
+                        style={{
+                          filter: "drop-shadow(0 0 10px rgba(244,114,182,0.95))",
+                        }}
+                      >
+                        {["❤️", "💗", "💕", "💖", "💘", "💝"][i]}
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              )}
+
               <motion.div
                 className="relative rounded-3xl p-4 sm:p-6"
                 style={{
@@ -488,19 +729,60 @@ export default function Home() {
                 animate={{ y: isHoveringImg ? -8 : 0 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
               >
+                {/* OUTER AMBIENT GLOW */}
+                {isHorror && (
+                  <div
+                    className="absolute -inset-6 rounded-[2.5rem] pointer-events-none blur-2xl"
+                    style={{
+                      background:
+                        "radial-gradient(60% 60% at 50% 50%, rgba(255,30,30,0.7) 0%, rgba(180,0,0,0.45) 45%, transparent 80%)",
+                      animation: "horrorPhotoPulse 3s ease-in-out infinite",
+                    }}
+                  />
+                )}
+                {isLove && (
+                  <div
+                    className="absolute -inset-6 rounded-[2.5rem] pointer-events-none blur-2xl"
+                    style={{
+                      background:
+                        "radial-gradient(60% 60% at 50% 50%, rgba(255,150,200,0.75) 0%, rgba(244,114,182,0.5) 45%, transparent 80%)",
+                      animation: "lovePhotoPulse 3s ease-in-out infinite",
+                    }}
+                  />
+                )}
+
+                {/* GRADIENT INNER GLOW */}
                 <motion.div
-                  className="absolute inset-0 rounded-3xl bg-linear-to-br from-cyan-500/20 via-transparent to-blue-500/20 blur-2xl"
+                  className="
+                    absolute inset-0 rounded-3xl blur-2xl
+                    bg-linear-to-br from-cyan-500/20 via-transparent to-blue-500/20
+                    love:from-pink-500/40 love:via-transparent love:to-rose-500/40
+                    horror:from-red-600/60 horror:via-transparent horror:to-red-950/60
+                  "
                   animate={{
-                    opacity: isHoveringImg ? 0.9 : 0.5,
+                    opacity: isHoveringImg ? 1 : 0.7,
                     scale: isHoveringImg ? 1.05 : 1,
                   }}
                   transition={{ duration: 0.4 }}
                   style={{ transform: "translateZ(-40px)" }}
                 />
 
+                {/* BORDER */}
                 <div
-                  className="absolute inset-0 rounded-3xl border border-cyan-400/20 dark:border-cyan-400/10"
-                  style={{ transform: "translateZ(0px)" }}
+                  className="
+                    absolute inset-0 rounded-3xl
+                    border border-cyan-400/20 dark:border-cyan-400/10
+                    love:border-pink-400/70
+                    horror:border-red-500/80
+                  "
+                  style={{
+                    transform: "translateZ(0px)",
+                    boxShadow: isHorror
+                      ? "0 0 25px rgba(255,20,20,0.7), inset 0 0 15px rgba(255,40,40,0.35)"
+                      : isLove
+                      ? "0 0 25px rgba(244,114,182,0.7), inset 0 0 15px rgba(255,180,210,0.4)"
+                      : undefined,
+                  }}
                 />
 
                 <div
@@ -510,13 +792,47 @@ export default function Home() {
                   <motion.img
                     src={profileImg}
                     alt={`${adminName} - Full Stack Developer`}
-                    className="w-full h-auto object-cover rounded-2xl shadow-2xl relative z-10"
+                    className={`
+                      w-full h-auto object-cover rounded-2xl shadow-2xl relative z-10
+                      ${isHorror ? "horror-photo-bright" : ""}
+                      ${isLove ? "love-photo-bright" : ""}
+                    `}
                     animate={{ scale: isHoveringImg ? 1.03 : 1 }}
                     transition={{ duration: 0.4 }}
                   />
 
+                  {isHorror && (
+                    <div
+                      className="pointer-events-none absolute inset-0 rounded-2xl z-20"
+                      style={{
+                        background:
+                          "radial-gradient(120% 120% at 50% 100%, transparent 40%, rgba(180,0,0,0.35) 100%)",
+                        mixBlendMode: "multiply",
+                      }}
+                    />
+                  )}
+                  {isLove && (
+                    <div
+                      className="pointer-events-none absolute inset-0 rounded-2xl z-20"
+                      style={{
+                        background:
+                          "radial-gradient(120% 120% at 50% 100%, transparent 40%, rgba(244,114,182,0.3) 100%)",
+                        mixBlendMode: "multiply",
+                      }}
+                    />
+                  )}
+
+                  {(isHorror || isLove) && (
+                    <div className="pointer-events-none absolute inset-0 rounded-2xl overflow-hidden z-20">
+                      <div
+                        className="shiny-sweep absolute top-0 left-0 h-full w-1/3 bg-linear-to-r from-transparent via-white/60 to-transparent"
+                        style={{ mixBlendMode: "overlay" }}
+                      />
+                    </div>
+                  )}
+
                   <motion.div
-                    className="absolute inset-0 rounded-2xl pointer-events-none"
+                    className="absolute inset-0 rounded-2xl pointer-events-none z-30"
                     style={{ background: glareBg }}
                     animate={{ opacity: isHoveringImg ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -524,13 +840,23 @@ export default function Home() {
                 </div>
 
                 <motion.div
-                  className="absolute -top-2 -left-2 w-3 h-3 rounded-full bg-cyan-400"
+                  className={`
+                    absolute -top-2 -left-2 w-3 h-3 rounded-full
+                    bg-cyan-400
+                    love:bg-pink-400 love:shadow-[0_0_20px_rgba(244,114,182,1)]
+                    horror:bg-red-500 horror:shadow-[0_0_20px_rgba(255,20,20,1)]
+                  `}
                   style={{ transform: "translateZ(60px)" }}
                   animate={isHoveringImg ? { scale: [1, 1.5, 1] } : { scale: 1 }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
                 <motion.div
-                  className="absolute -bottom-2 -right-2 w-3 h-3 rounded-full bg-blue-400"
+                  className={`
+                    absolute -bottom-2 -right-2 w-3 h-3 rounded-full
+                    bg-blue-400
+                    love:bg-rose-400 love:shadow-[0_0_20px_rgba(244,114,182,1)]
+                    horror:bg-red-700 horror:shadow-[0_0_20px_rgba(255,20,20,1)]
+                  `}
                   style={{ transform: "translateZ(60px)" }}
                   animate={isHoveringImg ? { scale: [1, 1.5, 1] } : { scale: 1 }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
@@ -568,7 +894,12 @@ export default function Home() {
                 </div>
                 <motion.p
                   whileHover={{ scale: 1.05 }}
-                  className="mt-2 text-gray-700 dark:text-gray-300 text-sm text-center cursor-pointer"
+                  className={`
+                    mt-2 text-sm text-center cursor-pointer
+                    text-gray-700 dark:text-gray-300
+                    ${isHorror ? "horror-text-soft" : ""}
+                    ${isLove ? "love-text-soft" : ""}
+                  `}
                 >
                   Average Rating:{" "}
                   <span className="font-semibold text-yellow-500">
@@ -581,8 +912,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-   
 
       {/* Sections below */}
       <section id="skills">

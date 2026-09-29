@@ -11,6 +11,7 @@ import {
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
+import { useTheme } from "./Context/ThemeContext";
 
 import Home from "./Components/Home/Home";
 import Resume from "./Components/Resume/Resume";
@@ -24,64 +25,291 @@ import Start from "./Components/Start/Start";
 const adminPath = import.meta.env.VITE_ADMIN_ROUTE;
 
 /* =========================================================
-   SNOWFLAKES
+   PARTICLE TYPES
 ========================================================= */
 
-const snowflakes = Array.from({ length: 65 }, (_, i) => ({
+type ParticleKind =
+  | "snow"
+  | "heart"
+  | "spider"
+  | "bat"
+  | "web"
+  | "skull"
+  | "ember"
+  | "eye";
+
+interface Particle {
+  id: number;
+  left: string;
+  size: string;
+  duration: string;
+  delay: string;
+  drift: string;
+  opacity: number;
+  kind: ParticleKind;
+  emoji?: string;
+}
+
+/* =========================================================
+   SNOW (LIGHT / DARK)
+========================================================= */
+
+const snowflakes: Particle[] = Array.from({ length: 65 }, (_, i) => ({
   id: i,
-
   left: `${Math.random() * 100}%`,
-
   size: `${Math.random() * 5 + 2}px`,
-
   duration: `${Math.random() * 10 + 8}s`,
-
   delay: `${Math.random() * -18}s`,
-
   drift: `${Math.random() * 140 - 70}px`,
-
   opacity: Math.random() * 0.55 + 0.25,
+  kind: "snow",
 }));
 
-function Snowfall() {
+/* =========================================================
+   LOVE — FALLING HEARTS
+========================================================= */
+
+const HEART_EMOJIS = ["❤️", "💗", "💕", "💖", "💘", "💝", "🩷"];
+
+const hearts: Particle[] = Array.from({ length: 45 }, (_, i) => ({
+  id: i,
+  left: `${Math.random() * 100}%`,
+  size: `${Math.random() * 16 + 12}px`,
+  duration: `${Math.random() * 9 + 9}s`,
+  delay: `${Math.random() * -18}s`,
+  drift: `${Math.random() * 160 - 80}px`,
+  opacity: Math.random() * 0.45 + 0.45,
+  kind: "heart",
+  emoji: HEART_EMOJIS[i % HEART_EMOJIS.length],
+}));
+
+/* =========================================================
+   HORROR — SPOOKY MIXED LAYERS
+   spiders, bats, webs, skulls, embers, eyes
+========================================================= */
+
+const SPIDER_EMOJIS = ["🕷️", "🕷️", "🕸️"];
+const BAT_EMOJIS = ["🦇", "🦇"];
+const WEB_EMOJIS = ["🕸️"];
+const SKULL_EMOJIS = ["💀", "☠️"];
+const EYE_EMOJIS = ["👁️", "👁️"];
+
+const makeHorrorGroup = (
+  count: number,
+  kind: ParticleKind,
+  emojis: string[],
+  sizeRange: [number, number],
+  durationRange: [number, number],
+  opacityRange: [number, number],
+  driftRange: [number, number] = [140, 240]
+): Particle[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    size: `${Math.random() * (sizeRange[1] - sizeRange[0]) + sizeRange[0]}px`,
+    duration: `${
+      Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0]
+    }s`,
+    delay: `${Math.random() * -20}s`,
+    drift: `${
+      Math.random() * (driftRange[1] - driftRange[0]) + driftRange[0]
+    }px`,
+    opacity:
+      Math.random() * (opacityRange[1] - opacityRange[0]) + opacityRange[0],
+    kind,
+    emoji: emojis[i % emojis.length],
+  }));
+
+const spiders = makeHorrorGroup(14, "spider", SPIDER_EMOJIS, [14, 24], [14, 22], [0.6, 0.95]);
+const bats = makeHorrorGroup(12, "bat", BAT_EMOJIS, [16, 26], [10, 16], [0.55, 0.9], [260, 460]);
+const webs = makeHorrorGroup(8, "web", WEB_EMOJIS, [22, 36], [14, 20], [0.25, 0.45]);
+const skulls = makeHorrorGroup(10, "skull", SKULL_EMOJIS, [14, 22], [16, 24], [0.5, 0.8]);
+const eyes = makeHorrorGroup(14, "eye", EYE_EMOJIS, [12, 20], [12, 20], [0.5, 0.85]);
+
+/* =========================================================
+   FALLING PARTICLES (theme-aware)
+========================================================= */
+
+function FallingParticles() {
+  const { theme } = useTheme();
+
+  const particles: Particle[] =
+    theme === "love" ? hearts : theme === "horror" ? [] : snowflakes;
+
   return (
-    <div
-      className="
-        pointer-events-none
-        fixed
-        inset-0
-        z-40
-        overflow-hidden
-      "
-      aria-hidden="true"
-    >
-      {snowflakes.map((snow) => (
-        <span
-          key={snow.id}
-          className="
-            snowflake
-            absolute
-          -top-5
-            rounded-full
-            bg-cyan-400/40
-            shadow-[0_0_8px_rgba(34,211,238,0.35)]
-            dark:bg-white/80
-            dark:shadow-[0_0_10px_rgba(255,255,255,0.45)]
-          "
-          style={
-            {
-              left: snow.left,
-              width: snow.size,
-              height: snow.size,
-              opacity: snow.opacity,
-              animationDuration: snow.duration,
-              animationDelay: snow.delay,
-              "--snow-drift": snow.drift,
-            } as React.CSSProperties
-          }
-        />
-      ))}
-    </div>
+    <>
+      {/* ============ SNOW / HEARTS ============ */}
+      {(theme === "light" || theme === "dark" || theme === "love") && (
+        <div
+          className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+          aria-hidden="true"
+        >
+          {particles.map((p) => {
+            const isEmoji = p.kind !== "snow";
+            return (
+              <span
+                key={`${p.kind}-${p.id}`}
+                className={`
+                  falling-particle absolute -top-5
+                  ${
+                    isEmoji
+                      ? "select-none flex items-center justify-center love:drop-shadow-[0_0_10px_rgba(244,114,182,0.65)]"
+                      : "rounded-full bg-cyan-400/40 shadow-[0_0_8px_rgba(34,211,238,0.35)] dark:bg-white/80 dark:shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+                  }
+                `}
+                style={
+                  {
+                    left: p.left,
+                    width: isEmoji ? "auto" : p.size,
+                    height: isEmoji ? "auto" : p.size,
+                    fontSize: isEmoji ? p.size : undefined,
+                    lineHeight: 1,
+                    opacity: p.opacity,
+                    animationDuration: p.duration,
+                    animationDelay: p.delay,
+                    "--particle-drift": p.drift,
+                  } as React.CSSProperties
+                }
+              >
+                {isEmoji ? p.emoji : null}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ============ HORROR — BRIGHT & SPOOKY ============ */}
+      {theme === "horror" && (
+        <>
+          {/* 🌫️ Radiant teal fog overlay (poster vibe) */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 z-30 horror:bg-[radial-gradient(80%_60%_at_50%_55%,rgba(120,220,200,0.35)_0%,rgba(20,60,55,0.35)_45%,rgba(0,0,0,0.75)_100%)]"
+          />
+
+          {/* ✨ Slow glowing pulse in the center */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 z-30 horror:bg-[radial-gradient(45%_35%_at_50%_55%,rgba(180,255,235,0.35)_0%,transparent_70%)] horror:animate-[horrorPulse_6s_ease-in-out_infinite]"
+          />
+
+          {/* 🎞️ Film grain texture */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 z-30 horror:opacity-[0.22] horror:mix-blend-overlay"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")",
+            }}
+          />
+
+          {/* 🕷️ Spiders + Skulls + Eyes — slow fall with glow */}
+          <div
+            className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+            aria-hidden="true"
+          >
+            {[...spiders, ...skulls, ...eyes].map((p) => (
+              <span
+                key={`${p.kind}-${p.id}`}
+                className="
+                  falling-particle absolute -top-5 select-none
+                  flex items-center justify-center
+                  horror:drop-shadow-[0_0_12px_rgba(140,255,220,0.75)]
+                "
+                style={
+                  {
+                    left: p.left,
+                    fontSize: p.size,
+                    lineHeight: 1,
+                    opacity: p.opacity,
+                    animationDuration: p.duration,
+                    animationDelay: p.delay,
+                    "--particle-drift": p.drift,
+                  } as React.CSSProperties
+                }
+              >
+                {p.emoji}
+              </span>
+            ))}
+          </div>
+
+          {/* 🦇 Bats — fly across horizontally */}
+          <div
+            className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+            aria-hidden="true"
+          >
+            {bats.map((p, idx) => (
+              <span
+                key={`bat-${p.id}`}
+                className="bat-fly absolute select-none horror:drop-shadow-[0_0_10px_rgba(0,0,0,0.95)]"
+                style={
+                  {
+                    top: `${8 + (idx * 7) % 75}%`,
+                    left: "-10%",
+                    fontSize: p.size,
+                    opacity: p.opacity,
+                    animationDuration: p.duration,
+                    animationDelay: p.delay,
+                    "--bat-travel": p.drift,
+                  } as React.CSSProperties
+                }
+              >
+                {p.emoji}
+              </span>
+            ))}
+          </div>
+
+          {/* 🕸️ Web strands — appear / disappear */}
+          <div
+            className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+            aria-hidden="true"
+          >
+            {webs.map((p) => (
+              <span
+                key={`web-${p.id}`}
+                className="web-fade absolute select-none horror:drop-shadow-[0_0_8px_rgba(200,255,230,0.55)]"
+                style={
+                  {
+                    top: p.left,
+                    left: `${(p.id * 17) % 95}%`,
+                    fontSize: p.size,
+                    animationDuration: p.duration,
+                    animationDelay: p.delay,
+                  } as React.CSSProperties
+                }
+              >
+                {p.emoji}
+              </span>
+            ))}
+          </div>
+
+          {/* 🌑 Black ash / embers — glowing teal rise */}
+          <div
+            className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+            aria-hidden="true"
+          >
+            {Array.from({ length: 40 }).map((_, i) => (
+              <span
+                key={`ember-${i}`}
+                className="ember-rise absolute rounded-full horror:bg-emerald-200/70 horror:shadow-[0_0_14px_rgba(160,255,220,0.95)]"
+                style={
+                  {
+                    left: `${Math.random() * 100}%`,
+                    bottom: "-5%",
+                    width: `${Math.random() * 4 + 2}px`,
+                    height: `${Math.random() * 4 + 2}px`,
+                    opacity: Math.random() * 0.6 + 0.4,
+                    animationDuration: `${Math.random() * 8 + 8}s`,
+                    animationDelay: `${Math.random() * -12}s`,
+                    "--particle-drift": `${Math.random() * 120 - 60}px`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </>
   );
 }
 
@@ -93,62 +321,37 @@ function AppContent() {
   const location = useLocation();
 
   const [entered, setEntered] = useState(false);
-
-  // 🔥 Scroll Top Button
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition =
         window.scrollY || document.documentElement.scrollTop;
-
-      if (scrollPosition > 100) {
-        setShowScrollTop(true);
-      } else {
-        setShowScrollTop(false);
-      }
+      setShowScrollTop(scrollPosition > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🔥 Hide Navbar Routes
   const hideNavbarRoutes = ["/admin/dashboard"];
+  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
-  const shouldHideNavbar =
-    hideNavbarRoutes.includes(location.pathname);
-
-  // 🔥 START PAGE
   if (!entered && location.pathname === "/") {
     return (
       <>
-        {/* 🔥 FIXED NAVBAR */}
         {!shouldHideNavbar && entered && <Navbar />}
 
         <AnimatePresence mode="wait">
           {!entered && location.pathname === "/" ? (
-            // 🔥 START SCREEN
             <motion.div
               key="start-page"
-              initial={{
-                rotateY: 0,
-                opacity: 1,
-              }}
-              animate={{
-                rotateY: 0,
-                opacity: 1,
-              }}
+              initial={{ rotateY: 0, opacity: 1 }}
+              animate={{ rotateY: 0, opacity: 1 }}
               exit={{
                 rotateY: -180,
                 opacity: 0,
-                transition: {
-                  duration: 1.5,
-                  ease: [0.76, 0, 0.24, 1],
-                },
+                transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] },
               }}
               style={{
                 transformStyle: "preserve-3d",
@@ -160,93 +363,42 @@ function AppContent() {
               <Start onStart={() => setEntered(true)} />
             </motion.div>
           ) : (
-            // 🔥 MAIN WEBSITE
             <motion.div
               key="main-home"
-              initial={{
-                rotateY: 180,
-                opacity: 0,
-              }}
-              animate={{
-                rotateY: 0,
-                opacity: 1,
-              }}
-              transition={{
-                duration: 1.5,
-                ease: [0.76, 0, 0.24, 1],
-              }}
+              initial={{ rotateY: 180, opacity: 0 }}
+              animate={{ rotateY: 0, opacity: 1 }}
+              transition={{ duration: 1.5, ease: [0.76, 0, 0.24, 1] }}
               style={{
                 transformStyle: "preserve-3d",
                 perspective: 2000,
                 transformOrigin: "right center",
               }}
             >
-              {/* 🔥 CONTENT */}
               <div className="pt-28 min-h-screen">
                 <Routes>
                   <Route path="/" element={<Home />} />
-
-                  <Route
-                    path="/resume"
-                    element={<Resume />}
-                  />
-
-                  <Route
-                    path={`/${adminPath}`}
-                    element={<Login />}
-                  />
-
-                  <Route
-                    path="/otp"
-                    element={<OTP />}
-                  />
-
-                  <Route
-                    path="/admin/dashboard"
-                    element={<AdminDashboard />}
-                  />
-
-                  <Route
-                    path="/icons"
-                    element={<Icons />}
-                  />
-
-                  <Route
-                    path="*"
-                    element={<PNF />}
-                  />
+                  <Route path="/resume" element={<Resume />} />
+                  <Route path={`/${adminPath}`} element={<Login />} />
+                  <Route path="/otp" element={<OTP />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/icons" element={<Icons />} />
+                  <Route path="*" element={<PNF />} />
                 </Routes>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* 🔥 SCROLL TO TOP BUTTON */}
         {showScrollTop && entered && (
           <button
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="
-              fixed
-              bottom-6
-              right-6
-              z-99999
-              flex
-              h-14
-              w-14
-              items-center
-              justify-center
-              rounded-full
-              bg-cyan-500
-              text-white
-              shadow-2xl
-              transition-all
-              duration-300
-              hover:scale-110
+              fixed bottom-6 right-6 z-99999 flex h-14 w-14 items-center justify-center
+              rounded-full bg-cyan-500 love:bg-pink-500
+              horror:bg-emerald-400 horror:text-black
+              text-white shadow-2xl love:shadow-pink-500/50
+              horror:shadow-[0_0_25px_rgba(160,255,220,0.9)]
+              transition-all duration-300 hover:scale-110
             "
           >
             <ChevronUp size={28} />
@@ -258,100 +410,41 @@ function AppContent() {
 
   return (
     <>
-      {/* 🔥 FIXED NAVBAR */}
       {!shouldHideNavbar && <Navbar />}
 
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
-          initial={{
-            rotateY: 90,
-            x: "100vw",
-            opacity: 0,
-          }}
-          animate={{
-            rotateY: 0,
-            x: 0,
-            opacity: 1,
-          }}
-          exit={{
-            opacity: 0,
-          }}
-          transition={{
-            duration: 1.2,
-            ease: [0.76, 0, 0.24, 1],
-          }}
-          style={{
-            transformStyle: "preserve-3d",
-            perspective: 2000,
-          }}
+          initial={{ rotateY: 90, x: "100vw", opacity: 0 }}
+          animate={{ rotateY: 0, x: 0, opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+          style={{ transformStyle: "preserve-3d", perspective: 2000 }}
         >
-          {/* 🔥 CONTENT SPACE FOR FIXED NAVBAR */}
           <div className="pt-28 min-h-screen">
             <Routes>
               <Route path="/" element={<Home />} />
-
-              <Route
-                path="/resume"
-                element={<Resume />}
-              />
-
-              <Route
-                path={`/${adminPath}`}
-                element={<Login />}
-              />
-
-              <Route
-                path="/otp"
-                element={<OTP />}
-              />
-
-              <Route
-                path="/admin/dashboard"
-                element={<AdminDashboard />}
-              />
-
-              <Route
-                path="/icons"
-                element={<Icons />}
-              />
-
-              {/* 404 */}
-              <Route
-                path="*"
-                element={<PNF />}
-              />
+              <Route path="/resume" element={<Resume />} />
+              <Route path={`/${adminPath}`} element={<Login />} />
+              <Route path="/otp" element={<OTP />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/icons" element={<Icons />} />
+              <Route path="*" element={<PNF />} />
             </Routes>
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* 🔥 SCROLL TO TOP BUTTON */}
       {showScrollTop && (
         <button
-          onClick={() => {
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            });
-          }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="
-            fixed
-            bottom-6
-            right-6
-            z-99999
-            flex
-            h-14
-            w-14
-            items-center
-            justify-center
-            rounded-full
-            bg-cyan-500
-            text-white
-            shadow-2xl
-            transition-all
-            duration-300
-            hover:scale-110
+            fixed bottom-6 right-6 z-99999 flex h-14 w-14 items-center justify-center
+            rounded-full bg-cyan-500 love:bg-pink-500
+            horror:bg-emerald-400 horror:text-black
+            text-white shadow-2xl love:shadow-pink-500/50
+            horror:shadow-[0_0_25px_rgba(160,255,220,0.9)]
+            transition-all duration-300 hover:scale-110
           "
         >
           <ChevronUp size={28} />
@@ -373,100 +466,104 @@ export default function App() {
       {/* ===================================================
           GLOBAL BACKGROUND
       =================================================== */}
-
       <div
         className="
-          fixed
-          inset-0
-          -z-50
-          h-full
-          w-full
-
+          fixed inset-0 -z-50 h-full w-full
           bg-white
-
           [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
-
           dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]
+          love:[background:radial-gradient(125%_125%_at_50%_10%,#fff0f5_40%,#ff9ec4_100%)]
+          horror:[background:radial-gradient(60%_55%_at_50%_60%,#1a4d45_0%,#0b2622_45%,#04100d_80%,#000_100%)]
         "
       />
 
       {/* ===================================================
-          CONTINUOUS SNOWFALL
+          FALLING PARTICLES
       =================================================== */}
-
-      <Snowfall />
+      <FallingParticles />
 
       {/* ===================================================
           WEBSITE
       =================================================== */}
-
       <AppContent />
 
       <Chatbot />
 
       {/* ===================================================
-          SNOW CSS
+          ANIMATION CSS
       =================================================== */}
-
       <style>
         {`
-          .snowflake {
-            animation-name: snowfall;
+          /* ---------- SNOW / HEARTS / SPIDERS / SKULLS / EYES ---------- */
+          .falling-particle {
+            animation-name: particleFall;
             animation-timing-function: linear;
             animation-iteration-count: infinite;
             will-change: transform;
           }
 
-          @keyframes snowfall {
-            0% {
-              transform:
-                translate3d(0, -30px, 0)
-                rotate(0deg);
-            }
+          @keyframes particleFall {
+            0%   { transform: translate3d(0, -30px, 0) rotate(0deg); }
+            25%  { transform: translate3d(calc(var(--particle-drift) * 0.25), 25vh, 0) rotate(90deg); }
+            50%  { transform: translate3d(calc(var(--particle-drift) * -0.35), 50vh, 0) rotate(180deg); }
+            75%  { transform: translate3d(calc(var(--particle-drift) * 0.55), 75vh, 0) rotate(270deg); }
+            100% { transform: translate3d(var(--particle-drift), 115vh, 0) rotate(360deg); }
+          }
 
-            25% {
-              transform:
-                translate3d(
-                  calc(var(--snow-drift) * 0.25),
-                  25vh,
-                  0
-                )
-                rotate(90deg);
-            }
+          /* ---------- BATS (fly across) ---------- */
+          .bat-fly {
+            animation-name: batFly;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            will-change: transform;
+          }
 
-            50% {
-              transform:
-                translate3d(
-                  calc(var(--snow-drift) * -0.35),
-                  50vh,
-                  0
-                )
-                rotate(180deg);
-            }
+          @keyframes batFly {
+            0%   { transform: translate3d(0, 0, 0) scaleX(1) rotate(0deg); opacity: 0; }
+            10%  { opacity: 0.95; }
+            50%  { transform: translate3d(calc(var(--bat-travel) * 0.5), -25px, 0) scaleX(1) rotate(-6deg); }
+            90%  { opacity: 0.95; }
+            100% { transform: translate3d(var(--bat-travel), 25px, 0) scaleX(1) rotate(6deg); opacity: 0; }
+          }
 
-            75% {
-              transform:
-                translate3d(
-                  calc(var(--snow-drift) * 0.55),
-                  75vh,
-                  0
-                )
-                rotate(270deg);
-            }
+          /* ---------- WEB STRANDS (appear / disappear) ---------- */
+          .web-fade {
+            animation-name: webFade;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            will-change: opacity, transform;
+          }
 
-            100% {
-              transform:
-                translate3d(
-                  var(--snow-drift),
-                  115vh,
-                  0
-                )
-                rotate(360deg);
-            }
+          @keyframes webFade {
+            0%, 100% { opacity: 0; transform: scale(0.85); }
+            50%      { opacity: 0.45; transform: scale(1); }
+          }
+
+          /* ---------- EMBERS / ASH (rise) ---------- */
+          .ember-rise {
+            animation-name: emberRise;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            will-change: transform, opacity;
+          }
+
+          @keyframes emberRise {
+            0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
+            10%  { opacity: 0.9; }
+            100% { transform: translate3d(var(--particle-drift), -110vh, 0) scale(0.5); opacity: 0; }
+          }
+
+          /* ---------- HORROR CENTER PULSE ---------- */
+          @keyframes horrorPulse {
+            0%, 100% { opacity: 0.55; transform: scale(1); }
+            50%      { opacity: 0.95; transform: scale(1.05); }
           }
 
           @media (prefers-reduced-motion: reduce) {
-            .snowflake {
+            .falling-particle,
+            .bat-fly,
+            .web-fade,
+            .ember-rise {
               animation-duration: 20s;
             }
           }

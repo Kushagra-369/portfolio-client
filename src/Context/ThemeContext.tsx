@@ -6,13 +6,14 @@ import {
   type ReactNode,
 } from "react";
 
-type Theme = "light" | "dark";
+export type Theme = "light" | "love" | "horror" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
   isDark: boolean;
 
-  // NEW
+  // Cycles:
+  // Light → Love → Horror → Dark → Light
   toggleTheme: (x: number, y: number) => void;
 }
 
@@ -22,12 +23,19 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
+const themes: Theme[] = ["light", "love", "horror", "dark"];
+
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("theme") as Theme;
+      const saved = localStorage.getItem("theme");
 
-      if (saved === "light" || saved === "dark") {
+      if (
+        saved === "light" ||
+        saved === "love" ||
+        saved === "horror" ||
+        saved === "dark"
+      ) {
         return saved;
       }
     }
@@ -35,10 +43,19 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     return "light";
   });
 
+  /*
+   * Apply current theme to <html>
+   *
+   * Examples:
+   * Light  -> <html class="light">
+   * Love   -> <html class="love">
+   * Horror -> <html class="horror">
+   * Dark   -> <html class="dark">
+   */
   useEffect(() => {
     const root = document.documentElement;
 
-    root.classList.remove("light", "dark");
+    root.classList.remove("light", "love", "horror", "dark");
     root.classList.add(theme);
 
     localStorage.setItem("theme", theme);
@@ -47,19 +64,37 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const toggleTheme = (x: number, y: number) => {
     const root = document.documentElement;
 
-    // Browser support
+    const changeTheme = () => {
+      setTheme((currentTheme) => {
+        const currentIndex = themes.indexOf(currentTheme);
+
+        const nextIndex = (currentIndex + 1) % themes.length;
+
+        return themes[nextIndex];
+      });
+    };
+
+    /*
+     * Browser does not support View Transition
+     */
     if (!(document as any).startViewTransition) {
-      setTheme((prev) => (prev === "light" ? "dark" : "light"));
+      changeTheme();
       return;
     }
 
+    /*
+     * Calculate radius for circular reveal
+     */
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     );
 
+    /*
+     * Start View Transition
+     */
     const transition = (document as any).startViewTransition(() => {
-      setTheme((prev) => (prev === "light" ? "dark" : "light"));
+      changeTheme();
     });
 
     transition.ready.then(() => {
