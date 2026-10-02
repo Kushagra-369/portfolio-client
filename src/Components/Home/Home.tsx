@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
@@ -12,7 +12,6 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import { APIURL } from "../../GlobalAPIURL";
 import { useTheme } from "../../Context/ThemeContext";
-
 import {
   SiJavascript,
   SiReact,
@@ -45,6 +44,22 @@ interface WorkItem {
   icon: string;
   color: string;
 }
+
+/* =========================================================
+   HORROR HOVER — whisper texts that surface when cursed
+========================================================= */
+const HORROR_WHISPERS = [
+  "I see you",
+  "Behind you",
+  "Don't turn around",
+  "You shouldn't have",
+  "He's here",
+  "It hurts",
+  "Look closer",
+  "Run.",
+  "Feed me",
+  "Let me in",
+];
 
 export default function Home() {
   const location = useLocation();
@@ -93,8 +108,48 @@ export default function Home() {
 
   const handleMouseEnterImg = () => {
     setIsHoveringImg(true);
-    if (isLove) setHeartBurstKey((k) => k + 1);
+    if (isLove || isHorror) setHeartBurstKey((k) => k + 1);
   };
+
+  /* Random whispers + blood drip positions, regenerated on each horror hover */
+  const horrorWhispers = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) => ({
+        text: HORROR_WHISPERS[Math.floor(Math.random() * HORROR_WHISPERS.length)],
+        top: `${10 + Math.random() * 72}%`,
+        left: `${5 + Math.random() * 70}%`,
+        rotation: -12 + Math.random() * 24,
+        delay: i * 0.35,
+        duration: 2.2 + Math.random() * 1.4,
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [heartBurstKey]
+  );
+
+  const horrorBloodDrips = useMemo(
+    () =>
+      Array.from({ length: 11 }, (_, i) => ({
+        left: `${6 + i * 8.5 + Math.random() * 3}%`,
+        width: `${2 + Math.random() * 2.5}px`,
+        height: `${18 + Math.random() * 42}px`,
+        delay: Math.random() * 0.9,
+        duration: 1.8 + Math.random() * 1.6,
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [heartBurstKey]
+  );
+
+  const horrorSplatters = useMemo(
+    () =>
+      Array.from({ length: 6 }, () => ({
+        top: `${10 + Math.random() * 80}%`,
+        left: `${10 + Math.random() * 80}%`,
+        size: `${50 + Math.random() * 90}px`,
+        delay: Math.random() * 1.4,
+      })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [heartBurstKey]
+  );
 
   const rotation = useMotionValue<number>(0);
   const isDragging = useRef<boolean>(false);
@@ -260,7 +315,6 @@ export default function Home() {
 
           /* ============================================
              LOVE — DARK rose text with soft pink glow
-             (dark text + light bg = clearly visible)
           ============================================ */
           .love-text,
           .love-text * {
@@ -333,12 +387,152 @@ export default function Home() {
             animation: shinySweep 3s linear infinite;
           }
 
-          /* Photo brightness boost for horror */
           .horror-photo-bright {
             filter: brightness(1.15) contrast(1.1) saturate(1.05);
           }
           .love-photo-bright {
             filter: brightness(1.08) contrast(1.05) saturate(1.1);
+          }
+
+          /* ============================================
+             HORROR IMAGE GLITCH — genuinely wrong
+          ============================================ */
+          @keyframes horrorImgGlitch {
+            0%, 100% {
+              transform: translate(0, 0) scale(1.03);
+              filter: brightness(1.05) contrast(1.25) saturate(0.55) hue-rotate(-10deg);
+            }
+            6% {
+              transform: translate(-5px, 2px) scale(1.04) skewX(-1.5deg);
+              filter: brightness(1.25) contrast(1.6) saturate(0.2) hue-rotate(-25deg);
+            }
+            8% {
+              transform: translate(4px, -3px) scale(1.035) skewX(2deg);
+              filter: brightness(1.05) contrast(1.8) saturate(0.05) hue-rotate(180deg);
+            }
+            11% {
+              transform: translate(-2px, 3px) scale(1.03);
+              filter: brightness(0.85) contrast(2.2) saturate(0) invert(0.05);
+            }
+            13% {
+              transform: translate(0, 0) scale(1.03);
+              filter: brightness(1.05) contrast(1.25) saturate(0.55);
+            }
+            47% {
+              transform: translate(0, 0) scale(1.03);
+              filter: brightness(1.05) contrast(1.25) saturate(0.55);
+            }
+            49% {
+              transform: translate(6px, 1px) scale(1.045) skewX(3deg);
+              filter: brightness(1.4) contrast(2) saturate(0.1) hue-rotate(45deg);
+            }
+            51% {
+              transform: translate(-4px, -2px) scale(1.03) skewX(-2deg);
+              filter: brightness(0.7) contrast(2.4) saturate(0.05);
+            }
+            53% {
+              transform: translate(0, 0) scale(1.03);
+              filter: brightness(1.05) contrast(1.25) saturate(0.55);
+            }
+            86% {
+              transform: translate(-3px, 2px) scale(1.04) skewY(1.5deg);
+              filter: brightness(1.2) contrast(1.9) saturate(0.15);
+            }
+            88% {
+              transform: translate(2px, -2px) scale(1.03) skewY(-1deg);
+              filter: brightness(1.5) contrast(1.4) saturate(0.3);
+            }
+          }
+          .horror-img-glitch {
+            animation: horrorImgGlitch 1.4s steps(24) infinite;
+            will-change: transform, filter;
+          }
+
+          /* RGB tear ghost layers */
+          @keyframes horrorRGBRed {
+            0%, 100% { transform: translate(-3px, 1px); opacity: 0.35; }
+            22%      { transform: translate(-8px, 2px); opacity: 0.6; }
+            48%      { transform: translate(-2px, 0);   opacity: 0.3; }
+            72%      { transform: translate(-11px, 3px);opacity: 0.7; }
+            90%      { transform: translate(-4px, 1px); opacity: 0.4; }
+          }
+          @keyframes horrorRGBCyan {
+            0%, 100% { transform: translate(3px, -1px);  opacity: 0.3; }
+            22%      { transform: translate(9px, -2px);  opacity: 0.55; }
+            48%      { transform: translate(2px, 0);     opacity: 0.25; }
+            72%      { transform: translate(12px, -3px); opacity: 0.65; }
+            90%      { transform: translate(4px, -1px);  opacity: 0.35; }
+          }
+          .horror-rgb-red {
+            animation: horrorRGBRed 1.2s steps(20) infinite;
+            filter: drop-shadow(0 0 0 #ff0000);
+            mix-blend-mode: screen;
+          }
+          .horror-rgb-cyan {
+            animation: horrorRGBCyan 1.35s steps(20) infinite;
+            filter: drop-shadow(0 0 0 #00ffff);
+            mix-blend-mode: screen;
+          }
+
+          /* Blood drips falling from the frame */
+          @keyframes horrorBloodDripFall {
+            0%   { transform: translateY(-10px) scaleY(0.6); opacity: 0; }
+            15%  { opacity: 1; }
+            100% { transform: translateY(120px) scaleY(1.4); opacity: 0; }
+          }
+
+          /* Blood splatter appearing */
+          @keyframes horrorSplatter {
+            0%, 100% { transform: scale(0.4); opacity: 0; }
+            30%      { transform: scale(1);    opacity: 0.85; }
+            60%      { transform: scale(1.1);  opacity: 0.55; }
+            90%      { transform: scale(1.15); opacity: 0; }
+          }
+
+          /* Static noise jitter */
+          @keyframes horrorStaticJitter {
+            0%   { transform: translate(0, 0); opacity: 0.35; }
+            20%  { transform: translate(-3px, 2px); opacity: 0.5; }
+            40%  { transform: translate(2px, -3px); opacity: 0.3; }
+            60%  { transform: translate(-2px, -2px); opacity: 0.55; }
+            80%  { transform: translate(3px, 3px); opacity: 0.4; }
+            100% { transform: translate(0, 0); opacity: 0.35; }
+          }
+          .horror-static {
+            animation: horrorStaticJitter 0.18s steps(3) infinite;
+          }
+
+          /* Whisper text breathing */
+          @keyframes horrorWhisper {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+            15%      { opacity: 0.9; }
+            40%      { opacity: 0.75; }
+            70%      { opacity: 0.95; }
+            85%      { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+          }
+
+          /* The eye */
+          @keyframes horrorEyeBlink {
+            0%, 100% { transform: scaleY(1); }
+            46%, 54% { transform: scaleY(0.05); }
+          }
+          .horror-eye {
+            animation: horrorEyeBlink 4.5s ease-in-out infinite;
+            transform-origin: center;
+          }
+
+          /* Hand / claw rising from below the image */
+          @keyframes horrorClawReach {
+            0%, 100% { transform: translateY(30%) rotate(-2deg); opacity: 0; }
+            35%      { transform: translateY(0%)  rotate(0deg);  opacity: 0.85; }
+            60%      { transform: translateY(-3%) rotate(1deg);  opacity: 0.7; }
+            85%      { transform: translateY(5%)  rotate(-1deg); opacity: 0; }
+          }
+
+          /* Death vignette creeping in */
+          @keyframes horrorDeathVignette {
+            0%, 100% { opacity: 0.3; }
+            50%      { opacity: 0.85; }
           }
         `}
       </style>
@@ -729,6 +923,42 @@ export default function Home() {
                 animate={{ y: isHoveringImg ? -8 : 0 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
               >
+                {/* ============================
+                    HORROR HOVER — TRUE DREAD
+                ============================ */}
+                {isHorror && isHoveringImg && (
+                  <>
+                    {/* Blood splatters creeping across the frame */}
+                    {horrorSplatters.map((s, i) => (
+                      <div
+                        key={`splat-${i}`}
+                        className="absolute pointer-events-none z-35 rounded-full"
+                        style={{
+                          top: s.top,
+                          left: s.left,
+                          width: s.size,
+                          height: s.size,
+                          background:
+                            "radial-gradient(circle, rgba(200,0,0,0.85) 0%, rgba(120,0,0,0.55) 35%, rgba(60,0,0,0.15) 60%, transparent 75%)",
+                          filter: "blur(1px)",
+                          animation: `horrorSplatter 2.4s ease-in-out ${s.delay}s infinite`,
+                          mixBlendMode: "multiply",
+                        }}
+                      />
+                    ))}
+
+                    {/* Static noise layer */}
+                    <div
+                      className="absolute inset-0 rounded-3xl pointer-events-none z-36 horror-static opacity-40"
+                      style={{
+                        backgroundImage:
+                          "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.65'/></svg>\")",
+                        mixBlendMode: "overlay",
+                      }}
+                    />
+                  </>
+                )}
+
                 {/* OUTER AMBIENT GLOW */}
                 {isHorror && (
                   <div
@@ -789,19 +1019,77 @@ export default function Home() {
                   className="relative select-none rounded-2xl overflow-hidden"
                   style={{ transform: "translateZ(30px)" }}
                 >
+                  {/* RGB tear ghost layers — only on horror hover */}
+                  {isHorror && isHoveringImg && (
+                    <>
+                      <img
+                        src={profileImg}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover rounded-2xl z-5 horror-rgb-red"
+                        style={{
+                          filter: "saturate(0) brightness(0.6) sepia(1) hue-rotate(-50deg) saturate(6)",
+                        }}
+                      />
+                      <img
+                        src={profileImg}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover rounded-2xl z-5 horror-rgb-cyan"
+                        style={{
+                          filter: "saturate(0) brightness(0.6) sepia(1) hue-rotate(160deg) saturate(6)",
+                        }}
+                      />
+                    </>
+                  )}
+
                   <motion.img
                     src={profileImg}
                     alt={`${adminName} - Full Stack Developer`}
                     className={`
                       w-full h-auto object-cover rounded-2xl shadow-2xl relative z-10
-                      ${isHorror ? "horror-photo-bright" : ""}
+                      ${isHorror && isHoveringImg ? "horror-img-glitch" : ""}
+                      ${isHorror && !isHoveringImg ? "horror-photo-bright" : ""}
                       ${isLove ? "love-photo-bright" : ""}
                     `}
-                    animate={{ scale: isHoveringImg ? 1.03 : 1 }}
+                    animate={{
+                      scale:
+                        isHoveringImg && !isHorror
+                          ? 1.03
+                          : isHorror && isHoveringImg
+                          ? 1.03
+                          : 1,
+                    }}
                     transition={{ duration: 0.4 }}
                   />
 
-                  {isHorror && (
+                  {/* Horror hover: creeping death vignette + blood stain */}
+                  {isHorror && isHoveringImg && (
+                    <>
+                      {/* Blood stain from bottom, creeping up */}
+                      <div
+                        className="pointer-events-none absolute inset-0 rounded-2xl z-20"
+                        style={{
+                          background:
+                            "linear-gradient(to top, rgba(60,0,0,0.95) 0%, rgba(140,0,0,0.55) 25%, rgba(80,0,0,0.25) 45%, transparent 65%)",
+                          mixBlendMode: "multiply",
+                          animation: "horrorDeathVignette 2.6s ease-in-out infinite",
+                        }}
+                      />
+                      {/* Corner shadow closing in */}
+                      <div
+                        className="pointer-events-none absolute inset-0 rounded-2xl z-20"
+                        style={{
+                          background:
+                            "radial-gradient(120% 100% at 50% 50%, transparent 30%, rgba(0,0,0,0.85) 85%, rgba(0,0,0,1) 100%)",
+                          mixBlendMode: "multiply",
+                        }}
+                      />
+                    </>
+                  )}
+
+                  {/* Non-horror vignettes (unchanged) */}
+                  {isHorror && !isHoveringImg && (
                     <div
                       className="pointer-events-none absolute inset-0 rounded-2xl z-20"
                       style={{
@@ -834,10 +1122,187 @@ export default function Home() {
                   <motion.div
                     className="absolute inset-0 rounded-2xl pointer-events-none z-30"
                     style={{ background: glareBg }}
-                    animate={{ opacity: isHoveringImg ? 1 : 0 }}
+                    animate={{ opacity: isHoveringImg && !isHorror ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
                   />
+
+                  {/* ==========================================
+                      HORROR HOVER — THE EYE IN THE DARK
+                  ========================================== */}
+                  {isHorror && isHoveringImg && (
+                    <motion.div
+                      className="absolute pointer-events-none z-45"
+                      style={{
+                        top: "18%",
+                        right: "14%",
+                        width: "clamp(60px, 12%, 110px)",
+                        height: "clamp(30px, 6%, 55px)",
+                      }}
+                      initial={{ opacity: 0, scale: 0.4 }}
+                      animate={{
+                        opacity: [0, 0, 0.95, 0.85, 0.95, 0],
+                        scale: [0.4, 0.4, 1, 0.97, 1, 0.85],
+                      }}
+                      transition={{
+                        duration: 4.5,
+                        times: [0, 0.15, 0.28, 0.55, 0.85, 1],
+                        repeat: Infinity,
+                        repeatDelay: 1.2,
+                      }}
+                    >
+                      <div className="horror-eye relative w-full h-full">
+                        {/* Outer sclera — dark, dead, bloodshot */}
+                        <div
+                          className="absolute inset-0 rounded-full"
+                          style={{
+                            background:
+                              "radial-gradient(ellipse at center, #f2e2c8 0%, #d8b8a0 45%, #6b1010 85%, #1a0000 100%)",
+                            boxShadow:
+                              "0 0 18px rgba(255,0,0,0.85), inset 0 0 12px rgba(120,0,0,0.9)",
+                          }}
+                        />
+                        {/* Bloodshot veins */}
+                        <div
+                          className="absolute inset-0 rounded-full"
+                          style={{
+                            background:
+                              "radial-gradient(circle at 22% 30%, rgba(160,0,0,0.9) 0%, transparent 12%), radial-gradient(circle at 78% 68%, rgba(180,0,0,0.85) 0%, transparent 10%), radial-gradient(circle at 40% 78%, rgba(200,0,0,0.8) 0%, transparent 8%), radial-gradient(circle at 65% 22%, rgba(150,0,0,0.85) 0%, transparent 9%)",
+                            mixBlendMode: "multiply",
+                          }}
+                        />
+                        {/* Iris — crimson */}
+                        <div
+                          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                          style={{
+                            width: "44%",
+                            height: "70%",
+                            background:
+                              "radial-gradient(circle at 40% 35%, #ff4a4a 0%, #b30000 45%, #4a0000 80%, #1a0000 100%)",
+                            boxShadow:
+                              "0 0 12px rgba(255,0,0,0.95), inset 0 0 8px rgba(0,0,0,0.9)",
+                          }}
+                        >
+                          {/* Pupil */}
+                          <div
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black"
+                            style={{
+                              width: "42%",
+                              height: "78%",
+                              boxShadow: "0 0 6px rgba(0,0,0,1)",
+                            }}
+                          />
+                          {/* Wet highlight */}
+                          <div
+                            className="absolute rounded-full bg-white/80"
+                            style={{
+                              width: "18%",
+                              height: "22%",
+                              top: "18%",
+                              left: "22%",
+                              filter: "blur(0.5px)",
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+               
+                  {isHorror && isHoveringImg && (
+                    <div
+                      className="absolute inset-x-0 bottom-0 pointer-events-none z-44 h-1/3 overflow-hidden"
+                      style={{ borderRadius: "0 0 1rem 1rem" }}
+                    >
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background:
+                            "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(20,0,0,0.9) 40%, transparent 100%)",
+                          animation:
+                            "horrorClawReach 3.6s ease-in-out 0.4s infinite",
+                        }}
+                      >
+                        {/* Claw fingers — jagged silhouettes */}
+                        <svg
+                          viewBox="0 0 400 120"
+                          preserveAspectRatio="none"
+                          className="w-full h-full opacity-90"
+                        >
+                          <defs>
+                            <linearGradient id="clawGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#000" />
+                              <stop offset="100%" stopColor="#2a0000" />
+                            </linearGradient>
+                          </defs>
+                          {[40, 110, 180, 250, 320, 370].map((x, i) => (
+                            <path
+                              key={i}
+                              d={`M${x} 120 L${x - 8} ${40 + (i % 3) * 12} L${x - 3} ${18 + (i % 2) * 10} L${x + 2} ${34 + (i % 3) * 8} L${x + 8} ${16 + (i % 2) * 12} L${x + 12} 120 Z`}
+                              fill="url(#clawGrad)"
+                            />
+                          ))}
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ==========================================
+                      HORROR HOVER — WHISPERS FROM THE DARK
+                  ========================================== */}
+                  {isHorror && isHoveringImg && (
+                    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden rounded-2xl">
+                      {horrorWhispers.map((w, i) => (
+                        <span
+                          key={i}
+                          className="absolute font-bold whitespace-nowrap"
+                          style={{
+                            top: w.top,
+                            left: w.left,
+                            fontFamily:
+                              "'Creepster', 'Nosifer', cursive",
+                            fontSize: "clamp(0.85rem, 1.6vw, 1.4rem)",
+                            letterSpacing: "0.08em",
+                            color: "#ff1a1a",
+                            textShadow:
+                              "0 0 6px #ff0000, 0 0 14px #b30000, 0 0 26px #4a0000, 0 2px 3px #000",
+                            animation: `horrorWhisper ${w.duration}s ease-in-out ${w.delay}s infinite`,
+                            transform: `translate(-50%, -50%) rotate(${w.rotation}deg)`,
+                            opacity: 0,
+                          }}
+                        >
+                          {w.text}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
+
+                {/* ==========================================
+                    HORROR HOVER — BLOOD DRIPPING FROM FRAME
+                ========================================== */}
+                {isHorror && isHoveringImg && (
+                  <div
+                    className="absolute left-0 right-0 pointer-events-none z-38 overflow-visible"
+                    style={{ top: "calc(100% - 12px)" }}
+                  >
+                    {horrorBloodDrips.map((d, i) => (
+                      <span
+                        key={`drip-${i}`}
+                        className="absolute top-0 rounded-b-full"
+                        style={{
+                          left: d.left,
+                          width: d.width,
+                          height: d.height,
+                          background:
+                            "linear-gradient(180deg, rgba(180,0,0,0.95) 0%, #b80000 40%, #ff0000 100%)",
+                          boxShadow:
+                            "0 0 8px rgba(255,0,0,0.95), 0 0 18px rgba(180,0,0,0.7)",
+                          animation: `horrorBloodDripFall ${d.duration}s ease-in ${d.delay}s infinite`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
 
                 <motion.div
                   className={`

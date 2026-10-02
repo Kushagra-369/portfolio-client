@@ -85,7 +85,7 @@ const hearts: Particle[] = Array.from({ length: 45 }, (_, i) => ({
 
 /* =========================================================
    HORROR — SPOOKY MIXED LAYERS
-   spiders, bats, webs, skulls, embers, eyes
+   spiders, bats, webs, skulls, eyes
 ========================================================= */
 
 const SPIDER_EMOJIS = ["🕷️", "🕷️", "🕸️"];
@@ -120,11 +120,11 @@ const makeHorrorGroup = (
     emoji: emojis[i % emojis.length],
   }));
 
-const spiders = makeHorrorGroup(14, "spider", SPIDER_EMOJIS, [14, 24], [14, 22], [0.6, 0.95]);
-const bats = makeHorrorGroup(12, "bat", BAT_EMOJIS, [16, 26], [10, 16], [0.55, 0.9], [260, 460]);
-const webs = makeHorrorGroup(8, "web", WEB_EMOJIS, [22, 36], [14, 20], [0.25, 0.45]);
-const skulls = makeHorrorGroup(10, "skull", SKULL_EMOJIS, [14, 22], [16, 24], [0.5, 0.8]);
-const eyes = makeHorrorGroup(14, "eye", EYE_EMOJIS, [12, 20], [12, 20], [0.5, 0.85]);
+const spiders = makeHorrorGroup(16, "spider", SPIDER_EMOJIS, [15, 26], [16, 26], [0.65, 1]);
+const bats = makeHorrorGroup(14, "bat", BAT_EMOJIS, [17, 28], [9, 15], [0.6, 0.95], [280, 500]);
+const webs = makeHorrorGroup(10, "web", WEB_EMOJIS, [24, 40], [14, 20], [0.12, 0.3]);
+const skulls = makeHorrorGroup(12, "skull", SKULL_EMOJIS, [15, 24], [18, 28], [0.55, 0.9]);
+const eyes = makeHorrorGroup(16, "eye", EYE_EMOJIS, [13, 22], [13, 22], [0.6, 0.95]);
 
 /* =========================================================
    FALLING PARTICLES (theme-aware)
@@ -178,32 +178,44 @@ function FallingParticles() {
         </div>
       )}
 
-      {/* ============ HORROR — BRIGHT & SPOOKY ============ */}
+      {/* ============ HORROR — BLOOD RED & WRETCHED ============ */}
       {theme === "horror" && (
         <>
-          {/* 🌫️ Radiant teal fog overlay (poster vibe) */}
+          {/* 🩸 Blood vignette — crushes the edges, keeps the middle readable */}
           <div
             aria-hidden="true"
-            className="pointer-events-none fixed inset-0 z-30 horror:bg-[radial-gradient(80%_60%_at_50%_55%,rgba(120,220,200,0.35)_0%,rgba(20,60,55,0.35)_45%,rgba(0,0,0,0.75)_100%)]"
+            className="pointer-events-none fixed inset-0 -z-40 horror:bg-[radial-gradient(ellipse_at_center,transparent_18%,rgba(75,0,0,0.55)_58%,rgba(25,0,0,0.85)_82%,rgba(0,0,0,0.97)_100%)]"
           />
 
-          {/* ✨ Slow glowing pulse in the center */}
+          {/* 🫀 Pulsing arterial core — slow heartbeat glow */}
           <div
             aria-hidden="true"
-            className="pointer-events-none fixed inset-0 z-30 horror:bg-[radial-gradient(45%_35%_at_50%_55%,rgba(180,255,235,0.35)_0%,transparent_70%)] horror:animate-[horrorPulse_6s_ease-in-out_infinite]"
+            className="pointer-events-none fixed inset-0 -z-40 horror:bg-[radial-gradient(42%_32%_at_50%_55%,rgba(230,10,10,0.22)_0%,rgba(120,0,0,0.10)_45%,transparent_75%)] horror:animate-[horrorPulse_5.5s_ease-in-out_infinite]"
           />
 
-          {/* 🎞️ Film grain texture */}
+          {/* 🕯️ Flickering darkness — the whole world breathes wrong */}
           <div
             aria-hidden="true"
-            className="pointer-events-none fixed inset-0 z-30 horror:opacity-[0.22] horror:mix-blend-overlay"
+            className="pointer-events-none fixed inset-0 -z-40 bg-black opacity-[0.08] horror:animate-[horrorFlicker_9s_ease-in-out_infinite]"
+          />
+
+          {/* ⚡ Occasional blood flash — like a lightbulb full of blood */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 -z-40 bg-red-800 opacity-0 mix-blend-screen horror:animate-[bloodFlash_16s_ease-in-out_infinite]"
+          />
+
+          {/* 🎞️ Film grain / rot */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-0 -z-40 horror:opacity-[0.3] horror:mix-blend-overlay"
             style={{
               backgroundImage:
-                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>\")",
+                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/></svg>\")",
             }}
           />
 
-          {/* 🕷️ Spiders + Skulls + Eyes — slow fall with glow */}
+          {/* 🕷️ Spiders + Skulls + Eyes — slow, heavy, glowing red */}
           <div
             className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
             aria-hidden="true"
@@ -214,7 +226,7 @@ function FallingParticles() {
                 className="
                   falling-particle absolute -top-5 select-none
                   flex items-center justify-center
-                  horror:drop-shadow-[0_0_12px_rgba(140,255,220,0.75)]
+                  horror:drop-shadow-[0_0_14px_rgba(255,0,0,0.85)]
                 "
                 style={
                   {
@@ -233,7 +245,7 @@ function FallingParticles() {
             ))}
           </div>
 
-          {/* 🦇 Bats — fly across horizontally */}
+          {/* 🦇 Bats — screeching across the screen */}
           <div
             className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
             aria-hidden="true"
@@ -241,7 +253,7 @@ function FallingParticles() {
             {bats.map((p, idx) => (
               <span
                 key={`bat-${p.id}`}
-                className="bat-fly absolute select-none horror:drop-shadow-[0_0_10px_rgba(0,0,0,0.95)]"
+                className="bat-fly absolute select-none horror:drop-shadow-[0_0_12px_rgba(255,0,0,0.75)]"
                 style={
                   {
                     top: `${8 + (idx * 7) % 75}%`,
@@ -259,7 +271,7 @@ function FallingParticles() {
             ))}
           </div>
 
-          {/* 🕸️ Web strands — appear / disappear */}
+          {/* 🕸️ Web strands — rot in and out of existence */}
           <div
             className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
             aria-hidden="true"
@@ -267,7 +279,7 @@ function FallingParticles() {
             {webs.map((p) => (
               <span
                 key={`web-${p.id}`}
-                className="web-fade absolute select-none horror:drop-shadow-[0_0_8px_rgba(200,255,230,0.55)]"
+                className="web-fade absolute select-none horror:drop-shadow-[0_0_10px_rgba(255,40,40,0.45)]"
                 style={
                   {
                     top: p.left,
@@ -283,15 +295,41 @@ function FallingParticles() {
             ))}
           </div>
 
-          {/* 🌑 Black ash / embers — glowing teal rise */}
+          {/* 🩸 Blood drops — falling, thick, glowing */}
           <div
             className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
             aria-hidden="true"
           >
-            {Array.from({ length: 40 }).map((_, i) => (
+            {Array.from({ length: 45 }).map((_, i) => (
+              <span
+                key={`blood-${i}`}
+                className="blood-drip absolute horror:bg-linear-to-b horror:from-red-400 horror:via-red-700 horror:to-red-950 horror:shadow-[0_0_12px_rgba(255,0,0,0.9)]"
+                style={
+                  {
+                    left: `${Math.random() * 100}%`,
+                    top: "-6%",
+                    width: `${Math.random() * 2.5 + 2}px`,
+                    height: `${Math.random() * 16 + 10}px`,
+                    borderRadius: "9999px",
+                    opacity: Math.random() * 0.55 + 0.4,
+                    animationDuration: `${Math.random() * 4 + 4.5}s`,
+                    animationDelay: `${Math.random() * -10}s`,
+                    "--particle-drift": `${Math.random() * 90 - 45}px`,
+                  } as React.CSSProperties
+                }
+              />
+            ))}
+          </div>
+
+          {/* 🔥 Embers — dying, ember-red, rising from below */}
+          <div
+            className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+            aria-hidden="true"
+          >
+            {Array.from({ length: 30 }).map((_, i) => (
               <span
                 key={`ember-${i}`}
-                className="ember-rise absolute rounded-full horror:bg-emerald-200/70 horror:shadow-[0_0_14px_rgba(160,255,220,0.95)]"
+                className="ember-rise absolute rounded-full horror:bg-red-500/70 horror:shadow-[0_0_16px_rgba(255,30,0,0.95)]"
                 style={
                   {
                     left: `${Math.random() * 100}%`,
@@ -395,9 +433,9 @@ function AppContent() {
             className="
               fixed bottom-6 right-6 z-99999 flex h-14 w-14 items-center justify-center
               rounded-full bg-cyan-500 love:bg-pink-500
-              horror:bg-emerald-400 horror:text-black
+              horror:bg-red-700 horror:text-red-50
               text-white shadow-2xl love:shadow-pink-500/50
-              horror:shadow-[0_0_25px_rgba(160,255,220,0.9)]
+              horror:shadow-[0_0_30px_rgba(255,0,0,0.85)]
               transition-all duration-300 hover:scale-110
             "
           >
@@ -441,9 +479,9 @@ function AppContent() {
           className="
             fixed bottom-6 right-6 z-99999 flex h-14 w-14 items-center justify-center
             rounded-full bg-cyan-500 love:bg-pink-500
-            horror:bg-emerald-400 horror:text-black
+            horror:bg-red-700 horror:text-red-50
             text-white shadow-2xl love:shadow-pink-500/50
-            horror:shadow-[0_0_25px_rgba(160,255,220,0.9)]
+            horror:shadow-[0_0_30px_rgba(255,0,0,0.85)]
             transition-all duration-300 hover:scale-110
           "
         >
@@ -459,35 +497,40 @@ function AppContent() {
 ========================================================= */
 
 export default function App() {
+  const { theme } = useTheme();
+  const isHorror = theme === "horror";
+
   return (
     <BrowserRouter>
       <CustomCursor />
 
-      {/* ===================================================
-          GLOBAL BACKGROUND
-      =================================================== */}
-      <div
-        className="
-          fixed inset-0 -z-50 h-full w-full
-          bg-white
-          [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
-          dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]
-          love:[background:radial-gradient(125%_125%_at_50%_10%,#fff0f5_40%,#ff9ec4_100%)]
-          horror:[background:radial-gradient(60%_55%_at_50%_60%,#1a4d45_0%,#0b2622_45%,#04100d_80%,#000_100%)]
-        "
-      />
+      <div className={isHorror ? "horror-mode" : ""}>
+        {/* ===================================================
+            GLOBAL BACKGROUND
+        =================================================== */}
+        <div
+          className="
+            fixed inset-0 -z-50 h-full w-full
+            bg-white
+            [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
+            dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]
+            love:[background:radial-gradient(125%_125%_at_50%_10%,#fff0f5_40%,#ff9ec4_100%)]
+            horror:[background:radial-gradient(120%_110%_at_50%_28%,#4a0a0a_0%,#2a0404_28%,#120101_55%,#050000_80%,#000_100%)]
+          "
+        />
 
-      {/* ===================================================
-          FALLING PARTICLES
-      =================================================== */}
-      <FallingParticles />
+        {/* ===================================================
+            FALLING PARTICLES
+        =================================================== */}
+        <FallingParticles />
 
-      {/* ===================================================
-          WEBSITE
-      =================================================== */}
-      <AppContent />
+        {/* ===================================================
+            WEBSITE
+        =================================================== */}
+        <AppContent />
 
-      <Chatbot />
+        <Chatbot />
+      </div>
 
       {/* ===================================================
           ANIMATION CSS
@@ -535,8 +578,22 @@ export default function App() {
           }
 
           @keyframes webFade {
-            0%, 100% { opacity: 0; transform: scale(0.85); }
-            50%      { opacity: 0.45; transform: scale(1); }
+            0%, 100% { opacity: 0; transform: scale(0.85) rotate(-4deg); }
+            50%      { opacity: 0.4; transform: scale(1) rotate(4deg); }
+          }
+
+          /* ---------- BLOOD DROPS (fall fast, stretch) ---------- */
+          .blood-drip {
+            animation-name: bloodDrip;
+            animation-timing-function: cubic-bezier(0.4, 0.05, 0.85, 0.4);
+            animation-iteration-count: infinite;
+            will-change: transform, opacity;
+          }
+
+          @keyframes bloodDrip {
+            0%   { transform: translate3d(0, -10vh, 0) scaleY(0.5); opacity: 0; }
+            6%   { opacity: 0.95; }
+            100% { transform: translate3d(var(--particle-drift), 118vh, 0) scaleY(1.7); opacity: 0.85; }
           }
 
           /* ---------- EMBERS / ASH (rise) ---------- */
@@ -550,20 +607,77 @@ export default function App() {
           @keyframes emberRise {
             0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0; }
             10%  { opacity: 0.9; }
-            100% { transform: translate3d(var(--particle-drift), -110vh, 0) scale(0.5); opacity: 0; }
+            100% { transform: translate3d(var(--particle-drift), -110vh, 0) scale(0.4); opacity: 0; }
           }
 
-          /* ---------- HORROR CENTER PULSE ---------- */
+          /* ---------- HORROR CENTER PULSE (heartbeat) ---------- */
           @keyframes horrorPulse {
-            0%, 100% { opacity: 0.55; transform: scale(1); }
-            50%      { opacity: 0.95; transform: scale(1.05); }
+            0%, 100% { opacity: 0.5;  transform: scale(1); }
+            18%      { opacity: 1;    transform: scale(1.06); }
+            30%      { opacity: 0.55; transform: scale(1); }
+            45%      { opacity: 0.85; transform: scale(1.03); }
+            60%      { opacity: 0.5;  transform: scale(1); }
+          }
+
+          /* ---------- HORROR FLICKER (bad bulb) ---------- */
+          @keyframes horrorFlicker {
+            0%, 100% { opacity: 0.07; }
+            6%       { opacity: 0.17; }
+            7%       { opacity: 0.03; }
+            8%       { opacity: 0.19; }
+            9%       { opacity: 0.05; }
+            35%      { opacity: 0.09; }
+            36%      { opacity: 0.02; }
+            37%      { opacity: 0.15; }
+            62%      { opacity: 0.06; }
+            63%      { opacity: 0.18; }
+            64%      { opacity: 0.04; }
+            86%      { opacity: 0.11; }
+          }
+
+          /* ---------- BLOOD FLASH (rare, violent) ---------- */
+          @keyframes bloodFlash {
+            0%, 88%, 100% { opacity: 0; }
+            89%           { opacity: 0.30; }
+            90%           { opacity: 0.04; }
+            91%           { opacity: 0.24; }
+            92%           { opacity: 0; }
+          }
+
+          /* ---------- HORROR TEXT: never lost, always bleeding ---------- */
+          .horror-mode h1,
+          .horror-mode h2,
+          .horror-mode h3,
+          .horror-mode h4,
+          .horror-mode h5,
+          .horror-mode h6,
+          .horror-mode p,
+          .horror-mode a,
+          .horror-mode li,
+          .horror-mode button,
+          .horror-mode span,
+          .horror-mode strong,
+          .horror-mode em,
+          .horror-mode label {
+            text-shadow:
+              0 2px 6px rgba(0, 0, 0, 0.95),
+              0 1px 2px rgba(0, 0, 0, 1),
+              0 0 18px rgba(200, 0, 0, 0.45);
+          }
+
+          .horror-mode h1,
+          .horror-mode h2 {
+            text-shadow:
+              0 3px 8px rgba(0, 0, 0, 1),
+              0 0 28px rgba(255, 0, 0, 0.6);
           }
 
           @media (prefers-reduced-motion: reduce) {
             .falling-particle,
             .bat-fly,
             .web-fade,
-            .ember-rise {
+            .ember-rise,
+            .blood-drip {
               animation-duration: 20s;
             }
           }

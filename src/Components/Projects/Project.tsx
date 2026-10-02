@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import type { MotionValue, Variants } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Github, ExternalLink } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
@@ -48,6 +48,22 @@ interface ShapeDef {
   duration: number;
   delay: number;
 }
+
+/* =========================================================
+   HORROR WHISPERS — surface inside the cards
+========================================================= */
+const HORROR_WHISPERS = [
+  "I see you",
+  "Behind you",
+  "Don't open it",
+  "He's watching",
+  "It hurts",
+  "Run.",
+  "Let me in",
+  "Nine of us",
+  "We never left",
+  "You shouldn't have",
+];
 
 // ==================== Static project data ====================
 const staticProjects: Project[] = [
@@ -378,7 +394,12 @@ export default function Project() {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-        <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+        <div
+          className={`
+            w-16 h-16 border-4 border-t-transparent rounded-full animate-spin
+            ${isHorror ? "border-red-600" : "border-cyan-400"}
+          `}
+        ></div>
       </div>
     );
   }
@@ -421,7 +442,27 @@ export default function Project() {
               0 2px 2px #000 !important;
           }
 
-          /* LOVE — dark rose text with soft pink glow (visible on light bg) */
+          /* HORROR heading flicker */
+          @keyframes projHorrorFlicker {
+            0%, 46%, 54%, 100% {
+              text-shadow:
+                0 0 4px #ffdddd, 0 0 10px #ff3333, 0 0 20px #ff0000,
+                0 0 40px #cc0000, 0 0 80px #8b0000, 0 4px 2px #000;
+            }
+            48% {
+              text-shadow:
+                0 0 2px #ffaaaa, 0 0 6px #aa0000, 0 0 12px #550000,
+                0 2px 2px #000;
+            }
+            50% {
+              text-shadow:
+                0 0 6px #ffffff, 0 0 16px #ff6666, 0 0 34px #cc0000,
+                0 0 70px #660000, 0 4px 2px #000;
+            }
+          }
+          .proj-horror-flicker { animation: projHorrorFlicker 3.8s infinite; }
+
+          /* LOVE — dark rose text with soft pink glow */
           .proj-love-text,
           .proj-love-text * {
             font-family: 'Dancing Script', 'Great Vibes', cursive !important;
@@ -442,6 +483,106 @@ export default function Project() {
               0 0 6px rgba(244, 114, 182, 0.55),
               0 1px 0 rgba(255, 255, 255, 0.55) !important;
           }
+
+          /* ============================================
+             HORROR PROJECT CARD — VHS rot on hover
+          ============================================ */
+          @keyframes projCardGlitch {
+            0%, 100% { transform: translate(0, 0); }
+            20%      { transform: translate(-3px, 1px) skew(-1.5deg); }
+            40%      { transform: translate(3px, -1px) skew(1.5deg); }
+            60%      { transform: translate(-2px, 2px) skew(-1deg); }
+            80%      { transform: translate(2px, -2px) skew(1deg); }
+          }
+          .proj-horror-card-glitch:hover {
+            animation: projCardGlitch 0.35s steps(4) infinite;
+          }
+
+          /* Blood-splattered backdrop on hover */
+          @keyframes projBloodBloom {
+            0%   { opacity: 0; transform: scale(0.85); }
+            30%  { opacity: 0.9; }
+            60%  { opacity: 0.6; }
+            100% { opacity: 0.85; transform: scale(1); }
+          }
+
+          /* Whisper text */
+          @keyframes projWhisper {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+            15%      { opacity: 0.9; }
+            40%      { opacity: 0.75; }
+            70%      { opacity: 0.95; }
+            85%      { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+          }
+
+          /* Blood drip from card bottom */
+          @keyframes projBloodDripFall {
+            0%   { transform: translateY(-10px) scaleY(0.6); opacity: 0; }
+            15%  { opacity: 1; }
+            100% { transform: translateY(120px) scaleY(1.4); opacity: 0; }
+          }
+
+          /* Static noise jitter */
+          @keyframes projStaticJitter {
+            0%   { transform: translate(0, 0); opacity: 0.35; }
+            20%  { transform: translate(-3px, 2px); opacity: 0.5; }
+            40%  { transform: translate(2px, -3px); opacity: 0.3; }
+            60%  { transform: translate(-2px, -2px); opacity: 0.55; }
+            80%  { transform: translate(3px, 3px); opacity: 0.4; }
+            100% { transform: translate(0, 0); opacity: 0.35; }
+          }
+          .proj-horror-static {
+            animation: projStaticJitter 0.18s steps(3) infinite;
+          }
+
+          /* Blood heartbeat on pagination bullet (active) */
+          @keyframes projBulletPulse {
+            0%, 100% {
+              box-shadow: 0 0 6px rgba(255,20,20,0.7);
+              background: #8b0000;
+            }
+            50% {
+              box-shadow: 0 0 18px rgba(255,40,40,1), 0 0 32px rgba(180,0,0,0.85);
+              background: #ff1a1a;
+            }
+          }
+
+          /* Floor grid blood flow */
+          @keyframes projFloorBloodFlow {
+            0%   { background-position: 0 0, 0 0; }
+            100% { background-position: 56px 56px, 56px 56px; }
+          }
+          .proj-horror-floor {
+            animation: projFloorBloodFlow 8s linear infinite;
+          }
+
+          /* Nav buttons — blood pulse on hover */
+          @keyframes projNavPulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(255,20,20,0.6); }
+            50%      { box-shadow: 0 0 24px rgba(255,40,40,1), 0 0 40px rgba(180,0,0,0.8); }
+          }
+          .proj-horror-nav:hover { animation: projNavPulse 1.4s ease-in-out infinite; }
+
+          /* Ambient shape blood aura */
+          @keyframes projShapeAura {
+            0%, 100% {
+              box-shadow: 0 0 18px rgba(255,26,26,0.6), inset 0 0 12px rgba(255,26,26,0.4);
+            }
+            50% {
+              box-shadow: 0 0 34px rgba(255,40,40,1), inset 0 0 20px rgba(255,40,40,0.65);
+            }
+          }
+          .proj-horror-shape { animation: projShapeAura 3.2s ease-in-out infinite; }
+
+          /* Creepy eye blinking on hero heading */
+          @keyframes projHeadingEyeBlink {
+            0%, 100% { transform: scaleY(1); }
+            46%, 54% { transform: scaleY(0.05); }
+          }
+          .proj-heading-eye {
+            animation: projHeadingEyeBlink 4.5s ease-in-out infinite;
+            transform-origin: center;
+          }
         `}
       </style>
 
@@ -461,9 +602,34 @@ export default function Project() {
             shape={shapeColor ? { ...s, color: shapeColor } : s}
             mouseX={mouseX}
             mouseY={mouseY}
+            isHorror={isHorror}
           />
         ))}
       </div>
+
+      {/* ============================================================
+          HORROR — blood mist rising from behind content
+          ============================================================ */}
+      {isHorror && (
+        <>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              background:
+                "radial-gradient(60% 40% at 50% 100%, rgba(180,0,0,0.35) 0%, rgba(80,0,0,0.2) 45%, transparent 80%)",
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-10 opacity-[0.22] mix-blend-overlay"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.7'/></svg>\")",
+            }}
+          />
+        </>
+      )}
 
       {/* ============================================================
           3D PERSPECTIVE FLOOR GRID
@@ -473,19 +639,25 @@ export default function Project() {
         style={{ perspective: "900px", perspectiveOrigin: "50% 100%" }}
       >
         <div
-          className="absolute inset-x-0 bottom-0 h-[120%]"
+          className={`absolute inset-x-0 bottom-0 h-[120%] ${isHorror ? "proj-horror-floor" : ""}`}
           style={{
             transform: "rotateX(72deg)",
             transformOrigin: "50% 100%",
             backgroundImage: isHorror
-              ? "linear-gradient(rgba(255,26,26,0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(255,26,26,0.28) 1px, transparent 1px)"
+              ? "linear-gradient(rgba(255,26,26,0.42) 1px, transparent 1px), linear-gradient(90deg, rgba(255,26,26,0.42) 1px, transparent 1px)"
               : isLove
               ? "linear-gradient(rgba(255,77,148,0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(255,77,148,0.28) 1px, transparent 1px)"
               : "linear-gradient(rgba(34,211,238,0.22) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.22) 1px, transparent 1px)",
             backgroundSize: "56px 56px",
           }}
         />
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-[#0b1220] opacity-90" />
+        <div
+          className={`
+            absolute inset-0 bg-linear-to-b from-transparent via-transparent
+            ${isHorror ? "to-[#050000]" : "to-white dark:to-[#0b1220]"}
+            opacity-90
+          `}
+        />
       </div>
 
       {/* ============================================================
@@ -501,13 +673,53 @@ export default function Project() {
           variants={fadeIn}
           custom={0}
           className={`
-            text-4xl md:text-5xl font-bold mb-8
+            relative inline-block text-4xl md:text-5xl font-bold mb-8
             bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent
-            ${isHorror ? "proj-horror-text" : ""}
+            ${isHorror ? "proj-horror-text proj-horror-flicker" : ""}
             ${isLove ? "proj-love-text" : ""}
           `}
         >
           Projects
+          {/* Horror — bloodshot eye to the right of the title */}
+          {isHorror && (
+            <motion.span
+              aria-hidden="true"
+              className="proj-heading-eye absolute top-1/2 -right-16 -translate-y-1/2 inline-block"
+              style={{
+                width: "52px",
+                height: "28px",
+              }}
+              initial={{ opacity: 0.85 }}
+              animate={{ opacity: [0.85, 0.95, 0.85] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              <span
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, #f2e2c8 0%, #d8b8a0 45%, #6b1010 85%, #1a0000 100%)",
+                  boxShadow:
+                    "0 0 14px rgba(255,0,0,0.85), inset 0 0 8px rgba(120,0,0,0.9)",
+                }}
+              />
+              <span
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                style={{
+                  width: "22%",
+                  height: "70%",
+                  background:
+                    "radial-gradient(circle at 40% 35%, #ff4a4a 0%, #b30000 45%, #4a0000 80%, #1a0000 100%)",
+                  boxShadow:
+                    "0 0 8px rgba(255,0,0,0.95), inset 0 0 6px rgba(0,0,0,0.9)",
+                }}
+              >
+                <span
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black"
+                  style={{ width: "50%", height: "80%" }}
+                />
+              </span>
+            </motion.span>
+          )}
         </motion.h1>
 
         <motion.p
@@ -566,10 +778,12 @@ function FloatingShape({
   shape,
   mouseX,
   mouseY,
+  isHorror,
 }: {
   shape: ShapeDef;
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
+  isHorror: boolean;
 }) {
   const tx = useSpring(
     useTransform(mouseX, [-0.5, 0.5], [-shape.depth * 45, shape.depth * 45]),
@@ -589,7 +803,7 @@ function FloatingShape({
 
   return (
     <motion.div
-      className="absolute"
+      className={`absolute ${isHorror ? "proj-horror-shape" : ""}`}
       style={{
         left: shape.x,
         top: shape.y,
@@ -652,6 +866,37 @@ function Section({
 }: SectionProps & { isHorror: boolean; isLove: boolean }) {
   const swiperRef = useRef<SwiperType | null>(null);
 
+  /* Horror whispers regenerated per project index — stable memoized per section */
+  const whispersByIndex = useMemo(
+    () =>
+      projects.map(() =>
+        Array.from({ length: 5 }, (_, i) => ({
+          text: HORROR_WHISPERS[Math.floor(Math.random() * HORROR_WHISPERS.length)],
+          top: `${15 + Math.random() * 65}%`,
+          left: `${10 + Math.random() * 65}%`,
+          rotation: -14 + Math.random() * 28,
+          delay: i * 0.4,
+          duration: 2.2 + Math.random() * 1.4,
+        }))
+      ),
+    [projects]
+  );
+
+  /* Horror blood drips regenerated per project index */
+  const dripsByIndex = useMemo(
+    () =>
+      projects.map(() =>
+        Array.from({ length: 8 }, (_, i) => ({
+          left: `${8 + i * 11 + Math.random() * 3}%`,
+          width: `${2 + Math.random() * 2.5}px`,
+          height: `${16 + Math.random() * 38}px`,
+          delay: Math.random() * 0.8,
+          duration: 1.8 + Math.random() * 1.4,
+        }))
+      ),
+    [projects]
+  );
+
   return (
     <>
       <motion.h2
@@ -659,7 +904,7 @@ function Section({
         className={`
           text-2xl font-semibold mb-6
           text-cyan-400
-          ${isHorror ? "proj-horror-text" : ""}
+          ${isHorror ? "proj-horror-text proj-horror-flicker" : ""}
           ${isLove ? "proj-love-text" : ""}
         `}
       >
@@ -717,17 +962,20 @@ function Section({
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: isHorror ? 1 : 1.02 }}
                   className={`
                     relative group rounded-2xl border shadow-lg overflow-hidden transition-all duration-300 h-full
                     border-cyan-400/20 hover:border-cyan-400/50
-                    ${isHorror ? "border-red-700/70! hover:border-red-500!" : ""}
+                    ${isHorror ? "proj-horror-card-glitch border-red-700/70! hover:border-red-500! shadow-[0_0_20px_rgba(180,0,0,0.45)]" : ""}
                     ${isLove ? "border-pink-400/50! hover:border-pink-500!" : ""}
                   `}
                 >
                   {project.profilePhoto?.secure_url ? (
                     <div
-                      className="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-60 transition-all duration-500"
+                      className={`
+                        absolute inset-0 bg-cover bg-center transition-all duration-500
+                        ${isHorror ? "opacity-30 group-hover:opacity-45 grayscale-[0.7] group-hover:grayscale-[0.4] contrast-[1.25] brightness-[0.85] hue-rotate-[-10deg]" : "opacity-40 group-hover:opacity-60"}
+                      `}
                       style={{
                         backgroundImage: `url(${project.profilePhoto.secure_url})`,
                       }}
@@ -738,12 +986,65 @@ function Section({
                     ></div>
                   )}
 
+                  {/* Horror — blood bloom overlay on hover */}
+                  {isHorror && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-3"
+                      style={{
+                        background:
+                          "radial-gradient(60% 60% at 30% 80%, rgba(200,0,0,0.55) 0%, rgba(120,0,0,0.35) 40%, transparent 75%), radial-gradient(50% 50% at 80% 20%, rgba(140,0,0,0.4) 0%, transparent 65%)",
+                        mixBlendMode: "multiply",
+                        animation: "projBloodBloom 1.2s ease-out forwards",
+                      }}
+                    />
+                  )}
+
+                  {/* Horror — static noise on hover */}
+                  {isHorror && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-40 transition-opacity duration-300 z-4 proj-horror-static"
+                      style={{
+                        backgroundImage:
+                          "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.65'/></svg>\")",
+                        mixBlendMode: "overlay",
+                      }}
+                    />
+                  )}
+
                   <div
                     className="
                       absolute inset-0 transition-all duration-500
                       bg-black/50 group-hover:bg-black/40
                     "
                   ></div>
+
+                  {/* Horror — whispers inside the card */}
+                  {isHorror && (
+                    <div className="absolute inset-0 pointer-events-none z-6 overflow-hidden rounded-2xl">
+                      {whispersByIndex[i]?.map((w, wi) => (
+                        <span
+                          key={wi}
+                          className="absolute font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{
+                            top: w.top,
+                            left: w.left,
+                            fontFamily: "'Creepster', 'Nosifer', cursive",
+                            fontSize: "clamp(0.8rem, 1.4vw, 1.15rem)",
+                            letterSpacing: "0.08em",
+                            color: "#ff1a1a",
+                            textShadow:
+                              "0 0 6px #ff0000, 0 0 14px #b30000, 0 0 26px #4a0000, 0 2px 3px #000",
+                            animation: `projWhisper ${w.duration}s ease-in-out ${w.delay}s infinite`,
+                            transform: `translate(-50%, -50%) rotate(${w.rotation}deg)`,
+                          }}
+                        >
+                          {w.text}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="relative z-10 p-6 backdrop-blur-[2px] min-h-[400px] flex flex-col">
                     <h3
@@ -772,9 +1073,9 @@ function Section({
                         <span
                           key={tech}
                           className={`
-                            text-xs px-3 py-1 rounded-full
+                            text-xs px-3 py-1 rounded-full transition-colors duration-300
                             bg-cyan-400/20 text-cyan-200
-                            ${isHorror ? "bg-red-900/60! text-red-100!" : ""}
+                            ${isHorror ? "bg-red-900/60! text-red-100! border border-red-700/70 group-hover:bg-red-800/80! group-hover:shadow-[0_0_10px_rgba(255,0,0,0.6)]" : ""}
                             ${isLove ? "bg-pink-500/30! text-pink-50!" : ""}
                           `}
                         >
@@ -784,9 +1085,9 @@ function Section({
                       {project.tools?.length > 4 && (
                         <span
                           className={`
-                            text-xs px-3 py-1 rounded-full
+                            text-xs px-3 py-1 rounded-full transition-colors duration-300
                             bg-cyan-400/20 text-cyan-200
-                            ${isHorror ? "bg-red-900/60! text-red-100!" : ""}
+                            ${isHorror ? "bg-red-900/60! text-red-100! border border-red-700/70 group-hover:bg-red-800/80! group-hover:shadow-[0_0_10px_rgba(255,0,0,0.6)]" : ""}
                             ${isLove ? "bg-pink-500/30! text-pink-50!" : ""}
                           `}
                         >
@@ -804,7 +1105,7 @@ function Section({
                           className={`
                             flex items-center gap-2 text-sm transition-colors
                             text-cyan-300 hover:text-cyan-100
-                            ${isHorror ? "text-red-300! hover:text-red-100!" : ""}
+                            ${isHorror ? "text-red-300! hover:text-red-100! hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.9)]" : ""}
                             ${isLove ? "text-pink-200! hover:text-pink-50!" : ""}
                           `}
                         >
@@ -819,7 +1120,7 @@ function Section({
                           className={`
                             flex items-center gap-2 text-sm transition-colors
                             text-cyan-300 hover:text-cyan-100
-                            ${isHorror ? "text-red-300! hover:text-red-100!" : ""}
+                            ${isHorror ? "text-red-300! hover:text-red-100! hover:drop-shadow-[0_0_8px_rgba(255,0,0,0.9)]" : ""}
                             ${isLove ? "text-pink-200! hover:text-pink-50!" : ""}
                           `}
                         >
@@ -828,6 +1129,32 @@ function Section({
                       )}
                     </div>
                   </div>
+
+                  {/* Horror — blood drips falling from card bottom on hover */}
+                  {isHorror && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute left-0 right-0 pointer-events-none z-7 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ top: "calc(100% - 6px)" }}
+                    >
+                      {dripsByIndex[i]?.map((d, di) => (
+                        <span
+                          key={di}
+                          className="absolute top-0 rounded-b-full"
+                          style={{
+                            left: d.left,
+                            width: d.width,
+                            height: d.height,
+                            background:
+                              "linear-gradient(180deg, rgba(180,0,0,0.95) 0%, #b80000 40%, #ff0000 100%)",
+                            boxShadow:
+                              "0 0 8px rgba(255,0,0,0.95), 0 0 18px rgba(180,0,0,0.7)",
+                            animation: `projBloodDripFall ${d.duration}s ease-in ${d.delay}s infinite`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               </SwiperSlide>
             );
@@ -840,7 +1167,7 @@ function Section({
             className={`
               p-3 rounded-full transition-all duration-300 hover:scale-110
               bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400
-              ${isHorror ? "bg-red-900/50! hover:bg-red-800/70! text-red-200!" : ""}
+              ${isHorror ? "proj-horror-nav bg-red-900/60! hover:bg-red-800/80! text-red-100! border border-red-600/70" : ""}
               ${isLove ? "bg-pink-500/30! hover:bg-pink-500/50! text-pink-100!" : ""}
             `}
           >
@@ -853,7 +1180,7 @@ function Section({
             className={`
               p-3 rounded-full transition-all duration-300 hover:scale-110
               bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400
-              ${isHorror ? "bg-red-900/50! hover:bg-red-800/70! text-red-200!" : ""}
+              ${isHorror ? "proj-horror-nav bg-red-900/60! hover:bg-red-800/80! text-red-100! border border-red-600/70" : ""}
               ${isLove ? "bg-pink-500/30! hover:bg-pink-500/50! text-pink-100!" : ""}
             `}
           >
@@ -885,6 +1212,16 @@ function Section({
         .project-swiper .swiper-pagination-bullet-active {
           background: #06b6d4;
           opacity: 1;
+        }
+        /* HORROR — blood-red bullets with heartbeat */
+        .horror-mode .project-swiper .swiper-pagination-bullet {
+          background: #8b0000;
+          opacity: 0.6;
+        }
+        .horror-mode .project-swiper .swiper-pagination-bullet-active {
+          background: #ff1a1a;
+          opacity: 1;
+          animation: projBulletPulse 1.6s ease-in-out infinite;
         }
         @media (max-width: 768px) {
           .project-swiper {
