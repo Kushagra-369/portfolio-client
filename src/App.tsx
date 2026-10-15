@@ -9,6 +9,8 @@ import {
   useLocation,
 } from "react-router-dom";
 
+import VoiceAssistant from "./Components/VoiceAssistant/VoiceAssistant";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 import { useTheme } from "./Context/ThemeContext";
@@ -107,13 +109,11 @@ const makeHorrorGroup = (
     id: i,
     left: `${Math.random() * 100}%`,
     size: `${Math.random() * (sizeRange[1] - sizeRange[0]) + sizeRange[0]}px`,
-    duration: `${
-      Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0]
-    }s`,
+    duration: `${Math.random() * (durationRange[1] - durationRange[0]) + durationRange[0]
+      }s`,
     delay: `${Math.random() * -20}s`,
-    drift: `${
-      Math.random() * (driftRange[1] - driftRange[0]) + driftRange[0]
-    }px`,
+    drift: `${Math.random() * (driftRange[1] - driftRange[0]) + driftRange[0]
+      }px`,
     opacity:
       Math.random() * (opacityRange[1] - opacityRange[0]) + opacityRange[0],
     kind,
@@ -151,10 +151,9 @@ function FallingParticles() {
                 key={`${p.kind}-${p.id}`}
                 className={`
                   falling-particle absolute -top-5
-                  ${
-                    isEmoji
-                      ? "select-none flex items-center justify-center love:drop-shadow-[0_0_10px_rgba(244,114,182,0.65)]"
-                      : "rounded-full bg-cyan-400/40 shadow-[0_0_8px_rgba(34,211,238,0.35)] dark:bg-white/80 dark:shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+                  ${isEmoji
+                    ? "select-none flex items-center justify-center love:drop-shadow-[0_0_10px_rgba(244,114,182,0.65)]"
+                    : "rounded-full bg-cyan-400/40 shadow-[0_0_8px_rgba(34,211,238,0.35)] dark:bg-white/80 dark:shadow-[0_0_10px_rgba(255,255,255,0.45)]"
                   }
                 `}
                 style={
@@ -398,7 +397,15 @@ function AppContent() {
               }}
               className="w-full h-screen"
             >
-              <Start onStart={() => setEntered(true)} />
+              <Start
+                onStart={() => {
+                  setEntered(true);
+
+                  window.dispatchEvent(
+                    new Event("portfolio-started")
+                  );
+                }}
+              />
             </motion.div>
           ) : (
             <motion.div
@@ -528,6 +535,8 @@ export default function App() {
             WEBSITE
         =================================================== */}
         <AppContent />
+
+        <VoiceAssistant />
 
         <Chatbot />
       </div>
