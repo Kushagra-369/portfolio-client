@@ -35,6 +35,59 @@ interface AdminData {
   socialLinks: { name: string; link: string }[];
 }
 
+
+function LiveClock({ compact = false }: { compact?: boolean }) {
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const time = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: compact ? undefined : "2-digit",
+    hour12: true,
+  }).format(now);
+
+  const date = new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+  }).format(now);
+
+  return (
+    <div
+      aria-label="Current time in India"
+      className={`
+        flex flex-col items-center justify-center shrink-0
+        rounded-xl border border-cyan-400/30
+        bg-black/20 text-cyan-200
+        shadow-[0_0_12px_rgba(34,211,238,0.12)]
+        leading-tight whitespace-nowrap
+        ${compact ? "px-2 py-2 text-[10px]" : "px-3 py-2 text-xs"}
+      `}
+    >
+      <span className="font-semibold tracking-wide tabular-nums">
+        {time}
+      </span>
+
+      {!compact && (
+        <span className="mt-1 text-[10px] opacity-70">
+          {date} · IST
+        </span>
+      )}
+    </div>
+  );
+}
+
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { toggleLightDark, theme } = useTheme();
@@ -466,6 +519,7 @@ export default function Navbar() {
 
         {/* Middle (md) Resume + Icons */}
         <div className="hidden md:flex lg:hidden items-center gap-3">
+          <LiveClock />
           <motion.div variants={bounceVariant} initial="rest" whileHover="hover" whileTap="tap">
             <Link
               to="/resume" data-tour="resume-link"
@@ -579,9 +633,8 @@ export default function Navbar() {
                   className={`
                     relative px-4 py-2 select-none rounded-xl font-semibold
                     transition-all duration-300 overflow-hidden group
-                    ${
-                      isActive(section.path, section.id)
-                        ? `
+                    ${isActive(section.path, section.id)
+                      ? `
                           text-white
                           bg-linear-to-r from-cyan-500/30 to-blue-500/30
                           love:from-pink-500/30 love:to-rose-500/30
@@ -593,7 +646,7 @@ export default function Navbar() {
                           love:shadow-pink-500/25
                           horror:shadow-[0_0_28px_rgba(255,20,20,0.75)]
                         `
-                        : `
+                      : `
                           text-gray-300 dark:text-white
                           love:text-pink-200
                           horror:text-neutral-300
@@ -623,10 +676,9 @@ export default function Navbar() {
                     {section.icon && (
                       <span
                         className={`
-                          ${
-                            isActive(section.path, section.id)
-                              ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
-                              : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
+                          ${isActive(section.path, section.id)
+                            ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
+                            : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
                           }
                           transition-all duration-300
                         `}
@@ -646,9 +698,8 @@ export default function Navbar() {
                   className={`
                     relative flex items-center gap-2 px-4 py-2 rounded-xl font-semibold
                     transition-all duration-300 overflow-hidden group
-                    ${
-                      isActive(section.path, section.id)
-                        ? `
+                    ${isActive(section.path, section.id)
+                      ? `
                           text-white
                           bg-linear-to-r from-cyan-500/30 to-blue-500/30
                           love:from-pink-500/30 love:to-rose-500/30
@@ -660,7 +711,7 @@ export default function Navbar() {
                           love:shadow-pink-500/25
                           horror:shadow-[0_0_28px_rgba(255,20,20,0.75)]
                         `
-                        : `
+                      : `
                           text-gray-300 dark:text-white
                           love:text-pink-200
                           horror:text-neutral-300
@@ -690,10 +741,9 @@ export default function Navbar() {
                     {section.icon && (
                       <span
                         className={`
-                          ${
-                            isActive(section.path, section.id)
-                              ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
-                              : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
+                          ${isActive(section.path, section.id)
+                            ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
+                            : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
                           }
                           transition-all duration-300
                         `}
@@ -713,6 +763,7 @@ export default function Navbar() {
 
         {/* Large: Resume + Icons */}
         <motion.div className="hidden lg:flex items-center gap-4" initial="hidden" animate="visible">
+          <LiveClock />
           <motion.div variants={bounceVariant} initial="rest" whileHover="hover" whileTap="tap">
             <Link
               to="/resume" data-tour="resume-link"
@@ -816,6 +867,9 @@ export default function Navbar() {
         </motion.div>
 
         {/* Hamburger with animation */}
+        <div className="md:hidden">
+          <LiveClock compact />
+        </div>
         <motion.button
           className={`
             block xl:hidden p-3 rounded-xl
@@ -890,9 +944,8 @@ export default function Navbar() {
                     className={`
                       relative flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl
                       font-semibold transition-all duration-300 overflow-hidden group
-                      ${
-                        isActive(section.path, section.id)
-                          ? `
+                      ${isActive(section.path, section.id)
+                        ? `
                             text-white
                             bg-linear-to-r from-cyan-500/30 to-blue-500/30
                             love:from-pink-500/30 love:to-rose-500/30
@@ -902,7 +955,7 @@ export default function Navbar() {
                             horror:border-red-600/80
                             horror:shadow-[0_0_22px_rgba(255,20,20,0.7)]
                           `
-                          : `
+                        : `
                             text-gray-300 dark:text-white
                             love:text-pink-200
                             horror:text-neutral-300
@@ -924,10 +977,9 @@ export default function Navbar() {
                       {section.icon && (
                         <span
                           className={`
-                            ${
-                              isActive(section.path, section.id)
-                                ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
-                                : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
+                            ${isActive(section.path, section.id)
+                              ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
+                              : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
                             }
                             transition-all duration-300
                           `}
