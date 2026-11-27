@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 
 import VoiceAssistant from "./Components/VoiceAssistant/VoiceAssistant";
+import PortfolioTour from "./Components/PortfolioTour/PortfolioTour";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
@@ -361,6 +362,15 @@ function AppContent() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
+    const handleAutomaticStart = () => setEntered(true);
+    window.addEventListener("portfolio-start-request", handleAutomaticStart);
+
+    return () => {
+      window.removeEventListener("portfolio-start-request", handleAutomaticStart);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       const scrollPosition =
         window.scrollY || document.documentElement.scrollTop;
@@ -400,10 +410,6 @@ function AppContent() {
               <Start
                 onStart={() => {
                   setEntered(true);
-
-                  window.dispatchEvent(
-                    new Event("portfolio-started")
-                  );
                 }}
               />
             </motion.div>
@@ -536,6 +542,7 @@ export default function App() {
         =================================================== */}
         <AppContent />
 
+        <PortfolioTour />
         <VoiceAssistant />
 
         <Chatbot />

@@ -6,7 +6,7 @@ import {
     useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Mic, MicOff, Volume2 } from "lucide-react";
+import { Mic, Volume2 } from "lucide-react";
 import { matchVoiceCommand } from "./voiceCommands";
 import "./VoiceAssistant.css";
 
@@ -67,6 +67,7 @@ export default function VoiceAssistant({
     const locationRef = useRef(location.pathname);
 
     const [enabled, setEnabled] = useState(false);
+    const [activated, setActivated] = useState(false);
     const [status, setStatus] = useState("Voice experience ready");
     const [lastHeard, setLastHeard] = useState("");
     const [speed, setSpeed] = useState(180);
@@ -251,8 +252,7 @@ export default function VoiceAssistant({
             switch (command) {
                 case "stop":
                     stopScroll();
-                    setStatus("Scrolling stopped");
-                    speak("Stopped.");
+                    setStatus("Journey stopped");
                     break;
 
                 case "scroll-down":
@@ -416,6 +416,13 @@ export default function VoiceAssistant({
                 if (!transcript) continue;
 
                 setLastHeard(transcript);
+
+                window.dispatchEvent(
+                    new CustomEvent("portfolio-voice-command", {
+                        detail: { text: transcript },
+                    })
+                );
+
                 execute(transcript);
             }
         };
@@ -464,14 +471,6 @@ export default function VoiceAssistant({
                     listeningRef.current = true;
                     setStatus("Listening for commands");
 
-                    speak(
-                        "Hey there! I am Kushagra's portfolio. " +
-                        "Welcome! You can explore my skills, projects, experience, " +
-                        "and achievements using your voice. " +
-                        "Say scroll down, scroll slowly, scroll faster, stop, " +
-                        "open resume, go home, or go to contact. " +
-                        "I understand English and Hinglish. Let's explore!"
-                    );
 
                 } catch {
                     setStatus(
@@ -496,22 +495,26 @@ export default function VoiceAssistant({
     }, [disableVoice, execute]);
 
     useEffect(() => {
-        const onPortfolioStarted = () => {
+        const handleEnable = () => {
+            setActivated(true);
             enableVoice();
         };
 
-        window.addEventListener(
-            "portfolio-started",
-            onPortfolioStarted
-        );
+        const handleDisable = () => {
+            disableVoice();
+            setActivated(false);
+        };
+
+        window.addEventListener("portfolio-voice-enable", handleEnable);
+        window.addEventListener("portfolio-manual-mode", handleDisable);
+        window.addEventListener("portfolio-tour-stop", handleDisable);
 
         return () => {
-            window.removeEventListener(
-                "portfolio-started",
-                onPortfolioStarted
-            );
+            window.removeEventListener("portfolio-voice-enable", handleEnable);
+            window.removeEventListener("portfolio-manual-mode", handleDisable);
+            window.removeEventListener("portfolio-tour-stop", handleDisable);
         };
-    }, [enableVoice]);
+    }, [enableVoice, disableVoice]);
 
     useEffect(() => {
         return () => {
@@ -534,28 +537,17 @@ export default function VoiceAssistant({
         };
     }, []);
 
+    if (!activated) return null;
+
     return (
         <div className="voice-assistant">
-            <button
-                type="button"
-                className="voice-toggle"
-                onClick={() => {
-                    if (enabled) disableVoice();
-                    else enableVoice();
-                }}
-                aria-label={
-                    enabled ? "Turn voice mode off" : "Enable voice mode"
-                }
-            >
-                {enabled ? <Mic size={20} /> : <MicOff size={20} />}
-                <span>{enabled ? "Voice On" : "Enable Voice"}</span>
-            </button>
-
             <div className="voice-status" aria-live="polite">
                 <Volume2 size={16} />
                 <span>{status}</span>
                 {enabled && (
-                    <small>Scroll speed: {speed} px/s</small>
+                    <small>
+                        <Mic size={13} /> Microphone active · Scroll speed: {speed} px/s
+                    </small>
                 )}
                 {lastHeard && <small>Heard: {lastHeard}</small>}
             </div>

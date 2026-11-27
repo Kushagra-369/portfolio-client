@@ -291,6 +291,7 @@ export default function Start({ onStart }: StartProps) {
               boxShadow: "0 0 30px rgba(34,211,238,0.8)",
             }}
             whileTap={{ scale: 0.95 }}
+            data-portfolio-start-button="true"
             onClick={onStart}
             className="group relative mt-12 inline-flex items-center gap-3 px-8 py-4 rounded-full
             bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600

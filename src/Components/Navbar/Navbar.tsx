@@ -2,7 +2,7 @@ import { useState, useEffect, type ReactElement } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import axios from "axios";
-import { Download, Menu, X, Linkedin, Github, Sun, Moon, Heart, Skull, Sparkles } from "lucide-react";
+import { Download, Menu, X, Linkedin, Github, Sun, Moon, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../Context/ThemeContext";
 import { APIURL } from "../../GlobalAPIURL";
@@ -37,12 +37,12 @@ interface AdminData {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { toggleTheme, theme } = useTheme();
+  const { toggleLightDark, theme } = useTheme();
   const isHorror = theme === "horror";
 
   const handleThemeToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    toggleTheme(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    toggleLightDark(rect.left + rect.width / 2, rect.top + rect.height / 2);
   };
   const location = useLocation();
   const navigate = useNavigate();
@@ -234,12 +234,8 @@ export default function Navbar() {
       element:
         theme === "dark" ? (
           <Sun className="w-5 h-5 sm:w-6 sm:h-6" />
-        ) : theme === "light" ? (
-          <Moon className="w-5 h-5 sm:w-6 sm:h-6" />
-        ) : theme === "love" ? (
-          <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
         ) : (
-          <Skull className="w-5 h-5 sm:w-6 sm:h-6" />
+          <Moon className="w-5 h-5 sm:w-6 sm:h-6" />
         ),
       href: "",
       hoverColor:
@@ -472,7 +468,7 @@ export default function Navbar() {
         <div className="hidden md:flex lg:hidden items-center gap-3">
           <motion.div variants={bounceVariant} initial="rest" whileHover="hover" whileTap="tap">
             <Link
-              to="/resume"
+              to="/resume" data-tour="resume-link"
               className="
                 relative flex items-center gap-2 px-3 py-2 rounded-xl
                 bg-linear-to-r from-cyan-500/20 to-blue-500/20
@@ -499,7 +495,7 @@ export default function Navbar() {
           {icons.map((icon) =>
             icon.external ? (
               <motion.a
-                key={icon.id}
+                key={icon.id} data-tour={`navbar-${icon.id}`}
                 href={icon.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -531,7 +527,7 @@ export default function Navbar() {
               </motion.a>
             ) : (
               <motion.button
-                key={icon.id}
+                key={icon.id} data-tour={`navbar-${icon.id}`}
                 onClick={handleThemeToggle}
                 className={`
                   relative p-2 rounded-xl
@@ -719,7 +715,7 @@ export default function Navbar() {
         <motion.div className="hidden lg:flex items-center gap-4" initial="hidden" animate="visible">
           <motion.div variants={bounceVariant} initial="rest" whileHover="hover" whileTap="tap">
             <Link
-              to="/resume"
+              to="/resume" data-tour="resume-link"
               className="
                 group relative inline-flex select-none items-center gap-2 px-4 py-2 rounded-xl
                 bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500
@@ -755,7 +751,7 @@ export default function Navbar() {
           {icons.map((icon) =>
             icon.external ? (
               <motion.a
-                key={icon.id}
+                key={icon.id} data-tour={`navbar-${icon.id}`}
                 href={icon.href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -787,7 +783,7 @@ export default function Navbar() {
               </motion.a>
             ) : (
               <motion.button
-                key={icon.id}
+                key={icon.id} data-tour={`navbar-${icon.id}`}
                 onClick={handleThemeToggle}
                 className={`
                   relative p-3 rounded-xl
@@ -953,7 +949,7 @@ export default function Navbar() {
                   className="mb-2"
                 >
                   <Link
-                    to="/resume"
+                    to="/resume" data-tour="resume-link"
                     onClick={() => setIsOpen(false)}
                     className="
                       flex justify-center items-center gap-2 px-4 py-2 rounded-xl
@@ -986,7 +982,7 @@ export default function Navbar() {
                   {icons.map((icon) =>
                     icon.external ? (
                       <motion.a
-                        key={icon.id}
+                        key={icon.id} data-tour={`navbar-${icon.id}`}
                         href={icon.href}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -1016,10 +1012,10 @@ export default function Navbar() {
                       </motion.a>
                     ) : (
                       <motion.button
-                        key={icon.id}
+                        key={icon.id} data-tour={`navbar-${icon.id}`}
                         onClick={(e) => {
                           const rect = e.currentTarget.getBoundingClientRect();
-                          toggleTheme(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                          toggleLightDark(rect.left + rect.width / 2, rect.top + rect.height / 2);
                           setIsOpen(false);
                         }}
                         className={`

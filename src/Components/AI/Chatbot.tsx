@@ -70,6 +70,36 @@ export default function Chatbot() {
     }, []);
 
     // =========================
+    // PORTFOLIO TOUR: TEMPORARY OPEN / CLOSE
+    // =========================
+    useEffect(() => {
+        const openForTour = () => {
+            setPosition({
+                x: 20,
+                y: Math.max(16, window.innerHeight - 520),
+            });
+            setMode("normal");
+        };
+
+        const closeForTour = () => {
+            setPosition({
+                x: 20,
+                y: window.innerHeight - 120,
+            });
+            setMode("small");
+            setDragging(false);
+        };
+
+        window.addEventListener("portfolio-tour-chatbot-open", openForTour);
+        window.addEventListener("portfolio-tour-chatbot-close", closeForTour);
+
+        return () => {
+            window.removeEventListener("portfolio-tour-chatbot-open", openForTour);
+            window.removeEventListener("portfolio-tour-chatbot-close", closeForTour);
+        };
+    }, []);
+
+    // =========================
     // AI RESPONSE
     // =========================
     const getAIResponse = async (msg: string) => {
@@ -191,6 +221,7 @@ export default function Chatbot() {
 
     return (
         <div
+            data-tour="ai-assistant"
             ref={chatbotRef}
             onMouseDown={handleMouseDown}
             style={{

@@ -15,6 +15,7 @@ interface ThemeContextType {
   // Cycles:
   // Light → Love → Horror → Dark → Light
   toggleTheme: (x: number, y: number) => void;
+  toggleLightDark: (x: number, y: number) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -114,12 +115,53 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     });
   };
 
+  const toggleLightDark = (x: number, y: number) => {
+    const root = document.documentElement;
+
+    const changeTheme = () => {
+      setTheme((currentTheme) =>
+        currentTheme === "dark" ? "light" : "dark"
+      );
+    };
+
+    if (!(document as any).startViewTransition) {
+      changeTheme();
+      return;
+    }
+
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = (document as any).startViewTransition(() => {
+      changeTheme();
+    });
+
+    transition.ready.then(() => {
+      root.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`,
+          ],
+        },
+        {
+          duration: 700,
+          easing: "ease-in-out",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      );
+    });
+  };
+
   return (
     <ThemeContext.Provider
       value={{
         theme,
         isDark: theme === "dark",
         toggleTheme,
+        toggleLightDark,
       }}
     >
       {children}

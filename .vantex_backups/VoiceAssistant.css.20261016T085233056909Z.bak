@@ -1,0 +1,87 @@
+
+.voice-assistant {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  font-family: inherit;
+}
+
+.voice-toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 18px;
+  border: 1px solid rgba(74, 222, 128, 0.45);
+  border-radius: 999px;
+  background: rgba(4, 20, 12, 0.94);
+  color: #86efac;
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.2);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.voice-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.35);
+}
+
+.voice-status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 280px;
+  padding: 12px 15px;
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 14px;
+  background: rgba(4, 14, 9, 0.94);
+  color: #d1fae5;
+  font-size: 12px;
+  backdrop-filter: blur(14px);
+}
+
+.voice-status > svg {
+  color: #4ade80;
+}
+
+.voice-status small {
+  color: #86efac;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .voice-assistant {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .voice-status {
+    max-width: min(280px, calc(100vw - 28px));
+  }
+}
+
+/* VANTEX overflow proposal: div:nth-of-type(16) > div:nth-of-type(2).pointer-events-none.fixed */
+div:nth-of-type(16) > div:nth-of-type(2).pointer-events-none.fixed {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    white-space: normal !important;
+}
+
+/* VANTEX overflow proposal: div:nth-of-type(5).fixed.z-99999 > div.w-full.h-full */
+div:nth-of-type(5).fixed.z-99999 > div.w-full.h-full {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+    white-space: normal !important;
+}
+
+/* VANTEX contrast proposal: div:nth-of-type(1).relative.flex > div:nth-of-type(2).relative.z-10 > div:nth-of-type(1).text-white.font-bold */
+div:nth-of-type(1).relative.flex > div:nth-of-type(2).relative.z-10 > div:nth-of-type(1).text-white.font-bold {
+    color: #e5fff0 !important;
+}
