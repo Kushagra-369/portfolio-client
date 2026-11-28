@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactElement } from "react";
+import { useState, useEffect, type ReactElement, type MouseEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import axios from "axios";
@@ -93,13 +93,12 @@ export default function Navbar() {
   const { toggleLightDark, theme } = useTheme();
   const isHorror = theme === "horror";
 
-  const handleThemeToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleThemeToggle = (e: MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     toggleLightDark(rect.left + rect.width / 2, rect.top + rect.height / 2);
   };
   const location = useLocation();
   const navigate = useNavigate();
-  const [, setMousePosition] = useState({ x: 0, y: 0 });
   const [activeSection, setActiveSection] = useState("home");
   const [borderWidth, setBorderWidth] = useState(0);
 
@@ -127,14 +126,6 @@ export default function Navbar() {
       }
     };
     fetchAdmin();
-  }, []);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   // ===== HORROR FONT LOADER (Creepster + Nosifer + Eater + Butcherman) =====
@@ -233,11 +224,13 @@ export default function Navbar() {
     rest: { scale: 1, y: 0 },
     hover: {
       scale: 1,
-      y: [0, -12, 0, -8, 0, -4, 0],
+      y: [0, -8, 0, -4, 0],
+      rotateX: [0, 1.2, 0],
+      rotateY: [0, -1.2, 0],
       transition: {
         duration: 0.6,
         ease: "easeOut",
-        times: [0, 0.2, 0.4, 0.5, 0.7, 0.85, 1],
+        times: [0, 0.25, 0.5, 0.75, 1],
       },
     },
     tap: { scale: 0.95, transition: { duration: 0.1 } },
@@ -388,11 +381,11 @@ export default function Navbar() {
           relative w-full mx-auto px-5 py-3 flex justify-between items-center rounded-3xl
           backdrop-blur-xl border border-white/20
           bg-linear-to-br from-slate-900/90 via-blue-900/85 to-cyan-900/90
-          dark:from-black dark:via-blue-950 dark:to-cyan-900
+          dark:from-black dark:via-[#03140b] dark:to-[#062817]
           love:from-rose-950/95 love:via-pink-900/90 love:to-red-900/95
           horror:from-zinc-900/95 horror:via-neutral-900/95 horror:to-black
           shadow-2xl shadow-cyan-500/20
-          dark:shadow-blue-900/30
+          dark:shadow-[0_0_34px_rgba(0,255,60,0.16)]
           love:shadow-pink-600/30
           horror:shadow-[0_0_40px_rgba(180,0,0,0.55)]
           horror:animate-[horrorBloodPulse_4s_ease-in-out_infinite]
@@ -404,6 +397,7 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: "easeOut", type: "spring", stiffness: 200 }}
         whileHover="hover"
         variants={bounceVariant}
+        style={{ transformStyle: "preserve-3d", perspective: 1200 }}
       >
         {/* Animated border linear */}
         <motion.div
@@ -425,7 +419,7 @@ export default function Navbar() {
         <motion.div
           className="
             absolute bottom-0 left-0 h-1 rounded-full
-            bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400
+            bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400 dark:from-[#00ff3c] dark:via-[#86efac] dark:to-[#00ff3c]
             love:from-pink-400 love:via-rose-500 love:to-red-500
             horror:from-red-700 horror:via-red-500 horror:to-red-800
             horror:animate-[horrorDrip_2.5s_ease-in-out_infinite]
@@ -445,7 +439,7 @@ export default function Navbar() {
         <motion.div
           className="
             absolute bottom-0 left-0 h-1 rounded-full blur-sm
-            bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400
+            bg-linear-to-r from-cyan-400 via-blue-500 to-cyan-400 dark:from-[#00ff3c] dark:via-[#86efac] dark:to-[#00ff3c]
             love:from-pink-400 love:via-rose-500 love:to-red-500
             horror:from-red-600 horror:via-red-400 horror:to-red-700
           "
@@ -474,10 +468,10 @@ export default function Navbar() {
                 love:border-pink-400/80
                 horror:border-red-700/90
                 bg-linear-to-br from-cyan-500 to-blue-600
-                dark:from-cyan-400 dark:to-blue-500
+                dark:from-[#00ff3c] dark:to-[#087b36]
                 love:from-pink-500 love:to-rose-600
                 horror:from-red-800 horror:to-black
-                shadow-lg shadow-cyan-500/25
+                shadow-lg shadow-cyan-500/25 dark:shadow-[0_0_22px_rgba(0,255,60,0.16)]
                 love:shadow-pink-500/30
                 horror:shadow-[0_0_28px_rgba(180,0,0,0.8)]
                 w-10 h-10 sm:w-12 sm:h-12 overflow-hidden
@@ -506,7 +500,7 @@ export default function Navbar() {
                 text-base sm:text-lg md:text-xl font-[Roboto] font-bold tracking-tight
                 bg-clip-text text-transparent
                 bg-linear-to-r from-cyan-400 to-blue-400
-                dark:from-cyan-300 dark:via-white dark:to-orange-400
+                dark:from-[#00ff66] dark:via-[#eaffef] dark:to-[#00b83f]
                 love:from-pink-300 love:via-rose-200 love:to-red-300
                 horror:from-red-500 horror:via-red-300 horror:to-red-700
                 ${horrorFontClass}
@@ -525,7 +519,7 @@ export default function Navbar() {
               to="/resume" data-tour="resume-link"
               className="
                 relative flex items-center gap-2 px-3 py-2 rounded-xl
-                bg-linear-to-r from-cyan-500/20 to-blue-500/20
+                bg-linear-to-r from-cyan-500/20 to-blue-500/20 dark:from-[#00ff3c]/15 dark:to-[#087b36]/15
                 love:from-pink-500/20 love:to-rose-500/20
                 horror:from-red-900/40 horror:to-black/60
                 border border-cyan-400/30
@@ -536,7 +530,7 @@ export default function Navbar() {
               "
             >
               <motion.div
-                className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-700/25 horror:to-red-950/30"
+                className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 dark:from-[#00ff3c]/15 dark:to-[#087b36]/15 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-700/25 horror:to-red-950/30"
                 initial={{ x: "-100%" }}
                 whileHover={{ x: "100%" }}
                 transition={{ duration: 0.5 }}
@@ -561,7 +555,7 @@ export default function Navbar() {
                   border border-white/20 dark:border-black/20
                   love:border-pink-400/30
                   horror:border-red-900/70
-                  dark:text-white love:text-pink-200 horror:text-red-300
+                  dark:text-[#d9ffe4] love:text-pink-200 horror:text-red-300
                   ${icon.hoverColor}
                   overflow-hidden group cursor-pointer
                   horror:shadow-[0_0_14px_rgba(180,0,0,0.5)]
@@ -591,7 +585,7 @@ export default function Navbar() {
                   border border-white/20 dark:border-black/20
                   love:border-pink-400/30
                   horror:border-red-900/70
-                  dark:text-white love:text-pink-200 horror:text-red-300
+                  dark:text-[#d9ffe4] love:text-pink-200 horror:text-red-300
                   ${icon.hoverColor}
                   overflow-hidden group
                   horror:shadow-[0_0_14px_rgba(180,0,0,0.5)]
@@ -636,13 +630,13 @@ export default function Navbar() {
                     ${isActive(section.path, section.id)
                       ? `
                           text-white
-                          bg-linear-to-r from-cyan-500/30 to-blue-500/30
+                          bg-linear-to-r from-cyan-500/30 to-blue-500/30 dark:from-[#00ff3c]/20 dark:to-[#087b36]/20
                           love:from-pink-500/30 love:to-rose-500/30
                           horror:from-red-900/70 horror:to-black/80
-                          border border-cyan-400/50
+                          border border-cyan-400/50 dark:border-[#00ff3c]/50
                           love:border-pink-400/60
                           horror:border-red-600/80
-                          shadow-lg shadow-cyan-500/25
+                          shadow-lg shadow-cyan-500/25 dark:shadow-[0_0_22px_rgba(0,255,60,0.16)]
                           love:shadow-pink-500/25
                           horror:shadow-[0_0_28px_rgba(255,20,20,0.75)]
                         `
@@ -658,14 +652,14 @@ export default function Navbar() {
                   `}
                 >
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-800/40 horror:to-black/50 rounded-xl"
+                    className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 dark:from-[#00ff3c]/15 dark:to-[#087b36]/15 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-800/40 horror:to-black/50 rounded-xl"
                     initial={{ scale: 0, opacity: 0 }}
                     whileHover={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.2 }}
                   />
                   {isActive(section.path, section.id) && (
                     <motion.div
-                      className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-cyan-400 love:bg-pink-400 horror:bg-red-500 rounded-full horror:shadow-[0_0_12px_rgba(255,20,20,1)]"
+                      className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-cyan-400 dark:bg-[#00ff3c] love:bg-pink-400 horror:bg-red-500 rounded-full horror:shadow-[0_0_12px_rgba(255,20,20,1)]"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: "spring", stiffness: 500, delay: 0.1 }}
@@ -677,8 +671,8 @@ export default function Navbar() {
                       <span
                         className={`
                           ${isActive(section.path, section.id)
-                            ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
-                            : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
+                            ? "text-cyan-300 dark:text-[#8dffad] love:text-pink-300 horror:text-red-400"
+                            : "text-cyan-400 dark:text-[#00ff66] love:text-pink-300 horror:text-red-500"
                           }
                           transition-all duration-300
                         `}
@@ -701,13 +695,13 @@ export default function Navbar() {
                     ${isActive(section.path, section.id)
                       ? `
                           text-white
-                          bg-linear-to-r from-cyan-500/30 to-blue-500/30
+                          bg-linear-to-r from-cyan-500/30 to-blue-500/30 dark:from-[#00ff3c]/20 dark:to-[#087b36]/20
                           love:from-pink-500/30 love:to-rose-500/30
                           horror:from-red-900/70 horror:to-black/80
-                          border border-cyan-400/50
+                          border border-cyan-400/50 dark:border-[#00ff3c]/50
                           love:border-pink-400/60
                           horror:border-red-600/80
-                          shadow-lg shadow-cyan-500/25
+                          shadow-lg shadow-cyan-500/25 dark:shadow-[0_0_22px_rgba(0,255,60,0.16)]
                           love:shadow-pink-500/25
                           horror:shadow-[0_0_28px_rgba(255,20,20,0.75)]
                         `
@@ -723,14 +717,14 @@ export default function Navbar() {
                   `}
                 >
                   <motion.div
-                    className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-800/40 horror:to-black/50"
+                    className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 dark:from-[#00ff3c]/15 dark:to-[#087b36]/15 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-800/40 horror:to-black/50"
                     initial={{ scale: 0, opacity: 0 }}
                     whileHover={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.2 }}
                   />
                   {isActive(section.path, section.id) && (
                     <motion.div
-                      className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-cyan-400 love:bg-pink-400 horror:bg-red-500 rounded-full horror:shadow-[0_0_12px_rgba(255,20,20,1)]"
+                      className="absolute -top-1 left-1/2 w-1.5 h-1.5 bg-cyan-400 dark:bg-[#00ff3c] love:bg-pink-400 horror:bg-red-500 rounded-full horror:shadow-[0_0_12px_rgba(255,20,20,1)]"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ type: "spring", stiffness: 500, delay: 0.1 }}
@@ -742,8 +736,8 @@ export default function Navbar() {
                       <span
                         className={`
                           ${isActive(section.path, section.id)
-                            ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
-                            : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
+                            ? "text-cyan-300 dark:text-[#8dffad] love:text-pink-300 horror:text-red-400"
+                            : "text-cyan-400 dark:text-[#00ff66] love:text-pink-300 horror:text-red-500"
                           }
                           transition-all duration-300
                         `}
@@ -769,7 +763,7 @@ export default function Navbar() {
               to="/resume" data-tour="resume-link"
               className="
                 group relative inline-flex select-none items-center gap-2 px-4 py-2 rounded-xl
-                bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500
+                bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500 dark:from-[#00ff3c] dark:via-[#08b84a] dark:to-[#86efac]
                 love:from-pink-500 love:via-rose-500 love:to-red-400
                 horror:from-red-800 horror:via-red-900 horror:to-black
                 text-white font-semibold shadow-md transition-all overflow-hidden
@@ -808,7 +802,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className={`
                   relative p-3 rounded-xl
-                  dark:text-white love:text-pink-200 horror:text-red-300
+                  dark:text-[#d9ffe4] love:text-pink-200 horror:text-red-300
                   bg-white/10 dark:bg-black/10
                   love:bg-pink-500/10
                   horror:bg-black/60
@@ -838,7 +832,7 @@ export default function Navbar() {
                 onClick={handleThemeToggle}
                 className={`
                   relative p-3 rounded-xl
-                  dark:text-white love:text-pink-200 horror:text-red-300
+                  dark:text-[#d9ffe4] love:text-pink-200 horror:text-red-300
                   bg-white/10 dark:bg-black/10
                   love:bg-pink-500/10
                   horror:bg-black/60
@@ -879,7 +873,7 @@ export default function Navbar() {
             border border-white/20 dark:border-black/20
             love:border-pink-400/30
             horror:border-red-900/70
-            text-white dark:text-white love:text-pink-200 horror:text-red-300
+            text-white dark:text-[#d9ffe4] love:text-pink-200 horror:text-red-300
             relative overflow-hidden group
             horror:shadow-[0_0_16px_rgba(180,0,0,0.55)]
           `}
@@ -910,11 +904,11 @@ export default function Navbar() {
               xl:hidden fixed inset-x-4 top-24 mx-auto rounded-3xl backdrop-blur-md
               border border-white/20
               bg-linear-to-br from-slate-900/95 via-blue-900/90 to-cyan-900/95
-              dark:from-black dark:via-blue-950 dark:to-cyan-900
+              dark:from-black dark:via-[#03140b] dark:to-[#062817]
               love:from-rose-950/95 love:via-pink-900/90 love:to-red-900/95
               horror:from-zinc-900/95 horror:via-neutral-900/95 horror:to-black
               shadow-2xl shadow-cyan-500/20
-              dark:shadow-blue-900/30
+              dark:shadow-[0_0_34px_rgba(0,255,60,0.16)]
               love:shadow-pink-600/30
               horror:shadow-[0_0_40px_rgba(180,0,0,0.6)]
               horror:border-red-900/70
@@ -947,10 +941,10 @@ export default function Navbar() {
                       ${isActive(section.path, section.id)
                         ? `
                             text-white
-                            bg-linear-to-r from-cyan-500/30 to-blue-500/30
+                            bg-linear-to-r from-cyan-500/30 to-blue-500/30 dark:from-[#00ff3c]/20 dark:to-[#087b36]/20
                             love:from-pink-500/30 love:to-rose-500/30
                             horror:from-red-900/70 horror:to-black/80
-                            border border-cyan-400/50
+                            border border-cyan-400/50 dark:border-[#00ff3c]/50
                             love:border-pink-400/60
                             horror:border-red-600/80
                             horror:shadow-[0_0_22px_rgba(255,20,20,0.7)]
@@ -968,7 +962,7 @@ export default function Navbar() {
                     `}
                   >
                     <motion.div
-                      className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-800/40 horror:to-black/50"
+                      className="absolute inset-0 bg-linear-to-r from-cyan-500/20 to-blue-500/20 dark:from-[#00ff3c]/15 dark:to-[#087b36]/15 love:from-pink-500/20 love:to-rose-500/20 horror:from-red-800/40 horror:to-black/50"
                       initial={{ scale: 0 }}
                       whileHover={{ scale: 1 }}
                       transition={{ duration: 0.2 }}
@@ -978,8 +972,8 @@ export default function Navbar() {
                         <span
                           className={`
                             ${isActive(section.path, section.id)
-                              ? "text-cyan-300 love:text-pink-300 horror:text-red-400"
-                              : "text-cyan-400 dark:text-cyan-300 love:text-pink-300 horror:text-red-500"
+                              ? "text-cyan-300 dark:text-[#8dffad] love:text-pink-300 horror:text-red-400"
+                              : "text-cyan-400 dark:text-[#00ff66] love:text-pink-300 horror:text-red-500"
                             }
                             transition-all duration-300
                           `}
@@ -1005,7 +999,7 @@ export default function Navbar() {
                     onClick={() => setIsOpen(false)}
                     className="
                       flex justify-center items-center gap-2 px-4 py-2 rounded-xl
-                      bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500
+                      bg-linear-to-r from-cyan-500 via-blue-500 to-sky-500 dark:from-[#00ff3c] dark:via-[#08b84a] dark:to-[#86efac]
                       love:from-pink-500 love:via-rose-500 love:to-red-400
                       horror:from-red-800 horror:via-red-900 horror:to-black
                       text-white font-semibold shadow-md relative overflow-hidden group

@@ -335,7 +335,7 @@ export default function PortfolioTour() {
     wait,
   ]);
 
-  const startJourney = useCallback(async () => {
+  const startJourney = async () => {
     const token = tokenRef.current + 1;
     tokenRef.current = token;
     activeRef.current = true;
@@ -354,21 +354,24 @@ export default function PortfolioTour() {
     setRunning(true);
     setStep(-1);
 
+    // Enable voice recognition while keeping the Start page visible.
     window.dispatchEvent(new Event("portfolio-voice-enable"));
 
-    await speak(
-      "Hello, I'm Kushagra's portfolio guide. Wrap your arms around the experience, sit back, relax, and enjoy the journey."
-    );
+    // Finish the welcome narration before starting the collision animation.
+    await speak("Hello, I'm Kushagra's portfolio guide. I'll take you through the portfolio.");
 
     if (!isCurrent(token)) return;
 
+    // Start now triggers the same collision animation as Enter Universe.
     window.dispatchEvent(new Event("portfolio-start-request"));
-    await wait(1500);
+
+    // Allow the collision and page transition to finish before the tour.
+    await wait(2200);
 
     if (!isCurrent(token)) return;
 
     await runTour(token);
-  }, [clearHighlights, isCurrent, runTour, speak, wait]);
+  };
 
   const selectManual = useCallback(() => {
     activeRef.current = false;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import type { CSSProperties } from "react";
 import Navbar from "./Components/Navbar/Navbar";
 import CustomCursor from "./Components/CustomCursor";
 import Chatbot from "./Components/AI/Chatbot";
@@ -154,7 +155,7 @@ function FallingParticles() {
                   falling-particle absolute -top-5
                   ${isEmoji
                     ? "select-none flex items-center justify-center love:drop-shadow-[0_0_10px_rgba(244,114,182,0.65)]"
-                    : "rounded-full bg-cyan-400/40 shadow-[0_0_8px_rgba(34,211,238,0.35)] dark:bg-white/80 dark:shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+                    : "rounded-full bg-cyan-400/40 shadow-[0_0_8px_rgba(34,211,238,0.35)] dark:bg-[#00ff3c]/80 dark:shadow-[0_0_12px_rgba(0,255,60,0.75)]"
                   }
                 `}
                 style={
@@ -168,7 +169,7 @@ function FallingParticles() {
                     animationDuration: p.duration,
                     animationDelay: p.delay,
                     "--particle-drift": p.drift,
-                  } as React.CSSProperties
+                  } as CSSProperties
                 }
               >
                 {isEmoji ? p.emoji : null}
@@ -237,7 +238,7 @@ function FallingParticles() {
                     animationDuration: p.duration,
                     animationDelay: p.delay,
                     "--particle-drift": p.drift,
-                  } as React.CSSProperties
+                  } as CSSProperties
                 }
               >
                 {p.emoji}
@@ -263,7 +264,7 @@ function FallingParticles() {
                     animationDuration: p.duration,
                     animationDelay: p.delay,
                     "--bat-travel": p.drift,
-                  } as React.CSSProperties
+                  } as CSSProperties
                 }
               >
                 {p.emoji}
@@ -287,7 +288,7 @@ function FallingParticles() {
                     fontSize: p.size,
                     animationDuration: p.duration,
                     animationDelay: p.delay,
-                  } as React.CSSProperties
+                  } as CSSProperties
                 }
               >
                 {p.emoji}
@@ -315,7 +316,7 @@ function FallingParticles() {
                     animationDuration: `${Math.random() * 4 + 4.5}s`,
                     animationDelay: `${Math.random() * -10}s`,
                     "--particle-drift": `${Math.random() * 90 - 45}px`,
-                  } as React.CSSProperties
+                  } as CSSProperties
                 }
               />
             ))}
@@ -340,7 +341,7 @@ function FallingParticles() {
                     animationDuration: `${Math.random() * 8 + 8}s`,
                     animationDelay: `${Math.random() * -12}s`,
                     "--particle-drift": `${Math.random() * 120 - 60}px`,
-                  } as React.CSSProperties
+                  } as CSSProperties
                 }
               />
             ))}
@@ -362,15 +363,6 @@ function AppContent() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    const handleAutomaticStart = () => setEntered(true);
-    window.addEventListener("portfolio-start-request", handleAutomaticStart);
-
-    return () => {
-      window.removeEventListener("portfolio-start-request", handleAutomaticStart);
-    };
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
       const scrollPosition =
         window.scrollY || document.documentElement.scrollTop;
@@ -383,10 +375,12 @@ function AppContent() {
 
   const hideNavbarRoutes = ["/admin/dashboard"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+  const showThemeEffects = entered || location.pathname !== "/";
 
   if (!entered && location.pathname === "/") {
     return (
       <>
+        {showThemeEffects && <FallingParticles />}
         {!shouldHideNavbar && entered && <Navbar />}
 
         <AnimatePresence mode="wait">
@@ -445,9 +439,9 @@ function AppContent() {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="
               fixed bottom-6 right-6 z-99999 flex h-14 w-14 items-center justify-center
-              rounded-full bg-cyan-500 love:bg-pink-500
+              rounded-full bg-sky-500 dark:bg-[#00ff3c] love:bg-pink-500
               horror:bg-red-700 horror:text-red-50
-              text-white shadow-2xl love:shadow-pink-500/50
+              text-white shadow-2xl dark:shadow-[0_0_28px_rgba(0,255,60,0.55)] love:shadow-pink-500/50
               horror:shadow-[0_0_30px_rgba(255,0,0,0.85)]
               transition-all duration-300 hover:scale-110
             "
@@ -461,6 +455,7 @@ function AppContent() {
 
   return (
     <>
+      {showThemeEffects && <FallingParticles />}
       {!shouldHideNavbar && <Navbar />}
 
       <AnimatePresence mode="wait">
@@ -491,9 +486,9 @@ function AppContent() {
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="
             fixed bottom-6 right-6 z-99999 flex h-14 w-14 items-center justify-center
-            rounded-full bg-cyan-500 love:bg-pink-500
+            rounded-full bg-sky-500 dark:bg-[#00ff3c] love:bg-pink-500
             horror:bg-red-700 horror:text-red-50
-            text-white shadow-2xl love:shadow-pink-500/50
+            text-white shadow-2xl dark:shadow-[0_0_28px_rgba(0,255,60,0.55)] love:shadow-pink-500/50
             horror:shadow-[0_0_30px_rgba(255,0,0,0.85)]
             transition-all duration-300 hover:scale-110
           "
@@ -524,18 +519,13 @@ export default function App() {
         <div
           className="
             fixed inset-0 -z-50 h-full w-full
-            bg-white
-            [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#7ee0ff_100%)]
-            dark:[background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]
-            love:[background:radial-gradient(125%_125%_at_50%_10%,#fff0f5_40%,#ff9ec4_100%)]
+            bg-[#f7fcff]
+            [background:radial-gradient(125%_125%_at_50%_10%,#ffffff_35%,#b9edff_100%)]
+            dark:[background:radial-gradient(125%_125%_at_50%_10%,#010402_0%,#031008_48%,#000000_100%)]
+            love:[background:radial-gradient(125%_125%_at_50%_10%,#fff3f8_0%,#ffd0e5_48%,#f472b6_100%)]
             horror:[background:radial-gradient(120%_110%_at_50%_28%,#4a0a0a_0%,#2a0404_28%,#120101_55%,#050000_80%,#000_100%)]
           "
         />
-
-        {/* ===================================================
-            FALLING PARTICLES
-        =================================================== */}
-        <FallingParticles />
 
         {/* ===================================================
             WEBSITE
