@@ -25,6 +25,7 @@ import AdminDashboard from "./Components/Dashboard/AdminDashboard";
 import Icons from "./Components/Home/Icons";
 import PNF from "./Components/PNF/PageNotFound";
 import Start from "./Components/Start/Start";
+import BlackHoleEffect from "./Components/BlackHole/BlackHoleEffect";
 
 const adminPath = import.meta.env.VITE_ADMIN_ROUTE;
 
@@ -399,6 +400,14 @@ function AppContent() {
 
   const [entered, setEntered] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("portfolio-main-visibility", {
+        detail: { visible: entered || location.pathname !== "/" },
+      })
+    );
+  }, [entered, location.pathname]);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -552,6 +561,7 @@ export default function App() {
     <BrowserRouter>
       <CustomCursor />
 
+      <BlackHoleEffect>
       <div className={isHorror ? "horror-mode" : ""}>
         {/* ===================================================
             GLOBAL BACKGROUND
@@ -577,6 +587,7 @@ export default function App() {
 
         <Chatbot />
       </div>
+      </BlackHoleEffect>
 
       {/* ===================================================
           ANIMATION CSS

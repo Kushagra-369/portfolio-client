@@ -1,0 +1,91 @@
+.black-hole-content {
+  position: relative;
+  min-height: 100vh;
+}
+
+.black-hole-trigger {
+  position: fixed;
+  z-index: 2147483000;
+  width: 58px;
+  height: 58px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.black-hole-ring {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #111 0deg,
+    #777 65deg,
+    #ddd 110deg,
+    #333 155deg,
+    #999 210deg,
+    #111 270deg,
+    #555 330deg,
+    #111 360deg
+  );
+  filter: blur(2px);
+  animation: blackHoleSpin 2.8s linear infinite;
+  box-shadow: 0 0 12px #77777755, 0 0 25px #aaaaaa33;
+}
+
+.black-hole-core {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: #000;
+  z-index: 2;
+  box-shadow: 0 0 18px #000, inset 0 0 12px #000;
+}
+
+.black-hole-trigger:hover .black-hole-ring {
+  filter: blur(3px);
+  box-shadow: 0 0 18px #aaa, 0 0 32px #555;
+}
+
+.black-hole-letter {
+  display: block;
+  will-change: transform, opacity, filter;
+}
+
+.black-hole-blackout {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482999;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+
+.black-hole-blackout.is-black {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@keyframes blackHoleSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .black-hole-trigger {
+    width: 50px;
+    height: 50px;
+    right: 18px;
+    bottom: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .black-hole-ring { animation-duration: 12s; }
+}
