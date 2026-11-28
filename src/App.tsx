@@ -353,6 +353,44 @@ function FallingParticles() {
 }
 
 /* =========================================================
+   SPARSE COSMIC ACCENTS
+   A few decorative objects placed in the page margins.
+   They intentionally stay away from the central content.
+========================================================= */
+
+function CosmicAccents() {
+  const { theme } = useTheme();
+
+  return (
+    <div
+      className={`cosmic-accents cosmic-${theme}`}
+      aria-hidden="true"
+    >
+      <div className="cosmic-starfield" />
+
+      <div className="cosmic-object cosmic-ringed-planet">
+        <span className="cosmic-planet-body" />
+        <span className="cosmic-planet-ring" />
+      </div>
+
+      <div className="cosmic-object cosmic-moon">
+        <span className="cosmic-moon-crater crater-one" />
+        <span className="cosmic-moon-crater crater-two" />
+      </div>
+
+      <div className="cosmic-object cosmic-mini-planet">
+        <span className="cosmic-mini-glow" />
+      </div>
+
+      <span className="cosmic-star star-one" />
+      <span className="cosmic-star star-two" />
+      <span className="cosmic-star star-three" />
+      <span className="cosmic-star star-four" />
+    </div>
+  );
+}
+
+/* =========================================================
    APP CONTENT
 ========================================================= */
 
@@ -380,6 +418,7 @@ function AppContent() {
   if (!entered && location.pathname === "/") {
     return (
       <>
+        {showThemeEffects && <CosmicAccents />}
         {showThemeEffects && <FallingParticles />}
         {!shouldHideNavbar && entered && <Navbar />}
 
@@ -399,7 +438,7 @@ function AppContent() {
                 perspective: 2000,
                 transformOrigin: "left center",
               }}
-              className="w-full h-screen"
+              className="w-full h-screen relative z-10"
             >
               <Start
                 onStart={() => {
@@ -419,7 +458,7 @@ function AppContent() {
                 transformOrigin: "right center",
               }}
             >
-              <div className="pt-28 min-h-screen">
+              <div className="pt-28 min-h-screen relative z-10">
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/resume" element={<Resume />} />
@@ -455,6 +494,7 @@ function AppContent() {
 
   return (
     <>
+      {showThemeEffects && <CosmicAccents />}
       {showThemeEffects && <FallingParticles />}
       {!shouldHideNavbar && <Navbar />}
 
@@ -467,7 +507,7 @@ function AppContent() {
           transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
           style={{ transformStyle: "preserve-3d", perspective: 2000 }}
         >
-          <div className="pt-28 min-h-screen">
+          <div className="pt-28 min-h-screen relative z-10">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/resume" element={<Resume />} />
@@ -543,6 +583,159 @@ export default function App() {
       =================================================== */}
       <style>
         {`
+          /* ---------- SPARSE COSMIC BACKGROUND ---------- */
+          .cosmic-accents {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            isolation: isolate;
+            --cosmic-glow: rgba(56, 189, 248, 0.42);
+            --cosmic-core: #8bdcff;
+            --cosmic-shadow: #174b70;
+          }
+
+          .cosmic-dark {
+            --cosmic-glow: rgba(0, 255, 174, 0.38);
+            --cosmic-core: #8fffe0;
+            --cosmic-shadow: #064c3b;
+          }
+
+          .cosmic-love {
+            --cosmic-glow: rgba(244, 114, 182, 0.4);
+            --cosmic-core: #ffc0df;
+            --cosmic-shadow: #8f3568;
+          }
+
+          .cosmic-horror {
+            --cosmic-glow: rgba(239, 68, 68, 0.38);
+            --cosmic-core: #ff9b9b;
+            --cosmic-shadow: #641313;
+          }
+
+          .cosmic-starfield {
+            position: absolute;
+            inset: 0;
+            opacity: 0.42;
+            background-image:
+              radial-gradient(1px 1px at 12% 18%, var(--cosmic-core) 98%, transparent),
+              radial-gradient(1px 1px at 83% 13%, var(--cosmic-core) 98%, transparent),
+              radial-gradient(1.5px 1.5px at 92% 48%, var(--cosmic-core) 98%, transparent),
+              radial-gradient(1px 1px at 7% 72%, var(--cosmic-core) 98%, transparent),
+              radial-gradient(1px 1px at 74% 86%, var(--cosmic-core) 98%, transparent),
+              radial-gradient(1px 1px at 28% 91%, var(--cosmic-core) 98%, transparent);
+          }
+
+          .cosmic-object {
+            position: absolute;
+            display: block;
+            filter: drop-shadow(0 0 22px var(--cosmic-glow));
+            animation: cosmicDrift 12s ease-in-out infinite;
+          }
+
+          .cosmic-ringed-planet {
+            top: 16%;
+            right: 8.5%;
+            width: clamp(64px, 7vw, 104px);
+            aspect-ratio: 1;
+            animation-delay: -3s;
+          }
+
+          .cosmic-planet-body {
+            position: absolute;
+            inset: 18%;
+            border-radius: 50%;
+            background:
+              radial-gradient(circle at 32% 28%, rgba(255,255,255,.95), transparent 12%),
+              radial-gradient(circle at 35% 30%, var(--cosmic-core), var(--cosmic-shadow) 72%);
+            box-shadow:
+              inset -9px -8px 16px rgba(0,0,0,.42),
+              0 0 20px var(--cosmic-glow);
+          }
+
+          .cosmic-planet-ring {
+            position: absolute;
+            left: -12%;
+            top: 37%;
+            width: 124%;
+            height: 30%;
+            border: 2px solid color-mix(in srgb, var(--cosmic-core) 72%, transparent);
+            border-radius: 50%;
+            transform: rotate(-22deg);
+            box-shadow: 0 0 10px var(--cosmic-glow);
+          }
+
+          .cosmic-moon {
+            left: 7%;
+            bottom: 15%;
+            width: clamp(34px, 4vw, 58px);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background:
+              radial-gradient(circle at 28% 25%, rgba(255,255,255,.85), transparent 15%),
+              radial-gradient(circle at 38% 35%, #dbeafe, #7892a8 72%, #26394b);
+            box-shadow: inset -8px -7px 13px rgba(0,0,0,.45), 0 0 22px var(--cosmic-glow);
+            animation-delay: -7s;
+          }
+
+          .cosmic-moon-crater {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(20, 35, 48, .22);
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,.18);
+          }
+
+          .crater-one { width: 19%; height: 19%; top: 28%; left: 56%; }
+          .crater-two { width: 12%; height: 12%; top: 60%; left: 30%; }
+
+          .cosmic-mini-planet {
+            right: 5.5%;
+            bottom: 24%;
+            width: clamp(20px, 2.2vw, 30px);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 28%, #fff, var(--cosmic-core) 28%, var(--cosmic-shadow) 82%);
+            box-shadow: 0 0 18px var(--cosmic-glow);
+            animation-delay: -5s;
+          }
+
+          .cosmic-star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--cosmic-core);
+            box-shadow: 0 0 9px 2px var(--cosmic-glow);
+            animation: cosmicTwinkle 4s ease-in-out infinite;
+          }
+
+          .star-one { top: 29%; right: 23%; }
+          .star-two { top: 67%; left: 19%; animation-delay: -1s; }
+          .star-three { top: 12%; left: 31%; animation-delay: -2.4s; }
+          .star-four { bottom: 12%; right: 28%; animation-delay: -3s; }
+
+          @keyframes cosmicDrift {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
+            50% { transform: translate3d(0, -13px, 0) rotate(4deg); }
+          }
+
+          @keyframes cosmicTwinkle {
+            0%, 100% { opacity: .28; transform: scale(.8); }
+            50% { opacity: .95; transform: scale(1.35); }
+          }
+
+          @media (max-width: 700px) {
+            .cosmic-ringed-planet { top: 12%; right: 3%; width: 54px; }
+            .cosmic-moon { left: 3%; bottom: 12%; width: 32px; }
+            .cosmic-mini-planet { right: 3%; bottom: 20%; width: 18px; }
+            .star-three, .star-four { display: none; }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .cosmic-object, .cosmic-star { animation: none; }
+          }
+
           /* ---------- SNOW / HEARTS / SPIDERS / SKULLS / EYES ---------- */
           .falling-particle {
             animation-name: particleFall;
